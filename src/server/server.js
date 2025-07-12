@@ -8,19 +8,21 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   const app = express();
   const taskManager = new TaskManager(projectPath);
   
+  // Initialize TaskManager immediately when server starts
+  console.log('🔄 Initializing JoRA...');
+  try {
+    await taskManager.loadProjectData();
+    console.log('✅ JoRA initialized successfully');
+  } catch (error) {
+    console.log('⚠️  JoRA started with minimal data');
+  }
+  
   // Middleware
   app.use(express.json());
   
-  // Serve static files from embedded assets
-  const webPath = path.join(__dirname, '../web');
-  app.use(express.static(webPath));
-  
-  // Root route that ensures TaskManager is initialized
-  app.get('/', async (req, res) => {
+  // Root route 
+  app.get('/', (req, res) => {
     try {
-      // Ensure TaskManager is ready
-      await taskManager.loadProjectData();
-      
       const indexPath = path.join(__dirname, '../web/index.html');
       const indexContent = fs.readFileSync(indexPath, 'utf8');
       res.send(indexContent);
@@ -32,6 +34,10 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       `);
     }
   });
+  
+  // Serve static files AFTER the root route
+  const webPath = path.join(__dirname, '../web');
+  app.use(express.static(webPath));
   
   // API Routes
   

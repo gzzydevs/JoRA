@@ -225,6 +225,39 @@ class TaskManager {
     }
   }
   
+  // Load config
+  async loadConfig() {
+    try {
+      const configPath = path.join(this.todoPath, 'config.json');
+      const configContent = await fs.readFile(configPath, 'utf8');
+      return JSON.parse(configContent);
+    } catch (error) {
+      return { projectName: 'JoRA', version: '1.0.0' };
+    }
+  }
+
+  // Load authors
+  async loadAuthors() {
+    try {
+      const authorsPath = path.join(this.todoPath, 'authors.json');
+      const authorsContent = await fs.readFile(authorsPath, 'utf8');
+      return JSON.parse(authorsContent);
+    } catch (error) {
+      return [];
+    }
+  }
+
+  // Load tags
+  async loadTags() {
+    try {
+      const tagsPath = path.join(this.todoPath, 'tags.json');
+      const tagsContent = await fs.readFile(tagsPath, 'utf8');
+      return JSON.parse(tagsContent);
+    } catch (error) {
+      return [];
+    }
+  }
+
   // Load project data (config, authors, tags)
   async loadProjectData() {
     try {
@@ -238,9 +271,9 @@ class TaskManager {
         tags
       };
     } catch (error) {
-      console.error('Error loading project data:', error);
+      console.error('Error loading project data:', error.message);
       return {
-        config: { name: 'Unknown Project', currentVersion: '0.0.0' },
+        config: { projectName: 'JoRA', version: '1.0.0' },
         authors: [],
         tags: []
       };
