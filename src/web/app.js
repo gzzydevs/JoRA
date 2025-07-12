@@ -22,7 +22,7 @@ class JoRAApp {
         console.log('JoRAApp calling init()...');
         this.init();
     }
-    
+
     async init() {
         this.initTheme();
         await this.loadProjectData();
