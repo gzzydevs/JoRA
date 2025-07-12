@@ -8,15 +8,6 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   const app = express();
   const taskManager = new TaskManager(projectPath);
   
-  // Warm up the server by initializing TaskManager
-  try {
-    console.log('🔄 Initializing TaskManager...');
-    await taskManager.loadProjectData();
-    console.log('✅ TaskManager initialized successfully');
-  } catch (error) {
-    console.warn('⚠️  TaskManager initialization warning:', error.message);
-  }
-  
   // Middleware
   app.use(express.json());
   
@@ -24,48 +15,24 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   const webPath = path.join(__dirname, '../web');
   app.use(express.static(webPath));
   
-  // Fallback for pkg bundled apps - serve files directly
-  if (process.pkg) {
-    app.get('/', (req, res) => {
-      try {
-        const indexPath = path.join(__dirname, '../web/index.html');
-        const indexContent = fs.readFileSync(indexPath, 'utf8');
-        res.send(indexContent);
-      } catch (error) {
-        res.status(500).send('Error loading interface');
-      }
-    });
-    
-    app.get('/styles.css', (req, res) => {
-      try {
-        const cssPath = path.join(__dirname, '../web/styles.css');
-        const cssContent = fs.readFileSync(cssPath, 'utf8');
-        res.type('text/css').send(cssContent);
-      } catch (error) {
-        res.status(404).send('CSS not found');
-      }
-    });
-    
-    app.get('/app.js', (req, res) => {
-      try {
-        const jsPath = path.join(__dirname, '../web/app.js');
-        const jsContent = fs.readFileSync(jsPath, 'utf8');
-        res.type('application/javascript').send(jsContent);
-      } catch (error) {
-        res.status(404).send('JS not found');
-      }
-    });
-  }
-  
-  // Health check endpoint
-  app.get('/health', (req, res) => {
-    res.json({ 
-      status: 'ok', 
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime()
-    });
+  // Root route that ensures TaskManager is initialized
+  app.get('/', async (req, res) => {
+    try {
+      // Ensure TaskManager is ready
+      await taskManager.loadProjectData();
+      
+      const indexPath = path.join(__dirname, '../web/index.html');
+      const indexContent = fs.readFileSync(indexPath, 'utf8');
+      res.send(indexContent);
+    } catch (error) {
+      res.status(500).send(`
+        <h1>JoRA Error</h1>
+        <p>Could not load interface files.</p>
+        <p>Error: ${error.message}</p>
+      `);
+    }
   });
-
+  
   // API Routes
   
   // Get all tasks
@@ -208,66 +175,17 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
     }
   });
   
-  // Catch-all: serve the main app for any non-API routes
-  app.get('*', (req, res) => {
-    if (req.path.startsWith('/api/')) return;
-    
-    try {
-      const indexPath = path.join(__dirname, '../web/index.html');
-      const indexContent = fs.readFileSync(indexPath, 'utf8');
-      res.send(indexContent);
-    } catch (error) {
-      res.status(500).send(`
-        <h1>JoRA Error</h1>
-        <p>Could not load interface files.</p>
-        <p>Error: ${error.message}</p>
-      `);
-    }
-  });
-  
   // Start server
-  const server = app.listen(port, '0.0.0.0', async () => {
+  const server = app.listen(port, 'localhost', () => {
     const url = `http://localhost:${port}`;
     console.log(`🎯 JoRA running at ${url}`);
-    console.log(`🌐 Also available at http://0.0.0.0:${port}`);
+    console.log('📋 Open your browser to start managing tasks');
+    console.log('⏹️  Press Ctrl+C to stop');
     
-    // Warm up the server with a self-test
-    try {
-      console.log('🔄 Testing server responsiveness...');
-      const http = require('http');
-      
-      const testReq = http.get(`http://localhost:${port}/health`, (res) => {
-        let data = '';
-        res.on('data', (chunk) => data += chunk);
-        res.on('end', () => {
-          if (res.statusCode === 200) {
-            console.log('✅ Server is responding correctly');
-            console.log('📋 Open your browser to start managing tasks');
-            console.log('⏹️  Press Ctrl+C to stop');
-            
-            if (openBrowser) {
-              open(url).catch(() => {
-                console.log('💡 Could not open browser automatically. Navigate to the URL above.');
-              });
-            }
-          }
-        });
+    if (openBrowser) {
+      open(url).catch(() => {
+        console.log('💡 Could not open browser automatically. Navigate to the URL above.');
       });
-      
-      testReq.on('error', (err) => {
-        console.warn('⚠️  Self-test failed:', err.message);
-        console.log('📋 Server should still work, try accessing manually');
-      });
-      
-      testReq.setTimeout(2000, () => {
-        testReq.destroy();
-        console.warn('⚠️  Self-test timeout, but server should work');
-      });
-      
-    } catch (error) {
-      console.warn('⚠️  Could not run self-test:', error.message);
-      console.log('📋 Open your browser to start managing tasks');
-      console.log('⏹️  Press Ctrl+C to stop');
     }
   });
   
