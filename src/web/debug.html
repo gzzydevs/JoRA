@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JoRA - Debug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .status { 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 4px; 
+            font-weight: bold;
+        }
+        .loading { background: #e3f2fd; color: #1976d2; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 JoRA - Debug Mode</h1>
+        <div class="status loading">Testing JavaScript and API...</div>
+        <div id="results"></div>
+        
+        <h2>Manual Tests:</h2>
+        <button onclick="testAPI()">Test API</button>
+        <button onclick="testConsole()">Test Console</button>
+        
+        <script>
+            function testAPI() {
+                fetch('/api/project')
+                    .then(r => r.json())
+                    .then(data => {
+                        document.getElementById('results').innerHTML = 
+                            '<div style="background: #e8f5e8; padding: 10px; margin: 10px 0; border-radius: 4px;">' +
+                            '<strong>API Working!</strong><br>' +
+                            'Project: ' + data.config.name + '<br>' +
+                            'Version: ' + data.config.currentVersion +
+                            '</div>';
+                    })
+                    .catch(err => {
+                        document.getElementById('results').innerHTML = 
+                            '<div style="background: #ffebee; padding: 10px; margin: 10px 0; border-radius: 4px;">' +
+                            '<strong>API Error:</strong> ' + err.message +
+                            '</div>';
+                    });
+            }
+            
+            function testConsole() {
+                console.log('Console test from button click');
+                alert('Check console for log message');
+            }
+        </script>
+    </div>
+    
+    <script src="debug.js"></script>
+</body>
+</html>

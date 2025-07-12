@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JoRA - Task Management</title>
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="logo">
+                        🎯 <span>JoRA</span>
+                    </h1>
+                    <div class="project-info">
+                        <span id="project-name">Loading...</span>
+                        <span class="version" id="project-version">v0.0.0</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-outline" id="theme-toggle-btn">🌙 Dark</button>
+                    <button class="btn btn-outline" id="backlog-btn">📋 Backlog</button>
+                    <div class="version-selector">
+                        <select id="version-select" class="version-dropdown">
+                            <option value="current">🏃 Current Version</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-secondary" id="new-author-btn">+ Author</button>
+                    <button class="btn btn-secondary" id="new-epic-btn">+ Epic</button>
+                    <button class="btn btn-primary" id="new-task-btn">+ Task</button>
+                    <button class="btn btn-success" id="release-btn">🚀 Release</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Filters and Stats -->
+            <div class="controls">
+                <div class="filters">
+                    <select id="epic-filter" class="filter-select">
+                        <option value="">All Epics</option>
+                    </select>
+                    <select id="author-filter" class="filter-select">
+                        <option value="">All Authors</option>
+                    </select>
+                    <input type="text" id="search-input" placeholder="Search tasks..." class="search-input">
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-number" id="todo-count">0</span>
+                        <span class="stat-label">To Do</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" id="progress-count">0</span>
+                        <span class="stat-label">In Progress</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" id="ready-count">0</span>
+                        <span class="stat-label">Ready</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kanban Board -->
+            <div class="kanban-board" id="kanban-view">
+                <div class="kanban-column" data-state="todo">
+                    <div class="column-header">
+                        <h3>📝 To Do</h3>
+                        <span class="task-count" id="todo-column-count">0</span>
+                    </div>
+                    <div class="task-list" id="todo-tasks">
+                        <!-- Tasks will be dynamically added here -->
+                    </div>
+                </div>
+
+                <div class="kanban-column" data-state="in_progress">
+                    <div class="column-header">
+                        <h3>🔄 In Progress</h3>
+                        <span class="task-count" id="progress-column-count">0</span>
+                    </div>
+                    <div class="task-list" id="progress-tasks">
+                        <!-- Tasks will be dynamically added here -->
+                    </div>
+                </div>
+
+                <div class="kanban-column" data-state="ready_to_release">
+                    <div class="column-header">
+                        <h3>✅ Ready to Release</h3>
+                        <span class="task-count" id="ready-column-count">0</span>
+                    </div>
+                    <div class="task-list" id="ready-tasks">
+                        <!-- Tasks will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Release View - Tasks by Type -->
+            <div class="release-view" id="release-view" style="display: none;">
+                <div class="release-header">
+                    <h2 id="release-title">Version 0.0.0</h2>
+                    <p id="release-description">Release description</p>
+                    <div class="release-meta">
+                        <span id="release-date">Generated on: N/A</span>
+                        <span id="release-task-count">0 tasks</span>
+                    </div>
+                </div>
+                
+                <div class="type-columns">
+                    <div class="type-column" data-type="feature">
+                        <div class="column-header">
+                            <h3>🚀 Features</h3>
+                            <span class="task-count" id="feature-count">0</span>
+                        </div>
+                        <div class="task-list" id="feature-tasks">
+                            <!-- Feature tasks will be here -->
+                        </div>
+                    </div>
+
+                    <div class="type-column" data-type="fix">
+                        <div class="column-header">
+                            <h3>🐛 Bug Fixes</h3>
+                            <span class="task-count" id="fix-count">0</span>
+                        </div>
+                        <div class="task-list" id="fix-tasks">
+                            <!-- Bug fix tasks will be here -->
+                        </div>
+                    </div>
+
+                    <div class="type-column" data-type="hotfix">
+                        <div class="column-header">
+                            <h3>🔥 Hotfixes</h3>
+                            <span class="task-count" id="hotfix-count">0</span>
+                        </div>
+                        <div class="task-list" id="hotfix-tasks">
+                            <!-- Hotfix tasks will be here -->
+                        </div>
+                    </div>
+
+                    <div class="type-column" data-type="poc">
+                        <div class="column-header">
+                            <h3>🧪 POCs</h3>
+                            <span class="task-count" id="poc-count">0</span>
+                        </div>
+                        <div class="task-list" id="poc-tasks">
+                            <!-- POC tasks will be here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">New Task</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="task-form">
+                    <div class="form-group">
+                        <label for="task-title">Title *</label>
+                        <input type="text" id="task-title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="task-description">Description (Markdown supported)</label>
+                        <textarea id="task-description" rows="4" placeholder="**Bold text**, *italic*, `code`, etc."></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task-estimated-points">Estimated Points</label>
+                            <input type="number" id="task-estimated-points" min="0" step="0.5" placeholder="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="task-estimated-date">Estimated Completion Date</label>
+                            <input type="date" id="task-estimated-date">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task-epic">Epic</label>
+                            <select id="task-epic">
+                                <option value="">No Epic</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="task-type">Type</label>
+                            <select id="task-type">
+                                <option value="feature">🚀 Feature</option>
+                                <option value="fix">🐛 Bug Fix</option>
+                                <option value="hotfix">🔥 Hotfix</option>
+                                <option value="poc">🧪 POC</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="task-priority">Priority</label>
+                            <select id="task-priority">
+                                <option value="very_low">Very Low</option>
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                                <option value="very_high">Very High</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task-author">Author</label>
+                            <select id="task-author">
+                                <!-- Authors will be loaded dynamically -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="task-assignee">Assignee</label>
+                            <select id="task-assignee">
+                                <option value="">Unassigned</option>
+                                <!-- Authors will be loaded dynamically -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="task-state">State</label>
+                            <select id="task-state">
+                                <option value="todo">To Do</option>
+                                <option value="in_progress">In Progress</option>
+                                <option value="ready_to_release">Ready to Release</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <div></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="task-tags">Tags</label>
+                        <div id="task-tags" class="tag-selector">
+                            <!-- Tags will be loaded dynamically -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Subtasks</label>
+                        <div id="subtasks-container">
+                            <!-- Subtasks will be added dynamically -->
+                        </div>
+                        <button type="button" id="add-subtask-btn" class="btn btn-outline">+ Add Subtask</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Images</label>
+                        <div id="image-upload-area" class="image-upload-area">
+                            <p>Paste images with Ctrl+V or drag & drop</p>
+                            <input type="file" id="image-input" accept="image/*" multiple style="display: none;">
+                            <button type="button" id="browse-images-btn" class="btn btn-outline">Browse Images</button>
+                        </div>
+                        <div id="image-preview-container">
+                            <!-- Image previews will appear here -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancel-task-btn">Cancel</button>
+                <button type="button" class="btn btn-danger" id="delete-task-btn" style="display: none;">Delete</button>
+                <button type="submit" form="task-form" class="btn btn-primary" id="save-task-btn">Save Task</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Author Modal -->
+    <div id="author-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>New Author</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="author-form">
+                    <div class="form-group">
+                        <label for="author-name">Name *</label>
+                        <input type="text" id="author-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="author-email">Email</label>
+                        <input type="email" id="author-email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="author-avatar">Avatar Image</label>
+                        <div class="avatar-upload-area">
+                            <input type="file" id="author-avatar-input" accept="image/*">
+                            <div id="avatar-preview" class="avatar-preview">
+                                <span>No avatar selected</span>
+                            </div>
+                        </div>
+                        <small>Will be automatically resized to 32x32, 64x64, and 128x128 pixels</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancel-author-btn">Cancel</button>
+                <button type="submit" form="author-form" class="btn btn-primary">Create Author</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Backlog View -->
+    <div id="backlog-view" class="view" style="display: none;">
+        <div class="view-header">
+            <h2>📋 Backlog</h2>
+            <div class="backlog-controls">
+                <select id="backlog-sort">
+                    <option value="createdAt-desc">Newest First</option>
+                    <option value="createdAt-asc">Oldest First</option>
+                    <option value="updatedAt-desc">Recently Updated</option>
+                    <option value="priority-desc">High Priority First</option>
+                    <option value="estimatedPoints-desc">Most Points First</option>
+                </select>
+                <select id="backlog-tag-filter">
+                    <option value="">All Tags</option>
+                </select>
+                <select id="backlog-assignee-filter">
+                    <option value="">All Assignees</option>
+                </select>
+                <button class="btn btn-secondary" id="back-to-kanban">← Back to Kanban</button>
+            </div>
+        </div>
+        <div id="backlog-list" class="backlog-list">
+            <!-- Backlog items will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Current Version View -->
+    <div id="current-version-view" class="view" style="display: none;">
+        <div class="view-header">
+            <h2>🏃 Current Version Sprint</h2>
+            <div class="sprint-controls">
+                <span id="sprint-points-total">0 points planned</span>
+                <button class="btn btn-secondary" id="back-to-kanban-2">← Back to Kanban</button>
+            </div>
+        </div>
+        <div class="sprint-board">
+            <!-- Similar to kanban but filtered for current version tasks -->
+            <div class="kanban-column" data-state="todo">
+                <div class="column-header">
+                    <h3>📝 Sprint To Do</h3>
+                    <span class="task-count" id="sprint-todo-count">0</span>
+                </div>
+                <div class="task-list" id="sprint-todo-tasks"></div>
+            </div>
+            <div class="kanban-column" data-state="in_progress">
+                <div class="column-header">
+                    <h3>🔄 Sprint In Progress</h3>
+                    <span class="task-count" id="sprint-progress-count">0</span>
+                </div>
+                <div class="task-list" id="sprint-progress-tasks"></div>
+            </div>
+            <div class="kanban-column" data-state="ready_to_release">
+                <div class="column-header">
+                    <h3>✅ Sprint Ready</h3>
+                    <span class="task-count" id="sprint-ready-count">0</span>
+                </div>
+                <div class="task-list" id="sprint-ready-tasks"></div>
+            </div>
+        </div>
+    </div>
+    <div id="epic-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>New Epic</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="epic-form">
+                    <div class="form-group">
+                        <label for="epic-name">Name *</label>
+                        <input type="text" id="epic-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="epic-description">Description</label>
+                        <textarea id="epic-description" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="epic-color">Color</label>
+                        <input type="color" id="epic-color" value="#6366f1">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancel-epic-btn">Cancel</button>
+                <button type="submit" form="epic-form" class="btn btn-primary">Create Epic</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Release Modal -->
+    <div id="release-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Generate Release</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="release-preview">
+                    <!-- Release preview will be loaded here -->
+                </div>
+                <form id="release-form">
+                    <div class="form-group">
+                        <label for="release-version">Version *</label>
+                        <input type="text" id="release-version" placeholder="1.0.0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="release-description">Release Notes</label>
+                        <textarea id="release-description" rows="4" placeholder="What's new in this release?"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancel-release-btn">Cancel</button>
+                <button type="submit" form="release-form" class="btn btn-success">🚀 Generate Release</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

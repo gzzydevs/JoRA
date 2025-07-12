@@ -1,0 +1,41 @@
+{
+  "name": "jora",
+  "version": "1.0.0",
+  "description": "JoRA - A simple, offline task management tool (no Jira needed)",
+  "main": "src/cli.js",
+  "bin": {
+    "jora": "src/cli.js"
+  },
+  "scripts": {
+    "start": "node src/cli.js",
+    "dev": "node src/cli.js",
+    "build": "npm run build:linux && npm run build:win && npm run build:mac",
+    "build:linux": "pkg . --targets node18-linux-x64 --output dist/jora-linux",
+    "build:win": "pkg . --targets node18-win-x64 --output dist/jora-win.exe",
+    "build:mac": "pkg . --targets node18-macos-x64 --output dist/jora-mac",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "pkg": {
+    "assets": [
+      "src/web/**/*"
+    ],
+    "outputPath": "dist"
+  },
+  "keywords": [
+    "task-management",
+    "kanban",
+    "offline",
+    "project-management",
+    "tickets"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "open": "^8.4.0",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
+  }
+}

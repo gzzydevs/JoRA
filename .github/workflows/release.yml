@@ -1,0 +1,92 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build binaries
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build binaries
+      run: npm run build
+      
+    - name: Upload Linux binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: jora-linux
+        path: dist/jora-linux
+        
+    - name: Upload Windows binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: jora-win
+        path: dist/jora-win.exe
+        
+    - name: Upload macOS binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: jora-mac
+        path: dist/jora-mac
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: dist/
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          dist/jora-linux/jora-linux
+          dist/jora-win/jora-win.exe
+          dist/jora-mac/jora-mac
+        generate_release_notes: true
+        body: |
+          ## 🎯 JoRA Release
+          
+          **Cross-platform task management without the enterprise bloat!**
+          
+          ### 📥 Download
+          - **Linux**: `jora-linux`
+          - **Windows**: `jora-win.exe`  
+          - **macOS**: `jora-mac`
+          
+          ### 🚀 Quick Start
+          ```bash
+          # Download the binary for your platform
+          # Put it in your project: mkdir tools && mv jora-* tools/jora
+          ./tools/jora init
+          ./tools/jora
+          ```
+          
+          ### ✨ What's New
+          See the generated release notes below for all changes in this version.
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
