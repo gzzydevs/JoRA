@@ -214,8 +214,8 @@ class JoRAApp {
         });
         
         // View navigation
-        document.getElementById('back-to-kanban').addEventListener('click', () => this.showKanbanView());
-        document.getElementById('back-to-kanban-2').addEventListener('click', () => this.showKanbanView());
+        document.getElementById('back-to-kanban').addEventListener('click', async () => await this.showKanbanView());
+        document.getElementById('back-to-kanban-2').addEventListener('click', async () => await this.showKanbanView());
         
         // Filters
         document.getElementById('epic-filter').addEventListener('change', (e) => {
@@ -372,10 +372,11 @@ class JoRAApp {
             return;
         }
         
-        const states = ['todo', 'in_progress', 'ready_to_release'];
+        const states = ['todo', 'in_progress', 'in_review', 'ready_to_release'];
         const containers = {
             'todo': document.getElementById('todo-tasks'),
             'in_progress': document.getElementById('progress-tasks'),
+            'in_review': document.getElementById('review-tasks'),
             'ready_to_release': document.getElementById('ready-tasks')
         };
         
@@ -474,15 +475,19 @@ class JoRAApp {
         const counts = {
             todo: tasks.filter(t => t.state === 'todo').length,
             in_progress: tasks.filter(t => t.state === 'in_progress').length,
+            in_review: tasks.filter(t => t.state === 'in_review').length,
             ready_to_release: tasks.filter(t => t.state === 'ready_to_release').length
         };
         
         document.getElementById('todo-count').textContent = counts.todo;
         document.getElementById('progress-count').textContent = counts.in_progress;
+        const reviewCountEl = document.getElementById('review-count');
+        if (reviewCountEl) reviewCountEl.textContent = counts.in_review;
         document.getElementById('ready-count').textContent = counts.ready_to_release;
         
         document.getElementById('todo-column-count').textContent = counts.todo;
         document.getElementById('progress-column-count').textContent = counts.in_progress;
+        document.getElementById('review-column-count').textContent = counts.in_review;
         document.getElementById('ready-column-count').textContent = counts.ready_to_release;
     }
     
@@ -835,14 +840,29 @@ class JoRAApp {
         });
     }
     
-    handleVersionChange(version) {
+    async handleVersionChange(version) {
         this.selectedVersion = version;
         
         if (version === 'current') {
-            this.showKanbanView();
+            this.currentView = 'kanban';
+            await this.showKanbanView();
         } else {
+            this.currentView = 'release';
             this.showReleaseView(version);
         }
+    }
+    
+    async showKanbanView() {
+        // Hide release view and show kanban board
+        document.getElementById('release-view').style.display = 'none';
+        document.getElementById('kanban-view').style.display = 'block';
+        this.currentView = 'kanban';
+        
+        // Reload current tasks when returning from release view
+        await this.loadTasks();
+        
+        // Re-render current tasks
+        this.renderTasks();
     }
     
     showReleaseView(version) {
@@ -857,12 +877,6 @@ class JoRAApp {
         document.getElementById('release-view').style.display = 'block';
         
         this.renderReleaseView(release);
-    }
-    
-    showKanbanView() {
-        document.getElementById('kanban-view').style.display = 'block';
-        document.getElementById('release-view').style.display = 'none';
-        this.currentView = 'kanban';
     }
     
     renderReleaseView(release) {
@@ -992,12 +1006,6 @@ class JoRAApp {
         document.querySelector('.main-content').style.display = 'none';
         document.getElementById('current-version-view').style.display = 'block';
         this.loadCurrentVersionData();
-    }
-    
-    showKanbanView() {
-        document.querySelector('.main-content').style.display = 'block';
-        document.getElementById('backlog-view').style.display = 'none';
-        document.getElementById('current-version-view').style.display = 'none';
     }
     
     async loadBacklogData() {

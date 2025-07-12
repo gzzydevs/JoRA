@@ -40,6 +40,26 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   app.use(express.static(webPath));
   
   // API Routes
+
+  // Diagnostic endpoint for WSL/VS Code debugging
+  app.get('/wsl-test', (req, res) => {
+    const headers = req.headers;
+    const connection = {
+      remoteAddress: req.connection.remoteAddress,
+      remotePort: req.connection.remotePort,
+      localAddress: req.connection.localAddress,
+      localPort: req.connection.localPort
+    };
+    
+    res.json({
+      message: '🎉 WSL server is accessible!',
+      timestamp: new Date().toISOString(),
+      headers,
+      connection,
+      userAgent: req.get('User-Agent'),
+      host: req.get('Host')
+    });
+  });
   
   // Get all tasks
   app.get('/api/tasks', async (req, res) => {
@@ -182,16 +202,17 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   });
   
   // Start server
-  const server = app.listen(port, 'localhost', () => {
+  const server = app.listen(port, '0.0.0.0', () => {
     const url = `http://localhost:${port}`;
     console.log(`🎯 JoRA running at ${url}`);
+    console.log(`🌐 WSL: Also available at http://0.0.0.0:${port}`);
+    console.log(`🔗 Windows: Try http://[::1]:${port} or http://127.0.0.1:${port}`);
     console.log('📋 Open your browser to start managing tasks');
     console.log('⏹️  Press Ctrl+C to stop');
     
     if (openBrowser) {
-      open(url).catch(() => {
-        console.log('💡 Could not open browser automatically. Navigate to the URL above.');
-      });
+      // Don't auto-open in WSL, it's confusing
+      console.log('💡 Auto-open disabled in WSL. Open browser manually.');
     }
   });
   

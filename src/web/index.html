@@ -60,6 +60,10 @@
                         <span class="stat-label">In Progress</span>
                     </div>
                     <div class="stat">
+                        <span class="stat-number" id="review-count">0</span>
+                        <span class="stat-label">In Review</span>
+                    </div>
+                    <div class="stat">
                         <span class="stat-number" id="ready-count">0</span>
                         <span class="stat-label">Ready</span>
                     </div>
@@ -84,6 +88,16 @@
                         <span class="task-count" id="progress-column-count">0</span>
                     </div>
                     <div class="task-list" id="progress-tasks">
+                        <!-- Tasks will be dynamically added here -->
+                    </div>
+                </div>
+
+                <div class="kanban-column" data-state="in_review">
+                    <div class="column-header">
+                        <h3>👀 In Review</h3>
+                        <span class="task-count" id="review-column-count">0</span>
+                    </div>
+                    <div class="task-list" id="review-tasks">
                         <!-- Tasks will be dynamically added here -->
                     </div>
                 </div>
@@ -239,6 +253,7 @@
                             <select id="task-state">
                                 <option value="todo">To Do</option>
                                 <option value="in_progress">In Progress</option>
+                                <option value="in_review">In Review</option>
                                 <option value="ready_to_release">Ready to Release</option>
                             </select>
                         </div>

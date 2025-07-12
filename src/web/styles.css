@@ -270,6 +270,34 @@ body {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
+/* Drag and Drop Effects */
+.task-card.dragging {
+    transform: rotate(-5deg) scale(1.05);
+    opacity: 0.8;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    z-index: 1000;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.task-card[draggable="true"]:hover {
+    cursor: grab;
+}
+
+.task-card[draggable="true"]:active {
+    cursor: grabbing;
+}
+
+.kanban-column.drag-over {
+    background: rgba(99, 102, 241, 0.1);
+    border: 2px dashed #6366f1;
+    transform: scale(1.02);
+    transition: all 0.2s ease;
+}
+
+.kanban-column.drag-over .task-list {
+    min-height: 200px;
+}
+
 .task-header {
     display: flex;
     justify-content: space-between;
@@ -599,6 +627,8 @@ body {
     cursor: pointer;
     transition: all 0.2s;
     appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
     background-position: right 0.5rem center;
     background-repeat: no-repeat;
@@ -751,6 +781,9 @@ body.dark-mode .version-dropdown {
     border-color: rgba(255, 255, 255, 0.2);
     color: #e5e7eb;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23e5e7eb' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
 }
 
 body.dark-mode .version-dropdown:hover {
@@ -893,150 +926,52 @@ body.dark-mode .task-card {
 
 body.dark-mode .task-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    background: rgba(52, 52, 84, 0.9);
 }
 
+body.dark-mode .task-card.dragging {
+    transform: rotate(-5deg) scale(1.05);
+    opacity: 0.8;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+body.dark-mode .kanban-column.drag-over {
+    background: rgba(99, 102, 241, 0.2);
+    border: 2px dashed #818cf8;
+    transform: scale(1.02);
+}
+
+/* Dark mode task elements */
 body.dark-mode .task-title {
-    color: #ffffff;
+    color: #f9fafb;
 }
 
 body.dark-mode .task-description {
-    color: #b0b0b0;
+    color: #d1d5db;
 }
 
 body.dark-mode .task-meta {
-    color: #888;
+    color: #9ca3af;
 }
 
-body.dark-mode .priority-high {
-    border-left-color: #ff6b6b;
+body.dark-mode .task-priority {
+    color: white;
 }
 
-body.dark-mode .priority-medium {
-    border-left-color: #ffa726;
+body.dark-mode .task-epic {
+    background: rgba(255, 255, 255, 0.1) !important;
 }
 
-body.dark-mode .priority-low {
-    border-left-color: #66bb6a;
-}
-
-body.dark-mode .tag {
+body.dark-mode .task-tag {
     background: rgba(255, 255, 255, 0.1);
-    color: #e0e0e0;
+    color: #e5e7eb;
 }
 
-body.dark-mode .modal {
-    background: rgba(0, 0, 0, 0.8);
-}
-
-body.dark-mode .modal-content {
-    background: #2a2a4a;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #e0e0e0;
-}
-
-body.dark-mode .modal-header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-body.dark-mode .modal-header h2 {
-    color: #ffffff;
-}
-
-body.dark-mode .form-group label {
-    color: #e0e0e0;
-}
-
-body.dark-mode .form-control {
-    background: rgba(42, 42, 74, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-body.dark-mode .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-body.dark-mode .form-control::placeholder {
-    color: #888;
-}
-
-body.dark-mode .btn {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-body.dark-mode .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-body.dark-mode .btn-secondary {
-    background: rgba(108, 117, 125, 0.8);
-}
-
-body.dark-mode .btn-success {
-    background: rgba(40, 167, 69, 0.8);
-}
-
-body.dark-mode .btn-outline {
-    background: rgba(255, 255, 255, 0.05);
-    color: #e0e0e0;
-}
-
-body.dark-mode .btn-outline:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-body.dark-mode .filter-select,
-body.dark-mode .search-input {
-    background: rgba(42, 42, 74, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-body.dark-mode .stats {
-    color: #e0e0e0;
-}
-
-body.dark-mode .stat-number {
-    color: #ffffff;
-}
-
-body.dark-mode .backlog-view,
-body.dark-mode .current-version-view {
-    background: rgba(26, 26, 46, 0.3);
-}
-
-body.dark-mode .backlog-item {
-    background: rgba(42, 42, 74, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-body.dark-mode .backlog-item:hover {
-    background: rgba(42, 42, 74, 0.8);
-}
-
-body.dark-mode .image-preview {
-    border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-body.dark-mode .success-message {
-    background: rgba(40, 167, 69, 0.8);
-    color: #ffffff;
-}
-
-body.dark-mode .error-message {
-    background: rgba(220, 53, 69, 0.8);
-    color: #ffffff;
-}
-
-body.dark-mode .loading-overlay {
-    background: rgba(26, 26, 46, 0.9);
-}
-
-body.dark-mode .spinner {
-    border-color: rgba(255, 255, 255, 0.1);
-    border-top-color: #667eea;
+body.dark-mode .empty-state {
+    color: #6b7280;
 }
 
 /* Theme toggle button specific styles */
