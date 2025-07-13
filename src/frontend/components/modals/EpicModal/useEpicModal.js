@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTaskContext } from '../../../contexts/TaskContext';
 import api from '../../../services/api';
 
 export const useEpicModal = (epicId) => {
+  const navigate = useNavigate();
   const { 
     tasks, 
     epics, 
     authors, 
-    tags, 
+    tags,
+    currentVersion,
     createEpic, 
     updateEpic, 
     deleteEpic 
@@ -42,7 +45,7 @@ export const useEpicModal = (epicId) => {
               name: foundEpic.name || '',
               description: foundEpic.description || '',
               color: foundEpic.color || '#3b82f6',
-              status: foundEpic.status || 'planning',
+              status: foundEpic.status || 'in_progress',
               priority: foundEpic.priority || 'medium',
               startDate: foundEpic.startDate || '',
               endDate: foundEpic.endDate || ''
@@ -57,7 +60,7 @@ export const useEpicModal = (epicId) => {
             name: '',
             description: '',
             color: '#3b82f6',
-            status: 'planning',
+            status: 'in_progress',
             priority: 'medium',
             startDate: '',
             endDate: ''
@@ -102,6 +105,11 @@ export const useEpicModal = (epicId) => {
   };
 
   const handleSave = async () => {
+    if (!formData.name?.trim()) {
+      alert('Epic name is required.');
+      return;
+    }
+
     try {
       setIsLoading(true);
       
@@ -118,8 +126,10 @@ export const useEpicModal = (epicId) => {
         setEpic(epicData);
       } else {
         // Create new epic
-        await createEpic(epicData);
-        setEpic(epicData);
+        const newEpic = await createEpic(epicData);
+        if (newEpic) {
+          navigate(`/epic/${newEpic.id}`);
+        }
       }
 
       setIsEditing(false);
@@ -134,16 +144,25 @@ export const useEpicModal = (epicId) => {
   const handleDelete = async () => {
     if (!epic) return;
     
-    if (window.confirm('Are you sure you want to delete this epic? This will not delete associated tasks.')) {
-      try {
-        setIsLoading(true);
-        await deleteEpic(epic.id);
-        // Navigation will be handled by the parent component
-      } catch (err) {
-        console.error('Error deleting epic:', err);
-        setError('Failed to delete epic');
-        setIsLoading(false);
+    const epicTasks = tasks.filter(task => task.epic === epic.id);
+    if (epicTasks.length > 0) {
+      if (!window.confirm(`This epic has ${epicTasks.length} associated tasks. Are you sure you want to delete it?`)) {
+        return;
       }
+    } else {
+      if (!window.confirm('Are you sure you want to delete this epic?')) {
+        return;
+      }
+    }
+    
+    try {
+      setIsLoading(true);
+      await deleteEpic(epic.id);
+      // Navigation will be handled by the parent component
+    } catch (err) {
+      console.error('Error deleting epic:', err);
+      setError('Failed to delete epic');
+      setIsLoading(false);
     }
   };
 
@@ -155,7 +174,7 @@ export const useEpicModal = (epicId) => {
           name: epic.name || '',
           description: epic.description || '',
           color: epic.color || '#3b82f6',
-          status: epic.status || 'planning',
+          status: epic.status || 'in_progress',
           priority: epic.priority || 'medium',
           startDate: epic.startDate || '',
           endDate: epic.endDate || ''
@@ -170,6 +189,7 @@ export const useEpicModal = (epicId) => {
     tasks: epicTasks,
     authors,
     tags,
+    currentVersion,
     isLoading,
     isEditing,
     formData,

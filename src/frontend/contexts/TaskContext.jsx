@@ -33,6 +33,8 @@ const TaskContext = createContext({
   
   // Epic actions
   createEpic: async () => {},
+  updateEpic: async () => {},
+  deleteEpic: async () => {},
   
   // Author actions
   createAuthor: async () => {},
@@ -89,6 +91,11 @@ export const TaskProvider = ({ children }) => {
       return acc;
     }, {});
   }, [filteredTasks]);
+
+  // Current version computed value
+  const currentVersion = useMemo(() => {
+    return selectedVersion === 'current' ? 'current' : selectedVersion;
+  }, [selectedVersion]);
 
   // Load initial data
   useEffect(() => {
@@ -249,6 +256,44 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+  const updateEpic = async (epicData) => {
+    try {
+      setIsLoading(true);
+      const updatedEpic = await apiService.updateEpic(epicData.id, epicData);
+      
+      // Update local state immediately without full reload
+      setEpics(prevEpics => 
+        prevEpics.map(epic => 
+          epic.id === epicData.id ? { ...epic, ...epicData } : epic
+        )
+      );
+      
+      showSuccess('Epic updated successfully');
+      return updatedEpic;
+    } catch (err) {
+      console.error('Error updating epic:', err);
+      setError('Failed to update epic: ' + err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const deleteEpic = async (epicId) => {
+    try {
+      setIsLoading(true);
+      await apiService.deleteEpic(epicId);
+      await loadEpics(); // Reload to get updated data
+      showSuccess('Epic deleted successfully');
+    } catch (err) {
+      console.error('Error deleting epic:', err);
+      setError('Failed to delete epic: ' + err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Author actions
   const createAuthor = async (authorData) => {
     try {
@@ -313,6 +358,7 @@ export const TaskProvider = ({ children }) => {
     
     // State
     selectedVersion,
+    currentVersion,
     filters,
     isLoading,
     error,
@@ -335,6 +381,8 @@ export const TaskProvider = ({ children }) => {
     
     // Epic actions
     createEpic,
+    updateEpic,
+    deleteEpic,
     
     // Author actions
     createAuthor,

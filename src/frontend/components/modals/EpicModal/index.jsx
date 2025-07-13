@@ -1,6 +1,7 @@
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import { useEpicModal } from './useEpicModal';
+import Task from '../../Task';
 import './styles.scss';
 
 const EpicModal = ({ 
@@ -10,11 +11,15 @@ const EpicModal = ({
   showHeader = false 
 }) => {
   const navigate = useNavigate();
+  const { id: paramId } = useParams();
+  const actualEpicId = epicId || paramId;
+  
   const {
     epic,
     tasks,
     authors,
     tags,
+    currentVersion,
     isLoading,
     isEditing,
     formData,
@@ -24,7 +29,7 @@ const EpicModal = ({
     toggleEdit,
     error,
     taskProgress
-  } = useEpicModal(epicId);
+  } = useEpicModal(actualEpicId);
 
   const handleClose = () => {
     if (isModal && onClose) {
@@ -44,7 +49,7 @@ const EpicModal = ({
     }
   };
 
-  if (isLoading) {
+  if (isLoading && actualEpicId) {
     return (
       <div className={isModal ? "modal-backdrop" : "epic-modal-page"}>
         <div className="epic-modal">
@@ -57,13 +62,13 @@ const EpicModal = ({
     );
   }
 
-  if (error || !epic) {
+  if (error) {
     return (
       <div className={isModal ? "modal-backdrop" : "epic-modal-page"}>
         <div className="epic-modal">
           <div className="error-container">
             <div className="error-message">
-              ❌ {error || 'Epic not found'}
+              ❌ {error}
             </div>
             <button className="btn btn-primary" onClick={handleClose}>
               {isModal ? 'Close' : 'Go Back'}
@@ -74,6 +79,26 @@ const EpicModal = ({
     );
   }
 
+  const isNewEpic = !actualEpicId;
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'in_progress': return '🔄';
+      case 'completed': return '✅';
+      case 'on_hold': return '⏸️';
+      default: return '📋';
+    }
+  };
+
+  const getStatusLabel = (status) => {
+    switch (status) {
+      case 'in_progress': return 'En Curso';
+      case 'completed': return 'Finalizada';
+      case 'on_hold': return 'No Finalizable';
+      default: return status;
+    }
+  };
+
   const content = (
     <div className="epic-modal">
       {showHeader && (
@@ -83,7 +108,7 @@ const EpicModal = ({
               ← Back to Kanban
             </Link>
           </div>
-          <h1>Epic Details</h1>
+          <h1>{isNewEpic ? 'New Epic' : 'Epic Details'}</h1>
         </div>
       )}
 
@@ -116,12 +141,14 @@ const EpicModal = ({
           </div>
           
           <div className="epic-modal-actions-right">
-            <button 
-              className="btn btn-danger btn-sm" 
-              onClick={handleDelete}
-            >
-              🗑️ Delete
-            </button>
+            {!isNewEpic && (
+              <button 
+                className="btn btn-danger btn-sm" 
+                onClick={handleDelete}
+              >
+                🗑️ Delete
+              </button>
+            )}
             <button 
               className="modal-close-btn" 
               onClick={handleClose}
@@ -143,7 +170,7 @@ const EpicModal = ({
                   placeholder="Epic name..."
                 />
               ) : (
-                <div className="epic-display-name">{epic.name}</div>
+                <div className="epic-display-name">{epic?.name}</div>
               )}
             </div>
 
@@ -158,7 +185,7 @@ const EpicModal = ({
                 />
               ) : (
                 <div className="epic-display-description">
-                  {epic.description || <em>No description</em>}
+                  {epic?.description || <em>No description</em>}
                 </div>
               )}
             </div>
@@ -176,9 +203,9 @@ const EpicModal = ({
                   <div className="epic-display-color">
                     <div 
                       className="color-swatch" 
-                      style={{ backgroundColor: epic.color }}
+                      style={{ backgroundColor: epic?.color }}
                     ></div>
-                    {epic.color}
+                    {epic?.color}
                   </div>
                 )}
               </div>
@@ -190,16 +217,13 @@ const EpicModal = ({
                     value={formData.status}
                     onChange={(e) => handleFormChange('status', e.target.value)}
                   >
-                    <option value="planning">📝 Planning</option>
-                    <option value="in_progress">🔄 In Progress</option>
-                    <option value="completed">✅ Completed</option>
-                    <option value="on_hold">⏸️ On Hold</option>
+                    <option value="in_progress">🔄 En Curso</option>
+                    <option value="completed">✅ Finalizada</option>
+                    <option value="on_hold">⏸️ No Finalizable</option>
                   </select>
                 ) : (
-                  <div className={`epic-display-status status-${epic.status?.replace('_', '-')}`}>
-                    {['📝', '🔄', '✅', '⏸️'][
-                      ['planning', 'in_progress', 'completed', 'on_hold'].indexOf(epic.status)
-                    ] || '📝'} {epic.status?.replace('_', ' ') || 'planning'}
+                  <div className={`epic-display-status status-${epic?.status?.replace('_', '-')}`}>
+                    {getStatusIcon(epic?.status)} {getStatusLabel(epic?.status)}
                   </div>
                 )}
               </div>
@@ -217,8 +241,8 @@ const EpicModal = ({
                     <option value="critical">Critical</option>
                   </select>
                 ) : (
-                  <div className={`epic-display-priority priority-${epic.priority?.replace('_', '-')}`}>
-                    {epic.priority?.replace('_', ' ') || 'medium'}
+                  <div className={`epic-display-priority priority-${epic?.priority?.replace('_', '-')}`}>
+                    {epic?.priority?.replace('_', ' ') || 'medium'}
                   </div>
                 )}
               </div>
@@ -235,7 +259,7 @@ const EpicModal = ({
                   />
                 ) : (
                   <div className="epic-display-date">
-                    {epic.startDate ? (
+                    {epic?.startDate ? (
                       new Date(epic.startDate).toLocaleDateString()
                     ) : (
                       <em>No start date</em>
@@ -254,7 +278,7 @@ const EpicModal = ({
                   />
                 ) : (
                   <div className="epic-display-date">
-                    {epic.endDate ? (
+                    {epic?.endDate ? (
                       new Date(epic.endDate).toLocaleDateString()
                     ) : (
                       <em>No end date</em>
@@ -264,79 +288,64 @@ const EpicModal = ({
               </div>
             </div>
 
-            {/* Progress Section */}
-            <div className="epic-progress-section">
-              <h3>Progress</h3>
-              <div className="progress-stats">
-                <div className="progress-bar">
-                  <div 
-                    className="progress-fill" 
-                    style={{ width: `${taskProgress.percentage}%` }}
-                  ></div>
-                </div>
-                <div className="progress-text">
-                  {taskProgress.completed} of {taskProgress.total} tasks completed ({taskProgress.percentage}%)
-                </div>
-              </div>
-              <div className="progress-breakdown">
-                <div className="breakdown-item">
-                  <span className="breakdown-label">To Do:</span>
-                  <span className="breakdown-count">{taskProgress.breakdown.todo}</span>
-                </div>
-                <div className="breakdown-item">
-                  <span className="breakdown-label">In Progress:</span>
-                  <span className="breakdown-count">{taskProgress.breakdown.in_progress}</span>
-                </div>
-                <div className="breakdown-item">
-                  <span className="breakdown-label">In Review:</span>
-                  <span className="breakdown-count">{taskProgress.breakdown.in_review}</span>
-                </div>
-                <div className="breakdown-item">
-                  <span className="breakdown-label">Ready to Release:</span>
-                  <span className="breakdown-count">{taskProgress.breakdown.ready_to_release}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Tasks Section */}
-            <div className="epic-tasks-section">
-              <h3>Tasks ({tasks.length})</h3>
-              {tasks.length > 0 ? (
-                <div className="epic-tasks-list">
-                  {tasks.map(task => (
-                    <div 
-                      key={task.id} 
-                      className="epic-task-item"
-                      onClick={() => handleTaskClick(task.id)}
-                    >
-                      <div className="task-info">
-                        <div className="task-title">{task.title}</div>
-                        <div className="task-meta">
-                          <span className={`task-state state-${task.state.replace('_', '-')}`}>
-                            {task.state.replace('_', ' ')}
-                          </span>
-                          <span className={`task-priority priority-${task.priority.replace('_', '-')}`}>
-                            {task.priority}
-                          </span>
-                          <span className="task-type">{task.type}</span>
-                        </div>
-                      </div>
-                      <div className="task-assignee">
-                        {task.assignee ? (
-                          authors.find(a => a.id === task.assignee)?.name || task.assignee
-                        ) : (
-                          <em>Unassigned</em>
-                        )}
-                      </div>
+            {!isNewEpic && (
+              <>
+                {/* Progress Section */}
+                <div className="epic-progress-section">
+                  <h3>Progress Overview</h3>
+                  <div className="progress-stats">
+                    <div className="progress-bar">
+                      <div 
+                        className="progress-fill" 
+                        style={{ width: `${taskProgress.percentage}%` }}
+                      ></div>
                     </div>
-                  ))}
+                    <div className="progress-text">
+                      {taskProgress.completed} of {taskProgress.total} tasks completed ({taskProgress.percentage}%)
+                    </div>
+                  </div>
+                  <div className="progress-breakdown">
+                    <div className="breakdown-item">
+                      <span className="breakdown-label">To Do:</span>
+                      <span className="breakdown-count">{taskProgress.breakdown.todo}</span>
+                    </div>
+                    <div className="breakdown-item">
+                      <span className="breakdown-label">In Progress:</span>
+                      <span className="breakdown-count">{taskProgress.breakdown.in_progress}</span>
+                    </div>
+                    <div className="breakdown-item">
+                      <span className="breakdown-label">In Review:</span>
+                      <span className="breakdown-count">{taskProgress.breakdown.in_review}</span>
+                    </div>
+                    <div className="breakdown-item">
+                      <span className="breakdown-label">Ready to Release:</span>
+                      <span className="breakdown-count">{taskProgress.breakdown.ready_to_release}</span>
+                    </div>
+                  </div>
                 </div>
-              ) : (
-                <div className="no-tasks">
-                  <em>No tasks in this epic</em>
+
+                {/* Tasks Section */}
+                <div className="epic-tasks-section">
+                  <h3>Associated Tasks {currentVersion && `(${currentVersion})`}</h3>
+                  {tasks.length > 0 ? (
+                    <div className="epic-tasks-list">
+                      {tasks.map(task => (
+                        <div key={task.id} className="task-item">
+                          <Task 
+                            task={task} 
+                            onClick={() => navigate(`/task/${task.id}`)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="no-tasks">
+                      <em>No tasks associated with this epic in the current version.</em>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </>
+            )}
           </div>
         </div>
       </div>

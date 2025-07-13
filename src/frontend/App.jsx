@@ -9,7 +9,9 @@ import BacklogPage from './pages/BacklogPage';
 import ReleasePage from './pages/ReleasePage';
 import TaskDetailPage from './pages/TaskDetailPage';
 import EpicDetailPage from './pages/EpicDetailPage';
+import EpicsPage from './pages/EpicsPage';
 import NewTaskPage from './pages/NewTaskPage';
+import NewEpicPage from './pages/NewEpicPage';
 import './styles/globals.scss';
 
 // Wrap pages with TaskContext
@@ -18,7 +20,9 @@ const BacklogPageWithContext = withTaskContext(BacklogPage);
 const ReleasePageWithContext = withTaskContext(ReleasePage);
 const TaskDetailPageWithContext = withTaskContext(TaskDetailPage);
 const EpicDetailPageWithContext = withTaskContext(EpicDetailPage);
+const EpicsPageWithContext = withTaskContext(EpicsPage);
 const NewTaskPageWithContext = withTaskContext(NewTaskPage);
+const NewEpicPageWithContext = withTaskContext(NewEpicPage);
 
 function App() {
   return (
@@ -32,7 +36,9 @@ function App() {
               <Route path="/release/:version" element={<ReleasePageWithContext />} />
               <Route path="/task/:id" element={<TaskDetailPageWithContext />} />
               <Route path="/tasks/new-task" element={<NewTaskPageWithContext />} />
+              <Route path="/epics" element={<EpicsPageWithContext />} />
               <Route path="/epic/:id" element={<EpicDetailPageWithContext />} />
+              <Route path="/epics/new-epic" element={<NewEpicPageWithContext />} />
             </Routes>
             <ModalManager />
           </div>

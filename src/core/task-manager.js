@@ -148,12 +148,62 @@ class TaskManager {
       name: epicData.name,
       description: epicData.description || '',
       color: epicData.color || '#6366f1',
-      status: epicData.status || 'active'
+      status: epicData.status || 'active',
+      priority: epicData.priority || 'medium',
+      startDate: epicData.startDate || null,
+      endDate: epicData.endDate || null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
     
     await this.saveEpic(epic);
-    this.epics.push(epic);
+    if (this.epics) {
+      this.epics.push(epic);
+    }
     return epic;
+  }
+
+  // Update existing epic
+  async updateEpic(epicId, updates) {
+    try {
+      const epicPath = path.join(this.epicsPath, `${epicId}.json`);
+      const epicContent = await fs.readFile(epicPath, 'utf8');
+      const epic = JSON.parse(epicContent);
+      
+      // Update fields
+      Object.assign(epic, updates, {
+        updatedAt: new Date().toISOString()
+      });
+      
+      await this.saveEpic(epic);
+      return epic;
+    } catch (error) {
+      throw new Error(`Epic ${epicId} not found`);
+    }
+  }
+
+  // Delete epic
+  async deleteEpic(epicId) {
+    try {
+      await fs.unlink(path.join(this.epicsPath, `${epicId}.json`));
+      if (this.epics) {
+        this.epics = this.epics.filter(epic => epic.id !== epicId);
+      }
+      return true;
+    } catch (error) {
+      throw new Error(`Failed to delete epic ${epicId}`);
+    }
+  }
+
+  // Save epic to file
+  async saveEpic(epic) {
+    try {
+      const epicPath = path.join(this.epicsPath, `${epic.id}.json`);
+      await fs.writeFile(epicPath, JSON.stringify(epic, null, 2));
+      return epic;
+    } catch (error) {
+      throw new Error(`Failed to save epic ${epic.id}: ${error.message}`);
+    }
   }
   
   // Create new author

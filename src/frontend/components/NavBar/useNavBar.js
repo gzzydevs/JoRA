@@ -19,6 +19,10 @@ export const useNavBar = () => {
     navigate('/epics/new-epic');
   };
 
+  const handleEpics = () => {
+    navigate('/epics');
+  };
+
   const handleNewAuthor = () => {
     navigate('/authors/new-author');
   };
@@ -35,6 +39,7 @@ export const useNavBar = () => {
     handleBacklog,
     handleNewTask,
     handleNewEpic,
+    handleEpics,
     handleNewAuthor,
     handleRelease,
   };

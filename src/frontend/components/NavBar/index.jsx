@@ -11,6 +11,7 @@ const NavBar = () => {
     handleBacklog,
     handleNewTask,
     handleNewEpic,
+    handleEpics,
     handleNewAuthor,
     handleRelease
   } = useNavBar();
@@ -48,6 +49,14 @@ const NavBar = () => {
             onClick={handleBacklog}
           >
             📋 Backlog
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            onClick={handleEpics}
+          >
+            📦 Épicas
           </button>
 
           <div className="navbar-divider" />

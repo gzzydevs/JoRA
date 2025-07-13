@@ -141,6 +141,26 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       res.status(400).json({ error: error.message });
     }
   });
+
+  // Update epic
+  app.put('/api/epics/:id', async (req, res) => {
+    try {
+      const epic = await taskManager.updateEpic(req.params.id, req.body);
+      res.json(epic);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Delete epic
+  app.delete('/api/epics/:id', async (req, res) => {
+    try {
+      await taskManager.deleteEpic(req.params.id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  });
   
   // Create author
   app.post('/api/authors', async (req, res) => {

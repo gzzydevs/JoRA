@@ -439,3 +439,17 @@
     }
   }
 }
+
+.epic-link {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}

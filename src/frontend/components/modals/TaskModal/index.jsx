@@ -253,7 +253,13 @@ const TaskModal = ({
                 ) : (
                   <div className="task-display-epic">
                     {task?.epic ? (
-                      epics.find(e => e.id === task.epic)?.name || task.epic
+                      <button 
+                        className="epic-link"
+                        onClick={() => navigate(`/epic/${task.epic}`)}
+                        type="button"
+                      >
+                        {epics.find(e => e.id === task.epic)?.name || task.epic}
+                      </button>
                     ) : (
                       <em>No epic</em>
                     )}

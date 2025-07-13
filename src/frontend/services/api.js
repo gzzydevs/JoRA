@@ -71,6 +71,19 @@ class ApiService {
     });
   }
 
+  async updateEpic(epicId, updates) {
+    return this.request(`/api/epics/${epicId}`, {
+      method: 'PUT',
+      body: JSON.stringify(updates)
+    });
+  }
+
+  async deleteEpic(epicId) {
+    return this.request(`/api/epics/${epicId}`, {
+      method: 'DELETE'
+    });
+  }
+
   // Authors
   async getAuthors() {
     return this.request('/api/authors');
