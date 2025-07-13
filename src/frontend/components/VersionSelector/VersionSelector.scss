@@ -1,0 +1,45 @@
+@import '../../styles/variables.scss';
+
+.version-selector {
+  display: flex;
+  align-items: center;
+}
+
+.version-select {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: $radius-md;
+  padding: $spacing-xs $spacing-sm;
+  color: var(--text-primary);
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-fast;
+  min-width: 120px;
+
+  &:hover {
+    background-color: var(--bg-surface-hover);
+    border-color: var(--color-primary);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+
+  option {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    padding: $spacing-xs;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: $mobile) {
+  .version-select {
+    min-width: 100px;
+    font-size: $font-size-xs;
+    padding: calc(#{$spacing-xs} / 2) $spacing-xs;
+  }
+}

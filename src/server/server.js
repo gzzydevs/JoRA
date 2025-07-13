@@ -23,7 +23,19 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   // Root route 
   app.get('/', (req, res) => {
     try {
-      const indexPath = path.join(__dirname, '../web/index.html');
+      // Try to serve the React build first, fallback to old web
+      const reactIndexPath = path.join(__dirname, '../../dist/frontend/index.html');
+      const webIndexPath = path.join(__dirname, '../web/index.html');
+      
+      let indexPath;
+      if (fs.existsSync(reactIndexPath)) {
+        console.log('📦 Serving React frontend');
+        indexPath = reactIndexPath;
+      } else {
+        console.log('⚠️  React build not found, serving legacy frontend');
+        indexPath = webIndexPath;
+      }
+      
       const indexContent = fs.readFileSync(indexPath, 'utf8');
       res.send(indexContent);
     } catch (error) {
@@ -36,8 +48,17 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   });
   
   // Serve static files AFTER the root route
+  const reactBuildPath = path.join(__dirname, '../../dist/frontend');
   const webPath = path.join(__dirname, '../web');
-  app.use(express.static(webPath));
+  
+  // Try React build first, fallback to legacy web
+  if (fs.existsSync(reactBuildPath)) {
+    console.log('📦 Serving React static files from:', reactBuildPath);
+    app.use(express.static(reactBuildPath));
+  } else {
+    console.log('⚠️  React build not found, serving legacy static files from:', webPath);
+    app.use(express.static(webPath));
+  }
   
   // API Routes
 

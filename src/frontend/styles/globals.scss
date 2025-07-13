@@ -1,0 +1,245 @@
+@import './variables.scss';
+@import './themes.scss';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color $transition-normal, color $transition-normal;
+}
+
+#root {
+  height: 100%;
+}
+
+// Global utility classes
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-sm {
+  gap: $spacing-sm;
+}
+
+.gap-md {
+  gap: $spacing-md;
+}
+
+.gap-lg {
+  gap: $spacing-lg;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.rounded {
+  border-radius: $radius-md;
+}
+
+.rounded-lg {
+  border-radius: $radius-lg;
+}
+
+.shadow {
+  box-shadow: $shadow-md;
+}
+
+.shadow-lg {
+  box-shadow: $shadow-lg;
+}
+
+// Button base styles
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-fast;
+  text-decoration: none;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  &.btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background-color: var(--color-primary-dark);
+    }
+  }
+  
+  &.btn-secondary {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    
+    &:hover:not(:disabled) {
+      background-color: var(--bg-surface-hover);
+    }
+  }
+  
+  &.btn-danger {
+    background-color: var(--color-error);
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background-color: #dc2626;
+    }
+  }
+  
+  &.btn-sm {
+    padding: calc(#{$spacing-xs}) #{$spacing-sm};
+    font-size: $font-size-xs;
+  }
+}
+
+// Form controls
+.form-control {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  
+  label {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: var(--text-primary);
+  }
+  
+  input, textarea, select {
+    padding: $spacing-sm;
+    border: 1px solid var(--border-color);
+    border-radius: $radius-md;
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: $font-size-sm;
+    transition: border-color $transition-fast;
+    
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    
+    &::placeholder {
+      color: var(--text-secondary);
+    }
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+}
+
+// Modal backdrop
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: $z-modal;
+  padding: $spacing-md;
+}
+
+// Card styles
+.card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  box-shadow: $shadow-sm;
+  transition: all $transition-fast;
+}
+
+// Priority indicators
+.priority-low {
+  color: var(--priority-low);
+}
+
+.priority-medium {
+  color: var(--priority-medium);
+}
+
+.priority-high {
+  color: var(--priority-high);
+}
+
+.priority-critical {
+  color: var(--priority-critical);
+}
+
+// Loading spinner
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-color);
+  border-top: 2px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Responsive utilities
+@media (max-width: $mobile) {
+  .hidden-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: $mobile) {
+  .mobile-only {
+    display: none !important;
+  }
+}

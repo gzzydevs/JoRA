@@ -1,0 +1,127 @@
+@import '../../styles/variables.scss';
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: $z-navbar;
+  background-color: var(--bg-surface);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-color);
+  padding: $spacing-sm 0;
+}
+
+.navbar-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $spacing-lg;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.navbar-title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.navbar-subtitle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(#{$spacing-xs} / 2);
+}
+
+.project-name {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--text-primary);
+}
+
+.project-version {
+  font-size: $font-size-xs;
+  color: var(--text-secondary);
+  font-weight: $font-weight-normal;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.navbar-divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--border-color);
+  margin: 0 $spacing-xs;
+}
+
+// Responsive adjustments
+@media (max-width: $tablet) {
+  .navbar-content {
+    padding: 0 $spacing-sm;
+    gap: $spacing-md;
+  }
+
+  .navbar-brand {
+    gap: $spacing-sm;
+  }
+
+  .navbar-title {
+    font-size: $font-size-lg;
+  }
+
+  .navbar-actions {
+    gap: $spacing-xs;
+  }
+
+  .navbar-divider {
+    display: none;
+  }
+}
+
+@media (max-width: $mobile) {
+  .navbar {
+    position: relative; // Remove fixed positioning on mobile
+  }
+
+  .navbar-content {
+    flex-direction: column;
+    gap: $spacing-sm;
+    align-items: stretch;
+  }
+
+  .navbar-brand {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .navbar-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .navbar-subtitle {
+    align-items: center;
+  }
+
+  // Hide some buttons on mobile to save space
+  .btn {
+    &:nth-child(2), // Dark mode toggle
+    &:nth-child(3) { // Backlog button
+      display: none;
+    }
+  }
+}
