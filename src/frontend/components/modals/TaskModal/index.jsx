@@ -26,6 +26,8 @@ const TaskModal = ({
     handleSave,
     handleDelete,
     toggleEdit,
+    handleConvertToEpic,
+    shouldShowConvertToEpic,
     error
   } = useTaskModal(taskId);
 
@@ -96,12 +98,23 @@ const TaskModal = ({
         <div className="task-modal-actions">
           <div className="task-modal-actions-left">
             {!isEditing ? (
-              <button 
-                className="btn btn-secondary btn-sm" 
-                onClick={toggleEdit}
-              >
-                ✏️ Edit
-              </button>
+              <>
+                <button 
+                  className="btn btn-secondary btn-sm" 
+                  onClick={toggleEdit}
+                >
+                  ✏️ Edit
+                </button>
+                {shouldShowConvertToEpic() && (
+                  <button 
+                    className="btn btn-warning btn-sm convert-to-epic-btn" 
+                    onClick={handleConvertToEpic}
+                    title="Convert this large task to an epic"
+                  >
+                    🔄 Convert to Epic
+                  </button>
+                )}
+              </>
             ) : (
               <div className="edit-actions">
                 <button 

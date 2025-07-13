@@ -75,6 +75,9 @@ export const TaskProvider = ({ children }) => {
   // Computed values
   const filteredTasks = useMemo(() => {
     return tasks.filter(task => {
+      // Exclude converted tasks from main views
+      if (task.state === 'converted_to_epic') return false;
+      
       if (filters.epic && task.epic !== filters.epic) return false;
       if (filters.author && task.author !== filters.author) return false;
       if (filters.search) {
@@ -87,7 +90,7 @@ export const TaskProvider = ({ children }) => {
   }, [tasks, filters]);
 
   const tasksByState = useMemo(() => {
-    const states = ['in_backlog', 'todo', 'in_progress', 'in_review', 'ready_to_release'];
+    const states = ['in_backlog', 'todo', 'in_progress', 'in_review', 'ready_to_release', 'converted_to_epic'];
     return states.reduce((acc, state) => {
       acc[state] = filteredTasks.filter(task => task.state === state);
       return acc;

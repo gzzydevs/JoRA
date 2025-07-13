@@ -8,7 +8,14 @@
     "task-006-pkg-distribution",
     "task-007-github-integration",
     "task-008-typescript-migration",
-    "task-009-convert-to-epic-button"
+    "task-009-convert-to-epic-button",
+    "task-test-convert-to-epic",
+    "task-010-translations-i18n",
+    "task-011-tags-management",
+    "task-012-configurable-states",
+    "task-013-fix-epics-authors-layout",
+    "task-014-unify-screen-styles",
+    "task-015-epic-completion-feature"
   ],
-  "lastUpdated": "2025-07-13T19:15:00.000Z"
+  "lastUpdated": "2025-07-13T20:50:00.000Z"
 }

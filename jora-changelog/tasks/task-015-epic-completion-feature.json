@@ -1,0 +1,48 @@
+{
+  "id": "task-015-epic-completion-feature",
+  "title": "Implement Epic Completion and Status Management",
+  "description": "Permitir cerrar épicas o mostrarlas como finalizadas automáticamente cuando no queden tareas asociadas abiertas. Mejorar la gestión del ciclo de vida de las épicas.",
+  "state": "in_backlog",
+  "priority": "low",
+  "type": "feature",
+  "epic": "advanced-workflow",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": ["epics", "completion", "status", "workflow"],
+  "estimatedPoints": 8,
+  "estimatedDate": "2025-08-15",
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Agregar botón 'Close Epic' en EpicModal",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Implementar auto-completion cuando no hay tareas abiertas",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Agregar estados 'completed' y 'closed' para épicas",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Mostrar épicas completadas con estilos diferenciados",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Implementar métricas de progreso en tiempo real",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Permitir reabrir épicas si se agregan nuevas tareas",
+      "completed": false
+    }
+  ],
+  "createdAt": "2025-07-13T20:40:00Z",
+  "updatedAt": "2025-07-13T20:40:00Z"
+}

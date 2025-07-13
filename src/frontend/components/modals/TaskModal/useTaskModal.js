@@ -215,6 +215,136 @@ export const useTaskModal = (taskId) => {
     setIsEditing(!isEditing);
   };
 
+  // Convert to Epic functionality
+  const handleConvertToEpic = async () => {
+    if (!task) return;
+
+    // Generate prompt for AI agent
+    const prompt = generateConvertToEpicPrompt(task);
+    
+    try {
+      // Copy to clipboard
+      await navigator.clipboard.writeText(prompt);
+      alert('✅ Prompt copied to clipboard! You can now paste it to an AI agent to convert this task to an epic.');
+    } catch (err) {
+      console.error('Failed to copy to clipboard:', err);
+      // Fallback: show prompt in a modal or alert
+      const textarea = document.createElement('textarea');
+      textarea.value = prompt;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      alert('✅ Prompt copied to clipboard! You can now paste it to an AI agent to convert this task to an epic.');
+    }
+  };
+
+  // Check if task is suitable for epic conversion
+  const shouldShowConvertToEpic = () => {
+    if (!task) return false;
+    
+    // Show convert button if:
+    // 1. Task has multiple subtasks (>= 3)
+    // 2. Task has high estimated points (>= 8)
+    // 3. Task is not already converted
+    const hasMultipleSubtasks = task.subtasks && task.subtasks.length >= 3;
+    const isLargeTask = task.estimatedPoints >= 8;
+    const notConverted = task.state !== 'converted_to_epic';
+    
+    return (hasMultipleSubtasks || isLargeTask) && notConverted;
+  };
+
+  const generateConvertToEpicPrompt = (task) => {
+    return `🔄 CONVERT TASK TO EPIC REQUEST
+
+Please convert the following task to an epic following these steps:
+
+**TASK TO CONVERT:**
+- **ID:** ${task.id}
+- **Title:** ${task.title}
+- **Description:** ${task.description}
+- **Current State:** ${task.state}
+- **Priority:** ${task.priority}
+- **Type:** ${task.type}
+- **Estimated Points:** ${task.estimatedPoints}
+- **Estimated Date:** ${task.estimatedDate || 'Not set'}
+- **Current Epic:** ${task.epic || 'None'}
+- **Author:** ${task.author || 'Unknown'}
+- **Assignee:** ${task.assignee || 'Unassigned'}
+- **Tags:** [${task.tags?.join(', ') || 'No tags'}]
+- **Subtasks:** ${task.subtasks?.length || 0} total
+- **Created:** ${task.createdAt || 'Unknown'}
+- **Updated:** ${task.updatedAt || 'Unknown'}
+
+**SUBTASKS TO CONVERT:**
+${task.subtasks?.map((subtask, index) => 
+  `${index + 1}. [${subtask.completed ? '✅' : '❌'}] ${subtask.text}`
+).join('\n') || 'No subtasks available'}
+
+**FILE LOCATIONS (for reference):**
+- Task file: \`/jora-changelog/tasks/${task.id}.json\`
+- Current tasks list: \`/jora-changelog/current.json\`
+- Epics directory: \`/jora-changelog/epics/\`
+- Example epic file: \`/jora-changelog/epics/core-functionality.json\`
+
+**INSTRUCTIONS:**
+1. **Update original task state:** 
+   - Open file: \`/jora-changelog/tasks/${task.id}.json\`
+   - Change "state" from "${task.state}" to "converted_to_epic"
+   - Update "updatedAt" timestamp
+
+2. **Create new epic:** 
+   - Create file: \`/jora-changelog/epics/epic-${task.id.replace('task-', '')}.json\`
+   - Structure:
+     {
+       "id": "epic-${task.id.replace('task-', '')}",
+       "name": "${task.title}" (or improved version),
+       "description": "Enhanced description based on original task",
+       "color": "#choose-appropriate-color",
+       "status": "planning",
+       "priority": "${task.priority}",
+       "created_from": "${task.id}",
+       "createdAt": "current-timestamp",
+       "startDate": "${task.estimatedDate || 'TBD'}",
+       "endDate": "calculated-end-date"
+     }
+
+3. **Convert subtasks to individual tasks:**
+   For each subtask, create new task file in \`/jora-changelog/tasks/\`:
+   - **If subtask was completed (✅):** set state to "ready_to_release"
+   - **If subtask was not completed (❌):** set state to "todo"
+   - **Epic assignment:** Set epic to "epic-${task.id.replace('task-', '')}"
+   - **Inherit properties:** author, tags, priority from original task
+   - **Add descriptions:** Expand subtask text into proper task descriptions
+   - **Estimate points:** Distribute original ${task.estimatedPoints} points across new tasks
+
+4. **Update current.json:**
+   - Add new task IDs to tasks array
+   - Update "lastUpdated" timestamp
+
+5. **Add epic to epics list (if needed):**
+   - Update any epic registry files
+
+**EXAMPLE NEW TASK STRUCTURE:**
+{
+  "id": "task-epic-${task.id.replace('task-', '')}-subtask-1",
+  "title": "Subtask title expanded",
+  "description": "Detailed description based on subtask",
+  "state": "ready_to_release" or "todo",
+  "priority": "${task.priority}",
+  "type": "${task.type}",
+  "epic": "epic-${task.id.replace('task-', '')}",
+  "author": "${task.author}",
+  "assignee": "${task.assignee || ''}",
+  "tags": [${task.tags?.map(tag => `"${tag}"`).join(', ') || ''}],
+  "estimatedPoints": calculated-points,
+  "createdAt": "current-timestamp",
+  "updatedAt": "current-timestamp"
+}
+
+Please implement these changes and update all JoRA data files accordingly.`;
+  };
+
   return {
     task,
     epics,
@@ -231,6 +361,8 @@ export const useTaskModal = (taskId) => {
     handleSubtaskToggle,
     handleSave,
     handleDelete,
-    toggleEdit
+    toggleEdit,
+    handleConvertToEpic,
+    shouldShowConvertToEpic
   };
 };

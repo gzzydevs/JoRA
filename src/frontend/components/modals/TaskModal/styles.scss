@@ -453,3 +453,20 @@
     opacity: 0.8;
   }
 }
+
+.convert-to-epic-btn {
+  margin-left: 8px;
+  background-color: var(--warning-color, #f59e0b) !important;
+  border-color: var(--warning-color, #f59e0b) !important;
+  color: white !important;
+
+  &:hover {
+    background-color: var(--warning-hover-color, #d97706) !important;
+    border-color: var(--warning-hover-color, #d97706) !important;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}

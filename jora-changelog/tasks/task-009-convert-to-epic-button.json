@@ -2,7 +2,7 @@
   "id": "task-009-convert-to-epic-button",
   "title": "Implement 'Convert to Epic' Button Feature",
   "description": "Crear un botón que permita convertir tareas grandes en épicas. El botón generará un prompt en clipboard para que un agente pueda: 1) Cambiar el estado de la tarea original a 'converted_to_epic', 2) Crear una nueva épica con referencia 'created_from: task_id', 3) Convertir subtareas en tareas individuales con análisis inteligente del estado.",
-  "state": "todo",
+  "state": "ready_to_release",
   "priority": "medium",
   "type": "feature",
   "epic": "ui-improvements",
@@ -21,34 +21,34 @@
     {
       "id": "subtask-1",
       "text": "Diseñar UI del botón 'Convert to Epic' en TaskModal",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-2",
       "text": "Implementar función de generación de prompt para clipboard",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-3",
       "text": "Agregar estado 'converted_to_epic' al modelo de datos",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-4",
       "text": "Implementar lógica de conversión de subtareas a tareas",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-5",
       "text": "Agregar referencia 'created_from' en épicas",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-6",
       "text": "Filtrar tareas 'converted_to_epic' de vistas principales",
-      "completed": false
+      "completed": true
     }
   ],
   "createdAt": "2025-07-13T19:10:00Z",
-  "updatedAt": "2025-07-13T19:10:00Z"
+  "updatedAt": "2025-07-13T20:55:00Z"
 }

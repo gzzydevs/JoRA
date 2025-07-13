@@ -1,0 +1,43 @@
+{
+  "id": "task-010-translations-i18n",
+  "title": "Implement Internationalization (i18n) Support",
+  "description": "Agregar soporte para múltiples idiomas en JoRA. Implementar sistema de traducciones que permita cambiar el idioma de la interfaz dinámicamente.",
+  "state": "in_backlog",
+  "priority": "low",
+  "type": "feature",
+  "epic": "ui-improvements",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": ["i18n", "translations", "localization", "ui"],
+  "estimatedPoints": 13,
+  "estimatedDate": "2025-08-05",
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Investigar librerías de i18n para React (react-i18next)",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Crear archivos de traducción (en, es)",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Implementar selector de idioma en NavBar",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Traducir todos los textos de la interfaz",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Persistir idioma seleccionado en localStorage",
+      "completed": false
+    }
+  ],
+  "createdAt": "2025-07-13T20:15:00Z",
+  "updatedAt": "2025-07-13T20:15:00Z"
+}

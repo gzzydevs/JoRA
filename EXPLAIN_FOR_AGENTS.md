@@ -382,19 +382,44 @@ if (error) return <ErrorMessage error={error} />;
 
 ---
 
-## 🎉 **Estado Actual: feature/jora-is-tracked-by-jora**
+## 🤖 **Guidelines para AI Agents - Working with Tasks**
 
-**JoRA está en proceso de desarrollo activo** con:
-- ✅ **Arquitectura React moderna completada**
-- ✅ **UI/UX pulida y responsive**  
-- ✅ **Performance optimizada con drag & drop**
-- ✅ **Funcionalidades core implementadas**
-- ✅ **Estructura escalable establecida**
+### **📋 Cuando recibas una tarea como contexto:**
 
-**Objetivo v0.1.0:** Lograr que JoRA se trackee a sí mismo completamente funcional, con todas las características principales trabajando sin errores críticos y listo para distribución como binario PKG.
+1. **📖 Leer la tarea completa**: Analiza `title`, `description`, `subtasks`, `tags`, `priority`, `epic`
+2. **🎯 Entender el objetivo**: Identifica exactamente qué necesita implementarse
+3. **📁 Explorar estructura**: Usa herramientas para entender la arquitectura actual
+4. **🔧 Implementar paso a paso**: Sigue las subtareas como guía de progreso
+5. **✅ Actualizar subtareas**: Marca como completadas las subtareas conforme avances
+6. **📊 Reportar progreso**: Actualiza el estado de la tarea cuando termine
 
-**Branch actual:** `feature/jora-is-tracked-by-jora` - Este branch representa el esfuerzo de convertir JoRA en un proyecto que se autogestiona usando sus propias herramientas.
+### **🎯 Pattern de trabajo recomendado:**
+
+```javascript
+// 1. Investigar componentes existentes
+// 2. Planificar implementación
+// 3. Crear/modificar archivos necesarios
+// 4. Testear funcionalidad
+// 5. Actualizar documentación si es necesario
+```
+
+### **📝 Subtask Management:**
+
+Cuando completes una subtarea, actualiza el JSON:
+```json
+{
+  "id": "subtask-1",
+  "text": "Diseñar UI del botón",
+  "completed": true  // ← Cambiar a true
+}
+```
+
+### **🔄 Estados de tarea válidos:**
+- `in_backlog` - En backlog, no prioritizada
+- `todo` - Listo para trabajar
+- `in_progress` - En desarrollo activo
+- `in_review` - Completado, esperando review
+- `ready_to_release` - Aprobado y listo
+- `converted_to_epic` - Convertido a épica (especial)
 
 ---
-
-*Este documento debe ser tu guía principal para entender JoRA y implementar nuevas funcionalidades manteniendo los estándares de código y arquitectura establecidos.*
