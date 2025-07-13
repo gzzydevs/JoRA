@@ -1,0 +1,54 @@
+@import '../../styles/variables.scss';
+
+.filter-bar {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+.filter-controls {
+  display: flex;
+  gap: $spacing-md;
+  align-items: flex-end;
+  flex-wrap: wrap;
+
+  .form-control {
+    min-width: 0; // Allow flex items to shrink
+    
+    &.flex-1 {
+      flex: 1;
+      min-width: 200px; // Minimum width for search input
+    }
+
+    select, input {
+      width: 100%;
+      min-width: 140px; // Minimum width for selects
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: $mobile) {
+  .filter-bar {
+    padding: $spacing-sm;
+  }
+
+  .filter-controls {
+    flex-direction: column;
+    gap: $spacing-sm;
+
+    .form-control {
+      width: 100%;
+      
+      &.flex-1 {
+        min-width: auto;
+      }
+
+      select, input {
+        min-width: auto;
+      }
+    }
+  }
+}

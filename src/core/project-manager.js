@@ -5,7 +5,7 @@ const path = require('path');
  * Initialize a JoRA project in the given directory
  */
 async function initializeProject(projectPath) {
-  const todoPath = path.join(projectPath, 'cl-todo');
+  const todoPath = path.join(projectPath, 'jora-changelog');
   
   // Check if already initialized
   try {
@@ -101,7 +101,7 @@ async function initializeProject(projectPath) {
     id: 'task-' + Date.now(),
     title: 'Welcome to JoRA!',
     description: 'This is your first task. Edit or delete it to get started.\n\n**Features:**\n- Markdown support\n- Image attachments\n- Estimated points and dates',
-    state: 'todo',
+    state: 'in_backlog',
     priority: 'medium',
     epic: 'getting-started',
     author: 'default',

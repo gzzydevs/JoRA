@@ -1,0 +1,28 @@
+@import '../../styles/variables.scss';
+
+.task-detail-page {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+}
+
+.task-detail-main {
+  padding-top: 80px; // Space for fixed navbar
+  min-height: calc(100vh - 80px);
+}
+
+.task-detail-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: $spacing-lg $spacing-md;
+}
+
+// Responsive adjustments
+@media (max-width: $mobile) {
+  .task-detail-main {
+    padding-top: 0; // NavBar is not fixed on mobile
+  }
+
+  .task-detail-container {
+    padding: $spacing-sm;
+  }
+}

@@ -9,7 +9,10 @@
   "scripts": {
     "start": "node src/cli.js",
     "dev": "node src/cli.js",
-    "build": "npm run build:linux && npm run build:win && npm run build:mac",
+    "dev:frontend": "vite",
+    "build:frontend": "vite build",
+    "preview:frontend": "vite preview",
+    "build": "npm run build:frontend && npm run build:linux && npm run build:win && npm run build:mac",
     "build:linux": "pkg . --targets node18-linux-x64 --output dist/jora-linux",
     "build:win": "pkg . --targets node18-win-x64 --output dist/jora-win.exe",
     "build:mac": "pkg . --targets node18-macos-x64 --output dist/jora-mac",
@@ -17,7 +20,8 @@
   },
   "pkg": {
     "assets": [
-      "src/web/**/*"
+      "src/web/**/*",
+      "dist/frontend/**/*"
     ],
     "outputPath": "dist"
   },
@@ -33,9 +37,15 @@
   "dependencies": {
     "express": "^4.18.2",
     "open": "^8.4.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.3",
+    "sass": "^1.89.2",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "pkg": "^5.8.1"
+    "@vitejs/plugin-react": "^4.6.0",
+    "pkg": "^5.8.1",
+    "vite": "^7.0.4"
   }
 }

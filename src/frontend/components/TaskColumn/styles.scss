@@ -1,0 +1,115 @@
+@import '../../styles/variables.scss';
+
+.task-column {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  min-height: 400px;
+  flex: 1;
+  transition: all $transition-fast;
+
+  &.drag-over {
+    border-color: var(--color-primary);
+    background-color: rgba(99, 102, 241, 0.05);
+    transform: scale(1.02);
+  }
+}
+
+.task-column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+  padding-bottom: $spacing-sm;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.task-column-title {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--text-primary);
+  font-size: $font-size-sm;
+}
+
+.task-column-icon {
+  font-size: $font-size-lg;
+}
+
+.task-column-count {
+  background-color: var(--color-primary);
+  color: white;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  padding: calc(#{$spacing-xs} / 2) $spacing-xs;
+  border-radius: $radius-xl;
+  min-width: 20px;
+  text-align: center;
+}
+
+.task-column-content {
+  flex: 1;
+  overflow-y: auto;
+  
+  // Custom scrollbar for webkit browsers
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: $radius-xl;
+    
+    &:hover {
+      background: var(--text-secondary);
+    }
+  }
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--text-secondary);
+  font-size: $font-size-sm;
+  font-style: italic;
+  text-align: center;
+  border: 2px dashed var(--border-color);
+  border-radius: $radius-md;
+  margin-top: $spacing-md;
+}
+
+// Responsive adjustments
+@media (max-width: $mobile) {
+  .task-column {
+    min-height: 300px;
+    padding: $spacing-sm;
+  }
+
+  .task-column-header {
+    margin-bottom: $spacing-sm;
+  }
+
+  .task-column-title {
+    font-size: $font-size-xs;
+    gap: $spacing-xs;
+  }
+
+  .task-column-icon {
+    font-size: $font-size-base;
+  }
+
+  .empty-state {
+    height: 150px;
+    font-size: $font-size-xs;
+  }
+}

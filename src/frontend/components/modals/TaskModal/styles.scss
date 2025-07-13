@@ -1,0 +1,455 @@
+@import '../../../styles/variables';
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.task-modal-page {
+  min-height: 100vh;
+  padding: 20px;
+  background-color: var(--bg-color);
+}
+
+.task-modal {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+
+  .task-modal-page & {
+    max-height: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+  }
+}
+
+.task-modal-header {
+  padding: 20px 30px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  border-radius: 12px 12px 0 0;
+
+  .task-modal-navigation {
+    margin-bottom: 15px;
+  }
+
+  h1 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+}
+
+.task-modal-content {
+  padding: 30px;
+}
+
+.task-modal-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+
+  .task-modal-actions-left {
+    display: flex;
+    gap: 10px;
+
+    .edit-actions {
+      display: flex;
+      gap: 10px;
+    }
+  }
+
+  .task-modal-actions-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-color-muted);
+    padding: 5px 10px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: var(--bg-color-hover);
+      color: var(--text-color);
+    }
+  }
+}
+
+.task-form {
+  .task-form-main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-control {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+      font-weight: 600;
+      color: var(--text-color);
+      font-size: 0.9rem;
+    }
+
+    input, textarea, select {
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+      }
+
+      &::placeholder {
+        color: var(--text-color-muted);
+      }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+      line-height: 1.5;
+    }
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+}
+
+// Display elements (non-editing mode)
+.task-display-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  padding: 12px 0;
+}
+
+.task-display-description {
+  color: var(--text-color);
+  line-height: 1.6;
+  padding: 12px 0;
+  white-space: pre-wrap;
+
+  em {
+    color: var(--text-color-muted);
+    font-style: italic;
+  }
+}
+
+.task-display-state {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+
+  &.state-todo {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+
+  &.state-in-progress {
+    background-color: #fff3e0;
+    color: #f57c00;
+  }
+
+  &.state-in-review {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+  }
+
+  &.state-ready-to-release {
+    background-color: #e8f5e8;
+    color: #388e3c;
+  }
+}
+
+.task-display-priority {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+
+  &.priority-low {
+    background-color: #f1f8e9;
+    color: #689f38;
+  }
+
+  &.priority-medium {
+    background-color: #fff3e0;
+    color: #f57c00;
+  }
+
+  &.priority-high {
+    background-color: #ffebee;
+    color: #d32f2f;
+  }
+
+  &.priority-critical {
+    background-color: #fce4ec;
+    color: #c2185b;
+  }
+}
+
+.task-display-type {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background-color: var(--bg-color-hover);
+  color: var(--text-color);
+  text-transform: capitalize;
+}
+
+.task-display-epic,
+.task-display-author,
+.task-display-assignee,
+.task-display-points,
+.task-display-date {
+  color: var(--text-color);
+  padding: 12px 0;
+
+  em {
+    color: var(--text-color-muted);
+    font-style: italic;
+  }
+}
+
+.task-display-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 0;
+
+  .task-tag {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  em {
+    color: var(--text-color-muted);
+    font-style: italic;
+  }
+}
+
+// Tag selector for editing
+.tag-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 0;
+
+  .tag-option {
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid var(--border-color);
+    background-color: var(--input-bg);
+    color: var(--text-color);
+
+    &:hover {
+      background-color: var(--bg-color-hover);
+    }
+
+    &.selected {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+  }
+}
+
+// Subtasks
+.subtasks-section {
+  .subtask-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      margin: 0;
+    }
+
+    .subtask-checkbox {
+      font-size: 1.1rem;
+      width: 20px;
+      text-align: center;
+
+      &.completed {
+        opacity: 0.7;
+      }
+    }
+
+    .subtask-text {
+      flex: 1;
+      padding: 8px 0;
+
+      &.completed {
+        text-decoration: line-through;
+        opacity: 0.7;
+      }
+    }
+  }
+
+  em {
+    color: var(--text-color-muted);
+    font-style: italic;
+    padding: 12px 0;
+    display: block;
+  }
+}
+
+// Loading and error states
+.loading-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 30px;
+  text-align: center;
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border-color);
+    border-left: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+  }
+
+  .error-message {
+    color: var(--error-color);
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+  }
+
+  span {
+    color: var(--text-color-muted);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .modal-backdrop {
+    padding: 10px;
+  }
+
+  .task-modal {
+    max-height: 95vh;
+  }
+
+  .task-modal-content {
+    padding: 20px;
+  }
+
+  .task-modal-actions {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+
+    .task-modal-actions-left,
+    .task-modal-actions-right {
+      justify-content: center;
+    }
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .subtask-item {
+    flex-wrap: wrap;
+    gap: 8px;
+
+    input[type="text"] {
+      width: 100%;
+      order: 2;
+    }
+
+    .btn {
+      order: 3;
+    }
+  }
+}
+
+.epic-link {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}

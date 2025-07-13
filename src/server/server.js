@@ -23,7 +23,19 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   // Root route 
   app.get('/', (req, res) => {
     try {
-      const indexPath = path.join(__dirname, '../web/index.html');
+      // Try to serve the React build first, fallback to old web
+      const reactIndexPath = path.join(__dirname, '../../dist/frontend/index.html');
+      const webIndexPath = path.join(__dirname, '../web/index.html');
+      
+      let indexPath;
+      if (fs.existsSync(reactIndexPath)) {
+        console.log('📦 Serving React frontend');
+        indexPath = reactIndexPath;
+      } else {
+        console.log('⚠️  React build not found, serving legacy frontend');
+        indexPath = webIndexPath;
+      }
+      
       const indexContent = fs.readFileSync(indexPath, 'utf8');
       res.send(indexContent);
     } catch (error) {
@@ -36,8 +48,17 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   });
   
   // Serve static files AFTER the root route
+  const reactBuildPath = path.join(__dirname, '../../dist/frontend');
   const webPath = path.join(__dirname, '../web');
-  app.use(express.static(webPath));
+  
+  // Try React build first, fallback to legacy web
+  if (fs.existsSync(reactBuildPath)) {
+    console.log('📦 Serving React static files from:', reactBuildPath);
+    app.use(express.static(reactBuildPath));
+  } else {
+    console.log('⚠️  React build not found, serving legacy static files from:', webPath);
+    app.use(express.static(webPath));
+  }
   
   // API Routes
 
@@ -120,12 +141,71 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       res.status(400).json({ error: error.message });
     }
   });
+
+  // Update epic
+  app.put('/api/epics/:id', async (req, res) => {
+    try {
+      const epic = await taskManager.updateEpic(req.params.id, req.body);
+      res.json(epic);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Delete epic
+  app.delete('/api/epics/:id', async (req, res) => {
+    try {
+      await taskManager.deleteEpic(req.params.id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+  
+  // Get all authors
+  app.get('/api/authors', async (req, res) => {
+    try {
+      console.log('📦 [GET] /api/authors - Fetching authors...');
+      const projectData = await taskManager.loadProjectData();
+      console.log('✅ [GET] /api/authors - Authors fetched:', projectData.authors?.length || 0);
+      res.json(projectData.authors || []);
+    } catch (error) {
+      console.error('❌ [GET] /api/authors - Error:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
   
   // Create author
   app.post('/api/authors', async (req, res) => {
     try {
       const author = await taskManager.createAuthor(req.body);
       res.status(201).json(author);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Update author
+  app.put('/api/authors/:id', async (req, res) => {
+    try {
+      console.log('PUT /api/authors/:id - Request received');
+      console.log('Author ID:', req.params.id);
+      console.log('Request body:', req.body);
+      
+      const author = await taskManager.updateAuthor(req.params.id, req.body);
+      console.log('Author updated successfully:', author);
+      res.json(author);
+    } catch (error) {
+      console.error('Error updating author:', error);
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Delete author
+  app.delete('/api/authors/:id', async (req, res) => {
+    try {
+      await taskManager.deleteAuthor(req.params.id);
+      res.status(204).send();
     } catch (error) {
       res.status(400).json({ error: error.message });
     }

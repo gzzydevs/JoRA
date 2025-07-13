@@ -1,0 +1,59 @@
+@import './variables.scss';
+
+:root {
+  // Light theme (default)
+  --bg-primary: #{$light-bg};
+  --bg-surface: #{$light-surface};
+  --bg-surface-hover: #{$light-surface-hover};
+  --card-bg: #{$light-bg};
+  --border-color: #{$light-border};
+  --text-primary: #{$light-text};
+  --text-secondary: #{$light-text-secondary};
+  
+  // Semantic colors (same in both themes)
+  --color-primary: #{$primary};
+  --color-primary-dark: #{$primary-dark};
+  --color-secondary: #{$secondary};
+  --color-success: #{$success};
+  --color-warning: #{$warning};
+  --color-error: #{$error};
+  --color-info: #{$info};
+  
+  // Priority colors
+  --priority-low: #{$priority-low};
+  --priority-medium: #{$priority-medium};
+  --priority-high: #{$priority-high};
+  --priority-critical: #{$priority-critical};
+}
+
+[data-theme="dark"] {
+  // Dark theme overrides
+  --bg-primary: #{$dark-bg};
+  --bg-surface: #{$dark-surface};
+  --bg-surface-hover: #{$dark-surface-hover};
+  --card-bg: #{$dark-surface};
+  --border-color: #{$dark-border};
+  --text-primary: #{$dark-text};
+  --text-secondary: #{$dark-text-secondary};
+}
+
+// Theme-aware classes
+.theme-bg-primary {
+  background-color: var(--bg-primary);
+}
+
+.theme-bg-surface {
+  background-color: var(--bg-surface);
+}
+
+.theme-text-primary {
+  color: var(--text-primary);
+}
+
+.theme-text-secondary {
+  color: var(--text-secondary);
+}
+
+.theme-border {
+  border-color: var(--border-color);
+}

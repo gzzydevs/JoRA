@@ -1,0 +1,81 @@
+@import '../../styles/variables.scss';
+
+.kanban-page {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+}
+
+.kanban-main {
+  padding-top: 80px; // Space for fixed navbar
+  min-height: calc(100vh - 80px);
+}
+
+.kanban-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $spacing-lg $spacing-md;
+}
+
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $spacing-lg;
+  align-items: start;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  gap: $spacing-md;
+  color: var(--text-secondary);
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  gap: $spacing-md;
+}
+
+.error-message {
+  color: var(--color-error);
+  font-size: $font-size-lg;
+  text-align: center;
+  padding: $spacing-md;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: $radius-lg;
+  max-width: 500px;
+}
+
+// Responsive adjustments
+@media (max-width: $tablet) {
+  .kanban-container {
+    padding: $spacing-md $spacing-sm;
+  }
+
+  .kanban-board {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: $spacing-md;
+  }
+}
+
+@media (max-width: $mobile) {
+  .kanban-main {
+    padding-top: 0; // NavBar is not fixed on mobile
+  }
+
+  .kanban-container {
+    padding: $spacing-sm;
+  }
+
+  .kanban-board {
+    grid-template-columns: 1fr;
+    gap: $spacing-sm;
+  }
+}

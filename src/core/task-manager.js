@@ -4,10 +4,73 @@ const path = require('path');
 class TaskManager {
   constructor(projectPath) {
     this.projectPath = projectPath;
-    this.todoPath = path.join(projectPath, 'cl-todo');
+    this.todoPath = this.getProjectDataPath(projectPath);
     this.tasksPath = path.join(this.todoPath, 'tasks');
     this.epicsPath = path.join(this.todoPath, 'epics');
     this.releasesPath = path.join(this.todoPath, 'releases');
+  }
+
+  // Determine the correct project data path and migrate if needed
+  getProjectDataPath(projectPath) {
+    const newPath = path.join(projectPath, 'jora-changelog');
+    const oldPath = path.join(projectPath, 'cl-todo');
+    
+    // Check if new path exists
+    try {
+      require('fs').accessSync(newPath);
+      console.log('🎯 Using jora-changelog directory');
+      return newPath;
+    } catch (err) {
+      // New path doesn't exist, check for old path
+      try {
+        require('fs').accessSync(oldPath);
+        console.log('🔄 Found cl-todo directory, will migrate to jora-changelog...');
+        this.migrateFromOldPath(oldPath, newPath);
+        return newPath;
+      } catch (err2) {
+        // Neither exists, use new path (will be created)
+        console.log('📁 Will create new jora-changelog directory');
+        return newPath;
+      }
+    }
+  }
+
+  // Migrate from cl-todo to jora-changelog
+  migrateFromOldPath(oldPath, newPath) {
+    try {
+      console.log(`📦 Migrating data from ${oldPath} to ${newPath}...`);
+      
+      // Copy the entire directory synchronously (we need this to happen before continuing)
+      const fs = require('fs');
+      
+      function copyDirSync(src, dest) {
+        if (!fs.existsSync(dest)) {
+          fs.mkdirSync(dest, { recursive: true });
+        }
+        
+        const entries = fs.readdirSync(src, { withFileTypes: true });
+        
+        for (const entry of entries) {
+          const srcPath = path.join(src, entry.name);
+          const destPath = path.join(dest, entry.name);
+          
+          if (entry.isDirectory()) {
+            copyDirSync(srcPath, destPath);
+          } else {
+            fs.copyFileSync(srcPath, destPath);
+          }
+        }
+      }
+      
+      copyDirSync(oldPath, newPath);
+      console.log('✅ Migration completed successfully!');
+      console.log('💡 You can safely delete the old cl-todo directory');
+      
+    } catch (error) {
+      console.error('❌ Migration failed:', error.message);
+      console.log('🔙 Falling back to cl-todo directory');
+      return oldPath;
+    }
   }
   
   // Generate a simple unique ID
@@ -52,7 +115,7 @@ class TaskManager {
       id: this.generateId(),
       title: taskData.title || 'Untitled Task',
       description: taskData.description || '',
-      state: taskData.state || 'todo',
+      state: taskData.state || 'in_backlog',
       type: taskData.type || 'feature',
       priority: taskData.priority || 'medium',
       epic: taskData.epic || null,
@@ -148,17 +211,70 @@ class TaskManager {
       name: epicData.name,
       description: epicData.description || '',
       color: epicData.color || '#6366f1',
-      status: epicData.status || 'active'
+      status: epicData.status || 'active',
+      priority: epicData.priority || 'medium',
+      startDate: epicData.startDate || null,
+      endDate: epicData.endDate || null,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
     
     await this.saveEpic(epic);
-    this.epics.push(epic);
+    if (this.epics) {
+      this.epics.push(epic);
+    }
     return epic;
+  }
+
+  // Update existing epic
+  async updateEpic(epicId, updates) {
+    try {
+      const epicPath = path.join(this.epicsPath, `${epicId}.json`);
+      const epicContent = await fs.readFile(epicPath, 'utf8');
+      const epic = JSON.parse(epicContent);
+      
+      // Update fields
+      Object.assign(epic, updates, {
+        updatedAt: new Date().toISOString()
+      });
+      
+      await this.saveEpic(epic);
+      return epic;
+    } catch (error) {
+      throw new Error(`Epic ${epicId} not found`);
+    }
+  }
+
+  // Delete epic
+  async deleteEpic(epicId) {
+    try {
+      await fs.unlink(path.join(this.epicsPath, `${epicId}.json`));
+      if (this.epics) {
+        this.epics = this.epics.filter(epic => epic.id !== epicId);
+      }
+      return true;
+    } catch (error) {
+      throw new Error(`Failed to delete epic ${epicId}`);
+    }
+  }
+
+  // Save epic to file
+  async saveEpic(epic) {
+    try {
+      const epicPath = path.join(this.epicsPath, `${epic.id}.json`);
+      await fs.writeFile(epicPath, JSON.stringify(epic, null, 2));
+      return epic;
+    } catch (error) {
+      throw new Error(`Failed to save epic ${epic.id}: ${error.message}`);
+    }
   }
   
   // Create new author
   async createAuthor(authorData) {
-    const author = { id: this.generateId(), ...authorData };
+    const author = { 
+      id: authorData.id || this.generateId(), 
+      ...authorData 
+    };
     
     this.projectData.authors.push(author);
     
@@ -166,6 +282,64 @@ class TaskManager {
     await fs.writeFile(configPath, JSON.stringify(this.projectData.authors, null, 2));
     
     return author;
+  }
+
+  // Update author
+  async updateAuthor(authorId, updates) {
+    try {
+      console.log('updateAuthor called with:', { authorId, updates });
+      console.log('Current projectData.authors:', this.projectData?.authors?.length || 'undefined');
+      
+      if (!this.projectData || !this.projectData.authors) {
+        console.error('projectData or authors not loaded!');
+        throw new Error('Project data not loaded');
+      }
+      
+      const authorIndex = this.projectData.authors.findIndex(a => a.id === authorId);
+      console.log('Author index found:', authorIndex);
+      
+      if (authorIndex === -1) {
+        throw new Error(`Author ${authorId} not found`);
+      }
+
+      const oldAuthor = { ...this.projectData.authors[authorIndex] };
+      this.projectData.authors[authorIndex] = {
+        ...this.projectData.authors[authorIndex],
+        ...updates,
+        updatedAt: new Date().toISOString()
+      };
+
+      console.log('Author updated from:', oldAuthor);
+      console.log('Author updated to:', this.projectData.authors[authorIndex]);
+
+      const configPath = path.join(this.todoPath, 'authors.json');
+      await fs.writeFile(configPath, JSON.stringify(this.projectData.authors, null, 2));
+      console.log('Authors file saved to:', configPath);
+      
+      return this.projectData.authors[authorIndex];
+    } catch (error) {
+      console.error('updateAuthor error:', error);
+      throw new Error(`Failed to update author ${authorId}: ${error.message}`);
+    }
+  }
+
+  // Delete author
+  async deleteAuthor(authorId) {
+    try {
+      const authorIndex = this.projectData.authors.findIndex(a => a.id === authorId);
+      if (authorIndex === -1) {
+        throw new Error(`Author ${authorId} not found`);
+      }
+
+      this.projectData.authors.splice(authorIndex, 1);
+
+      const configPath = path.join(this.todoPath, 'authors.json');
+      await fs.writeFile(configPath, JSON.stringify(this.projectData.authors, null, 2));
+      
+      return true;
+    } catch (error) {
+      throw new Error(`Failed to delete author ${authorId}: ${error.message}`);
+    }
   }
   
   // Generate a new release
@@ -265,18 +439,22 @@ class TaskManager {
       const authors = await this.loadAuthors();
       const tags = await this.loadTags();
       
-      return {
+      // Assign to instance variable for use in other methods
+      this.projectData = {
         config,
         authors,
         tags
       };
+      
+      return this.projectData;
     } catch (error) {
       console.error('Error loading project data:', error.message);
-      return {
+      this.projectData = {
         config: { projectName: 'JoRA', version: '1.0.0' },
         authors: [],
         tags: []
       };
+      return this.projectData;
     }
   }
 }
