@@ -74,8 +74,20 @@ class TaskManager {
   }
   
   // Generate a simple unique ID
-  generateId() {
-    return 'task-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+  generateId(title = '') {
+    // Create a slug from the title if provided
+    const slug = title 
+      ? title.toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, '') // Remove special chars
+          .replace(/\s+/g, '-')         // Replace spaces with dashes
+          .slice(0, 30)                 // Limit length
+      : 'auto-generated';
+    
+    // Use a simple counter approach for now
+    const timestamp = Date.now();
+    const counter = timestamp.toString().slice(-3); // Last 3 digits as counter
+    
+    return `task-${counter}-${slug}`;
   }
   
   // Load all tasks
@@ -112,7 +124,7 @@ class TaskManager {
   // Create new task
   async createTask(taskData) {
     const task = {
-      id: this.generateId(),
+      id: this.generateId(taskData.title),
       title: taskData.title || 'Untitled Task',
       description: taskData.description || '',
       state: taskData.state || 'in_backlog',
