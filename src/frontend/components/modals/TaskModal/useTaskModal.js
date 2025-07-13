@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTaskContext } from '../../../contexts/TaskContext';
 import api from '../../../services/api';
 
 export const useTaskModal = (taskId) => {
+  const navigate = useNavigate();
   const { 
     tasks, 
     epics, 
@@ -138,6 +140,11 @@ export const useTaskModal = (taskId) => {
   };
 
   const handleSave = async () => {
+    if (!formData.title?.trim()) {
+      alert('Task title is required.');
+      return;
+    }
+
     try {
       setIsLoading(true);
       
@@ -154,8 +161,10 @@ export const useTaskModal = (taskId) => {
         setTask(taskData);
       } else {
         // Create new task
-        await createTask(taskData);
-        setTask(taskData);
+        const newTask = await createTask(taskData);
+        if (newTask) {
+          navigate(`/task/${newTask.id}`);
+        }
       }
 
       setIsEditing(false);

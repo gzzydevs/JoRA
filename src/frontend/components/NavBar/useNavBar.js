@@ -12,22 +12,19 @@ export const useNavBar = () => {
   };
 
   const handleNewTask = () => {
-    // TODO: Open task modal
-    console.log('Open task modal');
+    navigate('/tasks/new-task');
   };
 
   const handleNewEpic = () => {
-    // TODO: Open epic modal
-    console.log('Open epic modal');
+    navigate('/epics/new-epic');
   };
 
   const handleNewAuthor = () => {
-    // TODO: Open author modal
-    console.log('Open author modal');
+    navigate('/authors/new-author');
   };
 
   const handleRelease = () => {
-    // TODO: Open release modal
+    // TODO: Open release modal or navigate to new release page
     console.log('Open release modal');
   };
 

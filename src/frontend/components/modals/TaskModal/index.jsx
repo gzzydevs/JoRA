@@ -4,7 +4,7 @@ import { useTaskModal } from './useTaskModal';
 import './styles.scss';
 
 const TaskModal = ({ 
-  taskId = null, 
+  taskId, 
   isModal = true, 
   onClose = null,
   showHeader = false 
@@ -47,7 +47,7 @@ const TaskModal = ({
     }
   };
 
-  if (isLoading) {
+  if (isLoading && taskId) {
     return (
       <div className={isModal ? "modal-backdrop" : "task-modal-page"}>
         <div className="task-modal">
@@ -60,13 +60,13 @@ const TaskModal = ({
     );
   }
 
-  if (error || !task) {
+  if (error) {
     return (
       <div className={isModal ? "modal-backdrop" : "task-modal-page"}>
         <div className="task-modal">
           <div className="error-container">
             <div className="error-message">
-              ❌ {error || 'Task not found'}
+              ❌ {error}
             </div>
             <button className="btn btn-primary" onClick={handleClose}>
               {isModal ? 'Close' : 'Go Back'}
@@ -77,6 +77,8 @@ const TaskModal = ({
     );
   }
 
+  const isNewTask = !taskId;
+
   const content = (
     <div className="task-modal">
       {showHeader && (
@@ -86,7 +88,7 @@ const TaskModal = ({
               ← Back to Kanban
             </Link>
           </div>
-          <h1>Task Details</h1>
+          <h1>{isNewTask ? 'New Task' : 'Task Details'}</h1>
         </div>
       )}
 
@@ -122,6 +124,7 @@ const TaskModal = ({
             <button 
               className="btn btn-danger btn-sm" 
               onClick={handleDelete}
+              disabled={isNewTask}
             >
               🗑️ Delete
             </button>
@@ -146,7 +149,7 @@ const TaskModal = ({
                   placeholder="Task title..."
                 />
               ) : (
-                <div className="task-display-title">{task.title}</div>
+                <div className="task-display-title">{task?.title}</div>
               )}
             </div>
 
@@ -161,7 +164,7 @@ const TaskModal = ({
                 />
               ) : (
                 <div className="task-display-description">
-                  {task.description || <em>No description</em>}
+                  {task?.description || <em>No description</em>}
                 </div>
               )}
             </div>
@@ -180,8 +183,8 @@ const TaskModal = ({
                     <option value="ready_to_release">Ready to Release</option>
                   </select>
                 ) : (
-                  <div className={`task-display-state state-${task.state.replace('_', '-')}`}>
-                    {task.state.replace('_', ' ')}
+                  <div className={`task-display-state state-${task?.state.replace('_', '-')}`}>
+                    {task?.state.replace('_', ' ')}
                   </div>
                 )}
               </div>
@@ -199,8 +202,8 @@ const TaskModal = ({
                     <option value="critical">Critical</option>
                   </select>
                 ) : (
-                  <div className={`task-display-priority priority-${task.priority.replace('_', '-')}`}>
-                    {task.priority.replace('_', ' ')}
+                  <div className={`task-display-priority priority-${task?.priority.replace('_', '-')}`}>
+                    {task?.priority.replace('_', ' ')}
                   </div>
                 )}
               </div>
@@ -225,8 +228,8 @@ const TaskModal = ({
                 ) : (
                   <div className="task-display-type">
                     {['✨', '🔥', '📚', '🧪', '⚡', '🐛', '♻️', '✅', '🔧'][
-                      ['feature', 'hotfix', 'documentation', 'poc', 'improvement', 'bug', 'refactor', 'test', 'chore'].indexOf(task.type)
-                    ] || '📝'} {task.type}
+                      ['feature', 'hotfix', 'documentation', 'poc', 'improvement', 'bug', 'refactor', 'test', 'chore'].indexOf(task?.type)
+                    ] || '📝'} {task?.type}
                   </div>
                 )}
               </div>
@@ -249,7 +252,7 @@ const TaskModal = ({
                   </select>
                 ) : (
                   <div className="task-display-epic">
-                    {task.epic ? (
+                    {task?.epic ? (
                       epics.find(e => e.id === task.epic)?.name || task.epic
                     ) : (
                       <em>No epic</em>
@@ -273,7 +276,7 @@ const TaskModal = ({
                   </select>
                 ) : (
                   <div className="task-display-author">
-                    {authors.find(a => a.id === task.author)?.name || task.author}
+                    {authors.find(a => a.id === task?.author)?.name || task?.author}
                   </div>
                 )}
               </div>
@@ -294,7 +297,7 @@ const TaskModal = ({
                   </select>
                 ) : (
                   <div className="task-display-assignee">
-                    {task.assignee ? (
+                    {task?.assignee ? (
                       authors.find(a => a.id === task.assignee)?.name || task.assignee
                     ) : (
                       <em>Unassigned</em>
@@ -318,7 +321,7 @@ const TaskModal = ({
                   />
                 ) : (
                   <div className="task-display-points">
-                    {task.estimatedPoints || 0} points
+                    {task?.estimatedPoints || 0} points
                   </div>
                 )}
               </div>
@@ -333,7 +336,7 @@ const TaskModal = ({
                   />
                 ) : (
                   <div className="task-display-date">
-                    {task.estimatedDate ? (
+                    {task?.estimatedDate ? (
                       new Date(task.estimatedDate).toLocaleDateString()
                     ) : (
                       <em>No date set</em>
@@ -359,7 +362,7 @@ const TaskModal = ({
                 </div>
               ) : (
                 <div className="task-display-tags">
-                  {task.tags?.length > 0 ? (
+                  {task?.tags?.length > 0 ? (
                     task.tags.map(tagId => {
                       const tag = tags.find(t => t.id === tagId);
                       return tag ? (
@@ -378,7 +381,7 @@ const TaskModal = ({
             <div className="form-control">
               <label>Subtasks</label>
               <div className="subtasks-section">
-                {(isEditing ? formData.subtasks : task.subtasks)?.map((subtask, index) => (
+                {(isEditing ? formData.subtasks : task?.subtasks)?.map((subtask, index) => (
                   <div key={index} className="subtask-item">
                     {isEditing ? (
                       <>
@@ -424,7 +427,7 @@ const TaskModal = ({
                   </button>
                 )}
                 
-                {(!task.subtasks || task.subtasks.length === 0) && !isEditing && (
+                {(!task?.subtasks || task.subtasks.length === 0) && !isEditing && (
                   <em>No subtasks</em>
                 )}
               </div>
