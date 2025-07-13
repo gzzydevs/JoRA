@@ -38,18 +38,21 @@ export const useReleasePage = (version) => {
         
         setReleaseData(release);
         
-        // Load tasks for this release
-        // Note: This assumes the backend can filter tasks by release/version
-        // For now, we'll load all tasks and filter client-side
-        const allTasks = await apiService.getTasks();
+        // For releases, tasks are typically stored inside the release object
+        // rather than being mixed with current tasks
+        let versionTasks = [];
         
-        // Filter tasks that were part of this release
-        // This logic might need to be adjusted based on how releases are tracked
-        const versionTasks = allTasks.filter(task => {
-          // You might need to adjust this logic based on your data structure
-          return task.releaseVersion === version || 
-                 (release.tasks && release.tasks.includes(task.id));
-        });
+        if (release.tasks && Array.isArray(release.tasks)) {
+          // Tasks are stored directly in the release
+          versionTasks = release.tasks;
+        } else {
+          // Fallback: try to find tasks by release association
+          const allTasks = await apiService.getTasks();
+          versionTasks = allTasks.filter(task => {
+            return task.releaseVersion === version || 
+                   task.release === version;
+          });
+        }
         
         setReleaseTasks(versionTasks);
         

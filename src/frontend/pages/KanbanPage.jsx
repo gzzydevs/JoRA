@@ -2,6 +2,7 @@ import React from 'react';
 import NavBar from '../components/NavBar/NavBar';
 import FilterBar from '../components/FilterBar/FilterBar';
 import TaskColumn from '../components/TaskColumn/TaskColumn';
+import { FloatingActionButton } from '../components/FloatingActionButton';
 import { useTaskContext } from '../hooks/useTaskContext';
 import './KanbanPage.scss';
 
@@ -90,6 +91,7 @@ const KanbanPage = () => {
           </div>
         </div>
       </main>
+      <FloatingActionButton />
     </div>
   );
 };

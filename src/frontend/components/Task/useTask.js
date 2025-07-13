@@ -1,8 +1,10 @@
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTaskContext } from '../../hooks/useTaskContext';
 
 export const useTask = (task, onEdit, onDelete) => {
   const { epics, authors, tags } = useTaskContext();
+  const navigate = useNavigate();
   const [isDragging, setIsDragging] = useState(false);
 
   const epic = useMemo(() => 
@@ -42,10 +44,13 @@ export const useTask = (task, onEdit, onDelete) => {
     setIsDragging(false);
   };
 
-  const handleClick = () => {
-    if (onEdit) {
-      onEdit(task);
-    }
+  const handleClick = (e) => {
+    // Prevent drag and drop when clicking
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Navigate to task detail page
+    navigate(`/task/${task.id}`);
   };
 
   return {
