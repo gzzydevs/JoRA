@@ -12,6 +12,7 @@ const NavBar = () => {
     handleNewTask,
     handleNewEpic,
     handleEpics,
+    handleAuthors,
     handleNewAuthor,
     handleRelease
   } = useNavBar();
@@ -57,6 +58,14 @@ const NavBar = () => {
             onClick={handleEpics}
           >
             📦 Épicas
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            onClick={handleAuthors}
+          >
+            👥 Autores
           </button>
 
           <div className="navbar-divider" />

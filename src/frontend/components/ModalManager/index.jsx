@@ -2,6 +2,7 @@ import React from 'react';
 import { useModal } from '../../contexts/ModalContext';
 import TaskModal from '../modals/TaskModal';
 import EpicModal from '../modals/EpicModal';
+import AuthorModal from '../modals/AuthorModal';
 
 const ModalManager = () => {
   const { activeModal, modalProps, closeModal } = useModal();
@@ -23,6 +24,12 @@ const ModalManager = () => {
           <EpicModal
             epicId={modalProps.epicId}
             isModal={true}
+            onClose={closeModal}
+          />
+        );
+      case 'author':
+        return (
+          <AuthorModal
             onClose={closeModal}
           />
         );

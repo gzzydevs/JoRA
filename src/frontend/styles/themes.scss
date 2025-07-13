@@ -5,6 +5,7 @@
   --bg-primary: #{$light-bg};
   --bg-surface: #{$light-surface};
   --bg-surface-hover: #{$light-surface-hover};
+  --card-bg: #{$light-bg};
   --border-color: #{$light-border};
   --text-primary: #{$light-text};
   --text-secondary: #{$light-text-secondary};
@@ -30,6 +31,7 @@
   --bg-primary: #{$dark-bg};
   --bg-surface: #{$dark-surface};
   --bg-surface-hover: #{$dark-surface-hover};
+  --card-bg: #{$dark-surface};
   --border-color: #{$dark-border};
   --text-primary: #{$dark-text};
   --text-secondary: #{$dark-text-secondary};

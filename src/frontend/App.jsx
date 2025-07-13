@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ModalProvider } from './contexts/ModalContext';
-import withTaskContext from './hocs/withTaskContext';
+import { TaskProvider } from './contexts/TaskContext';
 import ModalManager from './components/ModalManager';
 import KanbanPage from './pages/KanbanPage';
 import BacklogPage from './pages/BacklogPage';
@@ -10,40 +10,34 @@ import ReleasePage from './pages/ReleasePage';
 import TaskDetailPage from './pages/TaskDetailPage';
 import EpicDetailPage from './pages/EpicDetailPage';
 import EpicsPage from './pages/EpicsPage';
+import AuthorsPage from './pages/AuthorsPage';
 import NewTaskPage from './pages/NewTaskPage';
 import NewEpicPage from './pages/NewEpicPage';
 import './styles/globals.scss';
 
-// Wrap pages with TaskContext
-const KanbanPageWithContext = withTaskContext(KanbanPage);
-const BacklogPageWithContext = withTaskContext(BacklogPage);
-const ReleasePageWithContext = withTaskContext(ReleasePage);
-const TaskDetailPageWithContext = withTaskContext(TaskDetailPage);
-const EpicDetailPageWithContext = withTaskContext(EpicDetailPage);
-const EpicsPageWithContext = withTaskContext(EpicsPage);
-const NewTaskPageWithContext = withTaskContext(NewTaskPage);
-const NewEpicPageWithContext = withTaskContext(NewEpicPage);
-
 function App() {
   return (
     <ThemeProvider>
-      <ModalProvider>
-        <Router>
-          <div className="App">
-            <Routes>
-              <Route path="/" element={<KanbanPageWithContext />} />
-              <Route path="/backlog" element={<BacklogPageWithContext />} />
-              <Route path="/release/:version" element={<ReleasePageWithContext />} />
-              <Route path="/task/:id" element={<TaskDetailPageWithContext />} />
-              <Route path="/tasks/new-task" element={<NewTaskPageWithContext />} />
-              <Route path="/epics" element={<EpicsPageWithContext />} />
-              <Route path="/epic/:id" element={<EpicDetailPageWithContext />} />
-              <Route path="/epics/new-epic" element={<NewEpicPageWithContext />} />
-            </Routes>
-            <ModalManager />
-          </div>
-        </Router>
-      </ModalProvider>
+      <TaskProvider>
+        <ModalProvider>
+          <Router>
+            <div className="App">
+              <Routes>
+                <Route path="/" element={<KanbanPage />} />
+                <Route path="/backlog" element={<BacklogPage />} />
+                <Route path="/release/:version" element={<ReleasePage />} />
+                <Route path="/task/:id" element={<TaskDetailPage />} />
+                <Route path="/tasks/new-task" element={<NewTaskPage />} />
+                <Route path="/epics" element={<EpicsPage />} />
+                <Route path="/authors" element={<AuthorsPage />} />
+                <Route path="/epic/:id" element={<EpicDetailPage />} />
+                <Route path="/epics/new-epic" element={<NewEpicPage />} />
+              </Routes>
+              <ModalManager />
+            </div>
+          </Router>
+        </ModalProvider>
+      </TaskProvider>
     </ThemeProvider>
   );
 }

@@ -162,11 +162,50 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
     }
   });
   
+  // Get all authors
+  app.get('/api/authors', async (req, res) => {
+    try {
+      console.log('📦 [GET] /api/authors - Fetching authors...');
+      const projectData = await taskManager.loadProjectData();
+      console.log('✅ [GET] /api/authors - Authors fetched:', projectData.authors?.length || 0);
+      res.json(projectData.authors || []);
+    } catch (error) {
+      console.error('❌ [GET] /api/authors - Error:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
   // Create author
   app.post('/api/authors', async (req, res) => {
     try {
       const author = await taskManager.createAuthor(req.body);
       res.status(201).json(author);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Update author
+  app.put('/api/authors/:id', async (req, res) => {
+    try {
+      console.log('PUT /api/authors/:id - Request received');
+      console.log('Author ID:', req.params.id);
+      console.log('Request body:', req.body);
+      
+      const author = await taskManager.updateAuthor(req.params.id, req.body);
+      console.log('Author updated successfully:', author);
+      res.json(author);
+    } catch (error) {
+      console.error('Error updating author:', error);
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Delete author
+  app.delete('/api/authors/:id', async (req, res) => {
+    try {
+      await taskManager.deleteAuthor(req.params.id);
+      res.status(204).send();
     } catch (error) {
       res.status(400).json({ error: error.message });
     }

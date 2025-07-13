@@ -96,6 +96,19 @@ class ApiService {
     });
   }
 
+  async updateAuthor(authorId, updates) {
+    return this.request(`/api/authors/${authorId}`, {
+      method: 'PUT',
+      body: JSON.stringify(updates)
+    });
+  }
+
+  async deleteAuthor(authorId) {
+    return this.request(`/api/authors/${authorId}`, {
+      method: 'DELETE'
+    });
+  }
+
   // Releases
   async getReleases() {
     return this.request('/api/releases');

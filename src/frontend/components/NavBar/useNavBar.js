@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useTaskContext } from '../../hooks/useTaskContext';
 import { useTheme } from '../../hooks/useTheme';
+import { useModal } from '../../contexts/ModalContext';
 
 export const useNavBar = () => {
   const { config } = useTaskContext();
   const { isDarkMode, toggleTheme } = useTheme();
+  const { openModal } = useModal();
   const navigate = useNavigate();
 
   const handleBacklog = () => {
@@ -23,8 +25,12 @@ export const useNavBar = () => {
     navigate('/epics');
   };
 
+  const handleAuthors = () => {
+    navigate('/authors');
+  };
+
   const handleNewAuthor = () => {
-    navigate('/authors/new-author');
+    openModal('author', { author: null });
   };
 
   const handleRelease = () => {
@@ -40,6 +46,7 @@ export const useNavBar = () => {
     handleNewTask,
     handleNewEpic,
     handleEpics,
+    handleAuthors,
     handleNewAuthor,
     handleRelease,
   };

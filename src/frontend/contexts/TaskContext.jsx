@@ -38,6 +38,8 @@ const TaskContext = createContext({
   
   // Author actions
   createAuthor: async () => {},
+  updateAuthor: async () => {},
+  deleteAuthor: async () => {},
   
   // Release actions
   createRelease: async () => {},
@@ -311,6 +313,44 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+  const updateAuthor = async (authorId, authorData) => {
+    try {
+      setIsLoading(true);
+      const updatedAuthor = await apiService.updateAuthor(authorId, authorData);
+      
+      // Update local state immediately without full reload
+      setAuthors(prevAuthors => 
+        prevAuthors.map(author => 
+          author.id === authorId ? { ...author, ...authorData } : author
+        )
+      );
+      
+      showSuccess('Author updated successfully');
+      return updatedAuthor;
+    } catch (err) {
+      console.error('Error updating author:', err);
+      setError('Failed to update author: ' + err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const deleteAuthor = async (authorId) => {
+    try {
+      setIsLoading(true);
+      await apiService.deleteAuthor(authorId);
+      await loadProjectData(); // Reload project data to get updated authors
+      showSuccess('Author deleted successfully');
+    } catch (err) {
+      console.error('Error deleting author:', err);
+      setError('Failed to delete author: ' + err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Release actions
   const createRelease = async (releaseData) => {
     try {
@@ -386,6 +426,8 @@ export const TaskProvider = ({ children }) => {
     
     // Author actions
     createAuthor,
+    updateAuthor,
+    deleteAuthor,
     
     // Release actions
     createRelease,

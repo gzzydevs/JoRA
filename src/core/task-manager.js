@@ -208,7 +208,10 @@ class TaskManager {
   
   // Create new author
   async createAuthor(authorData) {
-    const author = { id: this.generateId(), ...authorData };
+    const author = { 
+      id: authorData.id || this.generateId(), 
+      ...authorData 
+    };
     
     this.projectData.authors.push(author);
     
@@ -216,6 +219,64 @@ class TaskManager {
     await fs.writeFile(configPath, JSON.stringify(this.projectData.authors, null, 2));
     
     return author;
+  }
+
+  // Update author
+  async updateAuthor(authorId, updates) {
+    try {
+      console.log('updateAuthor called with:', { authorId, updates });
+      console.log('Current projectData.authors:', this.projectData?.authors?.length || 'undefined');
+      
+      if (!this.projectData || !this.projectData.authors) {
+        console.error('projectData or authors not loaded!');
+        throw new Error('Project data not loaded');
+      }
+      
+      const authorIndex = this.projectData.authors.findIndex(a => a.id === authorId);
+      console.log('Author index found:', authorIndex);
+      
+      if (authorIndex === -1) {
+        throw new Error(`Author ${authorId} not found`);
+      }
+
+      const oldAuthor = { ...this.projectData.authors[authorIndex] };
+      this.projectData.authors[authorIndex] = {
+        ...this.projectData.authors[authorIndex],
+        ...updates,
+        updatedAt: new Date().toISOString()
+      };
+
+      console.log('Author updated from:', oldAuthor);
+      console.log('Author updated to:', this.projectData.authors[authorIndex]);
+
+      const configPath = path.join(this.todoPath, 'authors.json');
+      await fs.writeFile(configPath, JSON.stringify(this.projectData.authors, null, 2));
+      console.log('Authors file saved to:', configPath);
+      
+      return this.projectData.authors[authorIndex];
+    } catch (error) {
+      console.error('updateAuthor error:', error);
+      throw new Error(`Failed to update author ${authorId}: ${error.message}`);
+    }
+  }
+
+  // Delete author
+  async deleteAuthor(authorId) {
+    try {
+      const authorIndex = this.projectData.authors.findIndex(a => a.id === authorId);
+      if (authorIndex === -1) {
+        throw new Error(`Author ${authorId} not found`);
+      }
+
+      this.projectData.authors.splice(authorIndex, 1);
+
+      const configPath = path.join(this.todoPath, 'authors.json');
+      await fs.writeFile(configPath, JSON.stringify(this.projectData.authors, null, 2));
+      
+      return true;
+    } catch (error) {
+      throw new Error(`Failed to delete author ${authorId}: ${error.message}`);
+    }
   }
   
   // Generate a new release
@@ -315,18 +376,22 @@ class TaskManager {
       const authors = await this.loadAuthors();
       const tags = await this.loadTags();
       
-      return {
+      // Assign to instance variable for use in other methods
+      this.projectData = {
         config,
         authors,
         tags
       };
+      
+      return this.projectData;
     } catch (error) {
       console.error('Error loading project data:', error.message);
-      return {
+      this.projectData = {
         config: { projectName: 'JoRA', version: '1.0.0' },
         authors: [],
         tags: []
       };
+      return this.projectData;
     }
   }
 }
