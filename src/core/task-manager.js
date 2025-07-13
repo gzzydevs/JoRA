@@ -74,7 +74,7 @@ class TaskManager {
   }
   
   // Generate a simple unique ID
-  generateId(title = '') {
+  async generateId(title = '') {
     // Create a slug from the title if provided
     const slug = title 
       ? title.toLowerCase()
@@ -83,11 +83,24 @@ class TaskManager {
           .slice(0, 30)                 // Limit length
       : 'auto-generated';
     
-    // Use a simple counter approach for now
-    const timestamp = Date.now();
-    const counter = timestamp.toString().slice(-3); // Last 3 digits as counter
-    
-    return `task-${counter}-${slug}`;
+    // Get next counter by reading existing tasks
+    try {
+      const existingTasks = await this.loadAllTasks();
+      const maxNumber = existingTasks
+        .map(task => {
+          const match = task.id.match(/^task-(\d+)-/);
+          return match ? parseInt(match[1]) : 0;
+        })
+        .reduce((max, num) => Math.max(max, num), 21); // Start from 022 to avoid conflicts
+      
+      const nextNumber = (maxNumber + 1).toString().padStart(3, '0');
+      return `task-${nextNumber}-${slug}`;
+    } catch (error) {
+      // Fallback to timestamp if reading tasks fails
+      const timestamp = Date.now();
+      const counter = timestamp.toString().slice(-3);
+      return `task-${counter}-${slug}`;
+    }
   }
   
   // Load all tasks
@@ -124,7 +137,7 @@ class TaskManager {
   // Create new task
   async createTask(taskData) {
     const task = {
-      id: this.generateId(taskData.title),
+      id: await this.generateId(taskData.title),
       title: taskData.title || 'Untitled Task',
       description: taskData.description || '',
       state: taskData.state || 'in_backlog',

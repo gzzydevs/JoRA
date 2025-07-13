@@ -2,7 +2,7 @@
   "id": "task-016-unique-id-system",
   "title": "Implementar sistema de IDs único y escalable",
   "description": "Desarrollar un sistema de generación de IDs más robusto y escalable para tareas y épicas, con convenciones claras para acceso por URL y abreviaturas por épica.\n\n**Problema actual:**\n- IDs generados desde la web usando timestamp + random (ej: task-1752427573183-9qymcydf2)\n- Tareas creadas manualmente tienen IDs semánticos (task-001, task-016, etc.)\n- Inconsistencia entre IDs creados por agentes vs IDs de la web UI\n- Difícil de recordar y referenciar los IDs autogenerados\n- No hay convenciones claras para épicas\n- URLs difíciles de compartir y acceder directamente\n\n**Casos observados:**\n- Web UI: task-1752439856366-dneijmxmg\n- Manual: task-016-unique-id-system\n- Necesitamos unificar ambos enfoques\n\n**Propuesta de solución:**\n- Sistema de IDs semánticos unificado: task-###-description-slug\n- Contador global incremental para todas las tareas\n- Slug automático basado en título para legibilidad\n- Preservar compatibilidad con IDs existentes\n- Mejorar usabilidad de URLs",
-  "state": "in_progress",
+  "state": "ready_to_release",
   "type": "improvement",
   "priority": "high",
   "epic": "core-functionality",
@@ -33,27 +33,27 @@
     {
       "id": "subtask-5",
       "text": "Implementar contador global incremental",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-6",
       "text": "Migrar IDs existentes manteniendo retrocompatibilidad",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-7",
       "text": "Actualizar sistema de routing para nuevos IDs",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-8",
       "text": "Testear creación desde web UI con nuevos IDs",
-      "completed": false
+      "completed": true
     }
   ],
   "estimatedPoints": 10,
   "estimatedDate": null,
   "images": [],
   "createdAt": "2025-01-12T15:00:00Z",
-  "updatedAt": "2025-01-12T16:30:00Z"
+  "updatedAt": "2025-01-12T17:00:00Z"
 }
