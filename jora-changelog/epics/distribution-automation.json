@@ -1,0 +1,13 @@
+{
+  "id": "distribution-automation",
+  "name": "Distribution & Release Automation",
+  "description": "Epic para implementar sistema completo de distribución automática de binarios multiplataforma y CI/CD con GitHub Actions. Esta épica es **CRÍTICA** para alcanzar la v0.1.0 - primera release estable de JoRA.\n\n**Objetivos principales:**\n- Resolver problemas con PKG + Vite para generar binarios funcionales\n- Implementar build automático multiplataforma (Windows, macOS, Linux)\n- Configurar GitHub Actions para CI/CD completo\n- Automatizar publicación de releases con binarios\n- Crear documentación de distribución\n\n**Bloqueos actuales:**\n- PKG no funciona correctamente con Vite\n- No hay automatización de builds\n- Releases manuales son tediosos y propensos a errores\n\n**Criterio de éxito:**\n- Usuarios pueden descargar binarios desde GitHub Releases\n- Binarios funcionan en Windows, macOS y Linux sin dependencias\n- Releases se publican automáticamente al crear tags en GitHub\n- Documentación clara para distribución",
+  "color": "#dc2626",
+  "status": "in_progress",
+  "priority": "critical",
+  "created_from": "task-006-pkg-distribution",
+  "startDate": "2025-07-13",
+  "endDate": "2025-07-20",
+  "createdAt": "2025-07-13T21:30:00Z",
+  "updatedAt": "2025-07-13T21:30:00Z"
+}

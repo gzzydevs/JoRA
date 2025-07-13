@@ -21,7 +21,12 @@
     "task-021-task-dependencies-blocked-state",
     "task-019-task-card-state-management",
     "task-018-release-system-epic-handling",
-    "task-017-react-router-bug-fix"
+    "task-017-react-router-bug-fix",
+    "task-022-pkg-vite-investigation",
+    "task-023-multiplatform-build-system",
+    "task-024-github-actions-cicd",
+    "task-025-distribution-documentation",
+    "task-026-fix-hot-reloading-dev-experience"
   ],
-  "lastUpdated": "2025-07-13T21:11:14.633Z"
+  "lastUpdated": "2025-07-13T22:00:00Z"
 }

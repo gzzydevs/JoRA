@@ -2,7 +2,7 @@
   "id": "task-006-pkg-distribution",
   "title": "PKG Distribution + GitHub Actions Release",
   "description": "Resolver problemas con PKG para generar binarios distribuibles que funcionen correctamente. Crear GitHub Actions que automáticamente generen y publiquen binarios cuando se cree un release oficial en GitHub.",
-  "state": "todo",
+  "state": "converted_to_epic",
   "priority": "critical",
   "type": "feature",
   "epic": "api",
@@ -51,5 +51,5 @@
     }
   ],
   "createdAt": "2025-07-13T15:15:00Z",
-  "updatedAt": "2025-07-13T18:53:44.280Z"
+  "updatedAt": "2025-07-13T21:30:00Z"
 }

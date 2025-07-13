@@ -1,84 +1,231 @@
-# 🎯 JoRA - Project Explanation for AI Agents
+# 🎯 JoRA - Co### **🔥 ESTADO ACTUAL (Julio 2025)**
+- ✅ **React Migration** completada (Task-002)
+- ✅ **Convert to Epic Button** implementado y funcional (Task-009)
+- ✅ **Cancelled State** implementado con reactivación (Task-020)
+- ✅ **Unique ID System** implementado (semantic slugs) (Task-016)
+- 🚧 **PKG Distribution + GitHub Actions** - CRITICO para v0.1.0 (Task-006)
+- 🔄 **Actualmente**: 22 tareas activas, varias ready_to_release, falta v0.1.0 AI Agent Briefing
 
-## 📋 **Project Overview**
+## 📋 **Project Overview & Context**
 
-**JoRA** (Just Outstanding Requirements Administration) es un **task manager offline moderno** desarrollado inicialmente en vanilla JavaScript y completamente migrado a **React con arquitectura modular**. Es una aplicación desktop que combina la simplicidad de un Kanban board con funcionalidades avanzadas de gestión de proyectos.
+**JoRA** (Just Outstanding Requirements Administration) es un **task manager offline moderno** completamente migrado a **React con arquitectura modular**. Es una aplicación desktop que combina Kanban, épicas, releases y auto-tracking usando su propio sistema.
 
-### 🎯 **Propósito Principal**
-- **Gestión de tareas** con metodología Kanban
-- **Administración de epics** y releases
-- **Tracking de progreso** y métricas
-- **Funciona completamente offline** sin dependencias externas
-- **Interfaz moderna** con temas dark/light
-- **Arquitectura escalable** y mantenible
+### 🎯 **Misión Principal: JoRA se trackea a sí mismo**
+- **Autotracking completo**: JoRA gestiona su propio desarrollo usando su propio sistema
+- **Metodología Kanban** con 6 estados de tareas + estado especial `cancelled`
+- **Sistema de épicas** para features grandes con conversión automática
+- **Releases automatizadas** con GitHub Actions (en desarrollo)
+- **Funciona 100% offline** sin dependencias externas
+- **Estado actual**: Versión v0.0.x, trabajando hacia **v0.1.0** (primera release estable)
+
+### 🔥 **ESTADO ACTUAL (Julio 2025)**
+- ✅ **React Migration** completada
+- ✅ **Convert to Epic Button** implementado y funcional
+- ✅ **Cancelled State** implementado con reactivación
+- ✅ **Unique ID System** implementado (semantic slugs)
+- 🔄 **Actualmente**: 22 tareas activas, varias ready_to_release
 
 ---
 
-## 🏗️ **Arquitectura y Estructura**
+## 🏗️ **Stack & Arquitectura**
 
 ### **Stack Tecnológico**
 ```
-Frontend: React 18+ + React Router + SCSS + Vite
-Backend: Node.js + Express (API REST)
-Database: JSON files (sistema de archivos)
-Build: Vite + PKG (ejecutables multiplataforma)
+Frontend: React 18 + React Router v6 + SCSS + Vite
+Backend: Node.js + Express (REST API)
+Database: JSON files (filesystem-based)
+Build: Vite + PKG (cross-platform binaries)
+Version Control: Git + GitHub Actions
 ```
 
-### **Estructura de Archivos Organizada**
+### **Arquitectura de Archivos (CRÍTICA PARA AGENTES)**
 ```
-📁 src/
-├── 📁 frontend/
-│   ├── 📁 components/
-│   │   ├── 📁 NavBar/
-│   │   │   ├── index.jsx          # Componente principal
-│   │   │   ├── useNavBar.js        # Hook personalizado
-│   │   │   └── styles.scss         # Estilos específicos
-│   │   ├── 📁 TaskColumn/
-│   │   ├── 📁 Task/
-│   │   ├── 📁 FilterBar/
-│   │   ├── 📁 VersionSelector/
-│   │   ├── 📁 FloatingActionButton/
-│   │   └── 📁 modals/
-│   │       ├── 📁 TaskModal/
-│   │       └── 📁 EpicModal/
-│   ├── 📁 pages/
-│   │   ├── 📁 KanbanPage/
-│   │   │   ├── index.jsx
-│   │   │   └── styles.scss
-│   │   ├── 📁 BacklogPage/
-│   │   ├── 📁 ReleasePage/
-│   │   │   ├── index.jsx
-│   │   │   ├── useReleasePage.js   # Hook para lógica de release
-│   │   │   └── styles.scss
-│   │   ├── 📁 TaskDetailPage/
-│   │   └── 📁 EpicDetailPage/
-│   ├── 📁 contexts/
-│   │   ├── TaskContext.jsx         # Estado global de tareas
-│   │   ├── ThemeContext.jsx        # Gestión de temas
-│   │   └── ModalContext.jsx        # Gestión de modales
-│   ├── 📁 hooks/
-│   │   ├── useTaskContext.js
-│   │   ├── useOptimisticTasks.js   # Performance optimizada
-│   │   └── useTheme.js
-│   ├── 📁 services/
-│   │   └── api.js                  # Cliente HTTP
-│   ├── 📁 styles/
-│   │   ├── globals.scss
-│   │   ├── variables.scss
-│   │   └── themes.scss
-│   └── 📁 hocs/
-│       └── withTaskContext.jsx
-├── 📁 server/
-│   └── server.js                   # API Express
-├── 📁 core/
-│   ├── project-manager.js
-│   └── task-manager.js
-└── cli.js                          # Entry point
+📁 JoRA/
+├── 📁 src/
+│   ├── 📁 frontend/              # React app modular
+│   │   ├── 📁 components/        # Componentes reutilizables
+│   │   │   ├── 📁 NavBar/         │ index.jsx, useNavBar.js, styles.scss
+│   │   │   ├── 📁 Task/           │ index.jsx, useTask.js, styles.scss
+│   │   │   ├── 📁 TaskColumn/     │ (Kanban columns)
+│   │   │   ├── 📁 BacklogColumn/  │ (Backlog view)
+│   │   │   ├── 📁 FilterBar/      │ (Filtros y búsqueda)
+│   │   │   ├── 📁 FloatingActionButton/ │ (FAB para crear)
+│   │   │   ├── 📁 VersionSelector/ │ (Selector de versiones)
+│   │   │   └── 📁 modals/
+│   │   │       ├── 📁 TaskModal/   │ HÍBRIDO: Modal + Página completa
+│   │   │       ├── 📁 EpicModal/   │ HÍBRIDO: Modal + Página completa
+│   │   │       └── 📁 AuthorModal/ │ Gestión de autores
+│   │   ├── 📁 pages/             # Páginas principales (React Router)
+│   │   │   ├── 📁 KanbanPage/     │ Vista principal (/)
+│   │   │   ├── 📁 BacklogPage/    │ Vista backlog (/backlog)
+│   │   │   ├── 📁 EpicsPage/      │ Lista épicas (/epics)
+│   │   │   ├── 📁 TaskDetailPage/ │ Detalle tarea (/task/:id)
+│   │   │   ├── 📁 EpicDetailPage/ │ Detalle épica (/epic/:id)
+│   │   │   ├── 📁 ReleasePage/    │ Vista release (/release/:version)
+│   │   │   └── 📁 AuthorsPage/    │ Gestión autores (/authors)
+│   │   ├── 📁 contexts/          # Estado global (Context API)
+│   │   │   ├── TaskContext.jsx    │ ⭐ CORE: Estado de tareas, épicas, etc.
+│   │   │   ├── ThemeContext.jsx   │ Temas dark/light
+│   │   │   └── ModalContext.jsx   │ Gestión de modales
+│   │   ├── 📁 hooks/             # Custom hooks
+│   │   │   ├── useTaskContext.js  │ Hook para TaskContext
+│   │   │   ├── useOptimisticTasks.js │ Performance optimizada
+│   │   │   ├── useApi.js          │ HTTP client wrapper
+│   │   │   └── useTheme.js        │ Theme switching
+│   │   ├── 📁 services/
+│   │   │   └── api.js            │ ⭐ REST API cliente
+│   │   ├── 📁 styles/            # SCSS global
+│   │   │   ├── globals.scss       │ Estilos base
+│   │   │   ├── variables.scss     │ ⭐ Variables CSS/SCSS
+│   │   │   └── themes.scss        │ Dark/Light themes
+│   │   └── 📁 hocs/
+│   │       └── withTaskContext.jsx │ HOC for context injection
+│   ├── 📁 server/                # Backend Express
+│   │   └── server.js             │ ⭐ API endpoints REST
+│   ├── 📁 core/                  # Business logic
+│   │   ├── project-manager.js     │ Project-level operations
+│   │   └── task-manager.js       │ ⭐ CORE: CRUD tareas/épicas/releases
+│   └── cli.js                    # Entry point del servidor
+├── 📁 jora-changelog/            # ⭐ DATABASE JSON FILES
+│   ├── current.json              │ ⭐ Lista de tareas activas
+│   ├── config.json               │ Configuración del proyecto
+│   ├── authors.json              │ Lista de autores
+│   ├── tags.json                 │ Lista de tags disponibles
+│   ├── 📁 tasks/                 │ ⭐ TASKS DATABASE
+│   │   ├── task-001-initial-vanilla-scaffolding.json
+│   │   ├── task-009-convert-to-epic-button.json
+│   │   ├── task-016-unique-id-system.json
+│   │   ├── task-020-cancelled-state-implementation.json
+│   │   └── task-XXX-nombre.json  │ Formato: task-###-slug.json
+│   ├── 📁 epics/                 │ ⭐ EPICS DATABASE
+│   │   ├── core-functionality.json
+│   │   ├── ui-improvements.json
+│   │   ├── advanced-workflow.json
+│   │   └── epic-XXX.json         │ Épicas con tareas asociadas
+│   └── 📁 releases/              │ ⭐ RELEASES GENERATED
+│       ├── v0.1.0.json           │ Releases con tareas incluidas
+│       ├── v0.2.0.json
+│       └── v0.3.0.json
+├── package.json                  │ Dependencies y scripts
+├── vite.config.js               │ Configuración Vite
+└── README.md                    │ Documentación principal
+```
+
+### **⚡ IMPORTANTE: Convenciones de Naming**
+- **Componentes**: `ComponentName/index.jsx` (NO `ComponentName/ComponentName.jsx`)
+- **Hooks**: `useComponentName.js` (en carpeta del componente)
+- **Estilos**: `styles.scss` (en carpeta del componente)
+- **Tasks**: `task-###-slug.json` (IDs semánticos incrementales)
+- **Épicas**: `epic-name.json` o `epic-###.json`
+- **NO redundancia** en nombres de archivos
+
+---
+
+## � **Estados y Workflow de Tareas**
+
+### **Estados de Tareas (6 + 1 especial)**
+```javascript
+// Estados principales del Kanban
+'in_backlog'        // 📋 Ideas y tareas futuras (NO en Kanban)
+'todo'              // 📝 Listo para próximo sprint 
+'in_progress'       // 🔄 En desarrollo activo
+'in_review'         // 👀 En revisión/testing
+'ready_to_release'  // ✅ Listo para release
+
+// Estados especiales
+'converted_to_epic' // 🔄 Convertido a épica (histórico)
+'cancelled'         // ❌ Cancelado (solo visible en Backlog)
+```
+
+### **Flujo de Trabajo Típico**
+```
+📋 in_backlog → 📝 todo → 🔄 in_progress → 👀 in_review → ✅ ready_to_release
+                ↑                                             ↓
+              (reactivar)                              (release automático)
+                ↑                                             ↓
+            ❌ cancelled                               📦 moved to release
+```
+
+### **Características del Sistema**
+- **Drag & Drop optimizado** con actualizaciones optimistas
+- **Modales híbridos**: TaskModal/EpicModal funcionan como modal Y como página
+- **URLs directas**: `/task/task-009`, `/epic/core-functionality`
+- **Filtrado inteligente**: Por épica, autor, estado, búsqueda
+- **Convert to Epic**: Convierte tareas grandes en épicas automáticamente
+- **Estado cancelled**: Oculto del Kanban, visible solo en Backlog con toggle
+
+---
+
+## 📊 **Modelo de Datos ACTUAL**
+
+### **Task Structure (FORMATO ACTUALIZADO)**
+```javascript
+{
+  "id": "task-016-unique-id-system",        // ⭐ Semantic IDs nuevos
+  "title": "Implementar sistema de IDs único y escalable",
+  "description": "Desarrollar un sistema de generación...", // Markdown supported
+  "state": "ready_to_release",              // 6 estados + converted_to_epic + cancelled
+  "priority": "high",                       // low, medium, high, critical
+  "type": "improvement",                    // feature, hotfix, documentation, poc, improvement, bug, refactor, test, chore
+  "epic": "core-functionality",            // ID de épica asociada
+  "author": "gzzy",                        // ID del autor
+  "assignee": "gzzy",                       // ID del assignee (puede ser null)
+  "estimatedPoints": 10,                    // Puntos de historia (0-21)
+  "estimatedDate": "2025-07-20",           // Fecha estimada ISO o null
+  "tags": ["technical-debt", "ux"],        // Array de tags
+  "subtasks": [                            // Array de subtareas
+    {
+      "id": "subtask-1",
+      "text": "Analizar diferencias entre IDs manuales vs web UI",
+      "completed": true
+    },
+    {
+      "id": "subtask-2", 
+      "text": "Diseñar formato unificado: task-###-description-slug",
+      "completed": true
+    }
+  ],
+  "images": [],                            // Array de imágenes (futuro)
+  "createdAt": "2025-01-12T15:00:00Z",
+  "updatedAt": "2025-01-12T17:00:00Z"
+}
+```
+
+### **Epic Structure**
+```javascript
+{
+  "id": "core-functionality",
+  "name": "Core Functionality", 
+  "description": "Essential features for basic operation...",
+  "color": "#3b82f6",                      // Color para UI
+  "status": "in_progress",                 // planning, in_progress, completed, on_hold
+  "priority": "high",
+  "created_from": "task-009",              // ⭐ Si fue convertida desde tarea
+  "startDate": "2025-07-01",
+  "endDate": "2025-07-31",
+  "createdAt": "2025-07-13T10:30:00Z",
+  "updatedAt": "2025-07-13T14:45:00Z"
+}
+```
+
+### **Release Structure**
+```javascript
+{
+  "version": "v0.3.0",
+  "name": "Epic Conversion & Cancelled State",
+  "description": "Major release with epic conversion...",
+  "releaseDate": "2025-07-13",
+  "tasks": [ /* embedded tasks ready_to_release */ ],
+  "convertedToEpics": [ /* tasks that were converted */ ], // ⭐ Nuevo
+  "generatedAt": "2025-07-13T21:00:00Z",
+  "taskCount": 3,
+  "convertedCount": 1                      // ⭐ Nuevo
+}
 ```
 
 ---
 
-## 🎨 **Convenciones de Código Estrictas**
+## �🎨 **Convenciones de Código Estrictas**
 
 ### **📁 Organización de Archivos**
 - **Cada componente/página** tiene su propia carpeta
