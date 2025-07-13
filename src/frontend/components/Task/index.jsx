@@ -2,7 +2,7 @@ import React from 'react';
 import { useTask } from './useTask';
 import './styles.scss';
 
-const Task = ({ task, onEdit, onDelete }) => {
+const Task = ({ task, onEdit, onDelete, isBacklogView = false }) => {
   const { 
     epic, 
     author, 

@@ -87,7 +87,7 @@ export const TaskProvider = ({ children }) => {
   }, [tasks, filters]);
 
   const tasksByState = useMemo(() => {
-    const states = ['todo', 'in_progress', 'in_review', 'ready_to_release'];
+    const states = ['in_backlog', 'todo', 'in_progress', 'in_review', 'ready_to_release'];
     return states.reduce((acc, state) => {
       acc[state] = filteredTasks.filter(task => task.state === state);
       return acc;

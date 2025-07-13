@@ -235,6 +235,24 @@
   }
 }
 
+.backlog-board {
+  h2 {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-semibold;
+    color: var(--text-primary);
+    margin-bottom: $spacing-sm;
+  }
+  
+  p {
+    color: var(--text-secondary);
+    font-size: $font-size-base;
+    margin-bottom: $spacing-lg;
+  }
+}
+
+// Import BacklogColumn styles
+@import '../../components/BacklogColumn/styles.scss';
+
 // Responsive adjustments
 @media (max-width: $tablet) {
   .backlog-container {

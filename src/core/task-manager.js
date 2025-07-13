@@ -52,7 +52,7 @@ class TaskManager {
       id: this.generateId(),
       title: taskData.title || 'Untitled Task',
       description: taskData.description || '',
-      state: taskData.state || 'todo',
+      state: taskData.state || 'in_backlog',
       type: taskData.type || 'feature',
       priority: taskData.priority || 'medium',
       epic: taskData.epic || null,

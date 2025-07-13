@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import NavBar from '../../components/NavBar';
+import BacklogColumn from '../../components/BacklogColumn';
 import { useTaskContext } from '../../hooks/useTaskContext';
 import './styles.scss';
 
@@ -60,6 +61,10 @@ const BacklogPage = () => {
           <div className="backlog-content">
             <div className="backlog-stats">
               <div className="stat-card">
+                <div className="stat-number">{tasks.filter(t => t.state === 'in_backlog').length}</div>
+                <div className="stat-label">In Backlog</div>
+              </div>
+              <div className="stat-card">
                 <div className="stat-number">{tasks.filter(t => t.state === 'todo').length}</div>
                 <div className="stat-label">To Do</div>
               </div>
@@ -77,43 +82,42 @@ const BacklogPage = () => {
               </div>
             </div>
 
-            <div className="backlog-list">
-              <h2>All Tasks ({tasks.length})</h2>
-              {tasks.length === 0 ? (
-                <div className="empty-state">
-                  <p>No tasks found</p>
-                  <p>Create your first task to get started</p>
-                </div>
-              ) : (
-                <div className="task-list">
-                  {tasks.map(task => (
-                    <div key={task.id} className="task-row">
-                      <div className="task-row-header">
-                        <div className="task-row-title">{task.title}</div>
-                        <div className={`task-row-state state-${task.state.replace('_', '-')}`}>
-                          {task.state.replace('_', ' ')}
-                        </div>
-                      </div>
-                      {task.description && (
-                        <div className="task-row-description">{task.description}</div>
-                      )}
-                      <div className="task-row-meta">
-                        <span className={`priority priority-${task.priority.replace('_', '-')}`}>
-                          {task.priority.replace('_', ' ')}
-                        </span>
-                        {task.estimatedPoints > 0 && (
-                          <span className="points">{task.estimatedPoints} pts</span>
-                        )}
-                        {task.subtasks?.length > 0 && (
-                          <span className="subtasks">
-                            ✓ {task.subtasks.filter(s => s.completed).length}/{task.subtasks.length}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+            <div className="backlog-board">
+              <h2>Task Organization</h2>
+              <p>Drag tasks between states to organize your backlog</p>
+              
+              <div className="backlog-columns">
+                <BacklogColumn 
+                  state="in_backlog"
+                  title="📋 In Backlog" 
+                  tasks={tasks.filter(t => t.state === 'in_backlog')}
+                  description="Future tasks and ideas"
+                />
+                <BacklogColumn 
+                  state="todo"
+                  title="📝 Next Sprint" 
+                  tasks={tasks.filter(t => t.state === 'todo')}
+                  description="Ready for next sprint"
+                />
+                <BacklogColumn 
+                  state="in_progress"
+                  title="🔄 In Progress" 
+                  tasks={tasks.filter(t => t.state === 'in_progress')}
+                  description="Currently being worked"
+                />
+                <BacklogColumn 
+                  state="in_review"
+                  title="👀 In Review" 
+                  tasks={tasks.filter(t => t.state === 'in_review')}
+                  description="Under review"
+                />
+                <BacklogColumn 
+                  state="ready_to_release"
+                  title="✅ Ready to Release" 
+                  tasks={tasks.filter(t => t.state === 'ready_to_release')}
+                  description="Ready for next release"
+                />
+              </div>
             </div>
           </div>
         </div>

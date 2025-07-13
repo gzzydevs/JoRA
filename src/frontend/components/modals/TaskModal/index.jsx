@@ -177,6 +177,7 @@ const TaskModal = ({
                     value={formData.state}
                     onChange={(e) => handleFormChange('state', e.target.value)}
                   >
+                    <option value="in_backlog">In Backlog</option>
                     <option value="todo">To Do</option>
                     <option value="in_progress">In Progress</option>
                     <option value="in_review">In Review</option>

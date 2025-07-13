@@ -44,7 +44,7 @@ export const useTaskModal = (taskId) => {
             setFormData({
               title: foundTask.title || '',
               description: foundTask.description || '',
-              state: foundTask.state || 'todo',
+              state: foundTask.state || 'in_backlog',
               priority: foundTask.priority || 'medium',
               type: foundTask.type || 'feature',
               epic: foundTask.epic || '',
@@ -64,7 +64,7 @@ export const useTaskModal = (taskId) => {
           setFormData({
             title: '',
             description: '',
-            state: 'todo',
+            state: 'in_backlog',
             priority: 'medium',
             type: 'feature',
             epic: '',
