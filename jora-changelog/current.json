@@ -15,7 +15,9 @@
     "task-012-configurable-states",
     "task-013-fix-epics-authors-layout",
     "task-014-unify-screen-styles",
-    "task-015-epic-completion-feature"
+    "task-015-epic-completion-feature",
+    "task-016-unique-id-system",
+    "task-017-react-router-bug-fix"
   ],
-  "lastUpdated": "2025-07-13T20:50:00.000Z"
+  "lastUpdated": "2025-01-12T15:10:00Z"
 }
