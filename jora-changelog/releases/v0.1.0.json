@@ -1,0 +1,31 @@
+{
+  "version": "0.1.0",
+  "name": "JoRA Self-Tracking Release",
+  "description": "Primera versión funcional de JoRA capaz de trackearse a sí mismo. Incluye migración completa a React, funcionalidades principales implementadas, distribución como binario PKG y GitHub Actions automáticas.",
+  "releaseDate": "2025-07-25",
+  "tasks": [
+    "task-001-initial-vanilla-scaffolding",
+    "task-002-react-migration",
+    "task-009-convert-to-epic-button",
+    "task-006-pkg-distribution"
+  ],
+  "features": [
+    "✅ Arquitectura React completa con Vite",
+    "✅ Kanban board con drag & drop optimizado",
+    "✅ CRUD completo de tareas, epics y autores",
+    "✅ Sistema de temas (dark/light mode)",
+    "✅ Navegación con React Router",
+    "✅ API REST funcional con persistencia JSON",
+    "✅ UI responsive y moderna",
+    "� Botón 'Convert to Epic' para workflow avanzado",
+    "�📦 Distribución como binario PKG multiplataforma",
+    "🤖 GitHub Actions para releases automáticos"
+  ],
+  "breaking_changes": [],
+  "bug_fixes": [
+    "Optimización de performance en actualizaciones de UI",
+    "Fixes menores de UI/UX"
+  ],
+  "generatedAt": "2025-07-13T19:20:00.000Z",
+  "taskCount": 4
+}

@@ -1,0 +1,55 @@
+{
+  "id": "task-006-pkg-distribution",
+  "title": "PKG Distribution + GitHub Actions Release",
+  "description": "Resolver problemas con PKG para generar binarios distribuibles que funcionen correctamente. Crear GitHub Actions que automáticamente generen y publiquen binarios cuando se cree un release oficial en GitHub.",
+  "state": "todo",
+  "priority": "critical",
+  "type": "feature",
+  "epic": "api",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": [
+    "pkg",
+    "binary",
+    "distribution",
+    "deployment",
+    "github-actions",
+    "automation"
+  ],
+  "estimatedPoints": 13,
+  "estimatedDate": "2025-07-20",
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Investigar problemas actuales con PKG + Vite",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Configurar build process para binarios multiplataforma",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Testear binarios en diferentes OS (Windows, macOS, Linux)",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Crear GitHub Action para build automático en releases",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Configurar publicación automática de binarios en GitHub Releases",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Crear documentación de distribución y deployment",
+      "completed": false
+    }
+  ],
+  "createdAt": "2025-07-13T15:15:00Z",
+  "updatedAt": "2025-07-13T18:53:44.280Z"
+}

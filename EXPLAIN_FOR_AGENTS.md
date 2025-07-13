@@ -316,13 +316,21 @@ if (error) return <ErrorMessage error={error} />;
 - ✅ Routing dinámico
 - ✅ Sistema de versiones
 
-### **🔄 En Desarrollo Potencial**
-- 📝 **Markdown Editor**: Editor rico para descripciones
+### **🔄 En Desarrollo Actual (v0.1.0)**
+- � **Backlog UI Fixes**: Corregir drag & drop en página de backlog
+- 📚 **Documentation**: Documentación general de uso para usuarios
+- 🧪 **Testing Suite**: Implementar tests con Jest en todos los componentes
+- 📦 **PKG Distribution**: Hacer funcionar el empaquetado con PKG para binarios distribuibles
+- � **Bug Fixes**: Resolver errores menores y optimizar performance
+
+### **🔮 Roadmap Futuro (post v0.1.0)**
+- 🐙 **GitHub Integration**: Integrar con GitHub Issues, PRs y Releases automáticos
+- 📝 **Markdown Editor**: Editor rico para descripciones de tareas
+- 🔍 **Advanced Search**: Búsqueda avanzada y filtros complejos
+- ⌨️ **Keyboard Shortcuts**: Atajos de teclado para productividad
+- 📊 **Analytics Dashboard**: Métricas y reportes de progreso
+- 🌐 **TypeScript Migration**: Migrar todo el proyecto a TypeScript
 - 🔔 **Notifications**: Sistema de notificaciones
-- 🔍 **Advanced Search**: Búsqueda avanzada y filtros
-- ⌨️ **Keyboard Shortcuts**: Atajos de teclado
-- 📊 **Analytics Dashboard**: Métricas y reportes
-- 🌐 **Multi-language**: Internacionalización
 
 ### **🎯 Features Sugeridas para Agentes**
 ```javascript
@@ -374,16 +382,18 @@ if (error) return <ErrorMessage error={error} />;
 
 ---
 
-## 🎉 **Estado Actual**
+## 🎉 **Estado Actual: feature/jora-is-tracked-by-jora**
 
-**JoRA está 100% funcional** con:
-- ✅ **Arquitectura React moderna**
+**JoRA está en proceso de desarrollo activo** con:
+- ✅ **Arquitectura React moderna completada**
 - ✅ **UI/UX pulida y responsive**  
-- ✅ **Performance optimizada**
-- ✅ **Funcionalidades core completas**
-- ✅ **Estructura escalable**
+- ✅ **Performance optimizada con drag & drop**
+- ✅ **Funcionalidades core implementadas**
+- ✅ **Estructura escalable establecida**
 
-**Ready para:** Nuevas features, optimizaciones, y mejoras de UX.
+**Objetivo v0.1.0:** Lograr que JoRA se trackee a sí mismo completamente funcional, con todas las características principales trabajando sin errores críticos y listo para distribución como binario PKG.
+
+**Branch actual:** `feature/jora-is-tracked-by-jora` - Este branch representa el esfuerzo de convertir JoRA en un proyecto que se autogestiona usando sus propias herramientas.
 
 ---
 

@@ -1,0 +1,14 @@
+{
+  "tasks": [
+    "task-001-initial-vanilla-scaffolding",
+    "task-002-react-migration",
+    "task-003-backlog-ui-fixes",
+    "task-004-user-documentation",
+    "task-005-jest-testing-suite",
+    "task-006-pkg-distribution",
+    "task-007-github-integration",
+    "task-008-typescript-migration",
+    "task-009-convert-to-epic-button"
+  ],
+  "lastUpdated": "2025-07-13T19:15:00.000Z"
+}

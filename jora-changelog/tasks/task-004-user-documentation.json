@@ -1,0 +1,42 @@
+{
+  "id": "task-004-user-documentation",
+  "title": "Create User Documentation",
+  "description": "Crear documentación general de uso para usuarios finales, incluyendo guías de instalación, uso básico, configuración y mejores prácticas.",
+  "state": "in_backlog",
+  "priority": "medium",
+  "type": "documentation",
+  "epic": "getting-started",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": [
+    "documentation",
+    "user-guide",
+    "getting-started"
+  ],
+  "estimatedPoints": 8,
+  "estimatedDate": "2025-07-18",
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Escribir guía de instalación",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Documentar funcionalidades principales",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Crear ejemplos de uso",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Documentar configuración avanzada",
+      "completed": false
+    }
+  ],
+  "createdAt": "2025-07-13T15:05:00Z",
+  "updatedAt": "2025-07-13T18:59:41.738Z"
+}

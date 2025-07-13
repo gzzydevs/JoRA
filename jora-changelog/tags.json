@@ -1,0 +1,27 @@
+[
+  {
+    "id": "bug",
+    "name": "Bug",
+    "color": "#ff4444"
+  },
+  {
+    "id": "feature",
+    "name": "Feature",
+    "color": "#44ff44"
+  },
+  {
+    "id": "improvement",
+    "name": "Improvement",
+    "color": "#4444ff"
+  },
+  {
+    "id": "documentation",
+    "name": "Documentation",
+    "color": "#ffaa44"
+  },
+  {
+    "id": "refactor",
+    "name": "Refactor",
+    "color": "#aa44ff"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": "task-001-initial-vanilla-scaffolding",
+  "title": "Initial Vanilla JS Scaffolding",
+  "description": "Crear el scaffolding inicial del proyecto en Vanilla JavaScript. Este intento resultó en un archivo monolítico de más de 3000 líneas que dificultaba el desarrollo.",
+  "state": "ready_to_release",
+  "priority": "high",
+  "type": "feature",
+  "epic": "core-functionality",
+  "author": "gzzy",
+  "assignee": "gzzy",
+  "tags": ["scaffolding", "vanilla-js", "initial"],
+  "estimatedPoints": 13,
+  "estimatedDate": "2025-06-15",
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Configurar estructura de proyecto inicial",
+      "completed": true
+    },
+    {
+      "id": "subtask-2", 
+      "text": "Implementar funcionalidades básicas en app.js",
+      "completed": true
+    },
+    {
+      "id": "subtask-3",
+      "text": "Identificar problemas de escalabilidad",
+      "completed": true
+    }
+  ],
+  "createdAt": "2025-06-01T10:00:00Z",
+  "updatedAt": "2025-06-15T18:00:00Z"
+}

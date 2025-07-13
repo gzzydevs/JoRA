@@ -1,0 +1,43 @@
+{
+  "id": "task-007-github-integration",
+  "title": "Basic GitHub API Integration",
+  "description": "Implementar integración básica con GitHub API para sincronizar Issues y PRs. Esta es una versión simplificada enfocada en funcionalidades core sin releases automáticos (que están en PKG Distribution task).",
+  "state": "in_backlog",
+  "priority": "low",
+  "type": "feature",
+  "epic": "api",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": [
+    "github",
+    "integration",
+    "api",
+    "automation"
+  ],
+  "estimatedPoints": 13,
+  "estimatedDate": "2025-08-15",
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Configurar autenticación con GitHub API",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Sincronizar tareas con GitHub Issues (lectura)",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Asociar tareas con PRs existentes",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Crear interfaz de configuración para repos",
+      "completed": false
+    }
+  ],
+  "createdAt": "2025-07-13T15:20:00Z",
+  "updatedAt": "2025-07-13T18:55:49.031Z"
+}
