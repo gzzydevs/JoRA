@@ -1,6 +1,6 @@
 import React from 'react';
 import { useModal } from '../../contexts/ModalContext';
-import './FloatingActionButton.scss';
+import './styles.scss';
 
 const FloatingActionButton = () => {
   const { openModal } = useModal();

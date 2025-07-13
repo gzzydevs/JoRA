@@ -1,7 +1,7 @@
 import React from 'react';
 import { useModal } from '../../contexts/ModalContext';
-import { TaskModal } from '../modals/TaskModal';
-import { EpicModal } from '../modals/EpicModal';
+import TaskModal from '../modals/TaskModal';
+import EpicModal from '../modals/EpicModal';
 
 const ModalManager = () => {
   const { activeModal, modalProps, closeModal } = useModal();

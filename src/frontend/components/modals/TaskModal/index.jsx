@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTaskModal } from './useTaskModal';
-import './TaskModal.scss';
+import './styles.scss';
 
 const TaskModal = ({ 
   taskId = null, 

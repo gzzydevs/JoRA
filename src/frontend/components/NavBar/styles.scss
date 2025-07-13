@@ -68,6 +68,12 @@
   margin: 0 $spacing-xs;
 }
 
+// Increase navbar button size for better visibility
+.navbar-actions .btn-sm {
+  padding: $spacing-sm $spacing-md;
+  font-size: $font-size-sm;
+}
+
 // Responsive adjustments
 @media (max-width: $tablet) {
   .navbar-content {

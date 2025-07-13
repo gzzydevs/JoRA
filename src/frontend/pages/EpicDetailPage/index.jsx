@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { EpicModal } from '../components/modals/EpicModal';
+import EpicModal from '../../components/modals/EpicModal';
+import './styles.scss';
 
 const EpicDetailPage = () => {
   const { id } = useParams();

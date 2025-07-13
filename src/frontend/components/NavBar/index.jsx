@@ -1,7 +1,7 @@
 import React from 'react';
-import VersionSelector from '../VersionSelector/VersionSelector';
+import VersionSelector from '../VersionSelector';
 import { useNavBar } from './useNavBar';
-import './NavBar.scss';
+import './styles.scss';
 
 const NavBar = () => {
   const {

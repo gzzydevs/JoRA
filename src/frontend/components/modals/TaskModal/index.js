@@ -1,2 +1,2 @@
-export { default as TaskModal } from './TaskModal';
+export { default } from './index';
 export { useTaskModal } from './useTaskModal';

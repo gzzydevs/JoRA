@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import NavBar from '../components/NavBar/NavBar';
+import NavBar from '../../components/NavBar';
 import { useReleasePage } from './useReleasePage';
-import './ReleasePage.scss';
+import './styles.scss';
 
 const ReleasePage = () => {
   const { version } = useParams();

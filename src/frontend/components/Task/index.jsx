@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTask } from './useTask';
-import './Task.scss';
+import './styles.scss';
 
 const Task = ({ task, onEdit, onDelete }) => {
   const { 

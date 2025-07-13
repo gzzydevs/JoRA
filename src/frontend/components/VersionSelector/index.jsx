@@ -1,6 +1,6 @@
 import React from 'react';
 import { useVersionSelector } from './useVersionSelector';
-import './VersionSelector.scss';
+import './styles.scss';
 
 const VersionSelector = () => {
   const {

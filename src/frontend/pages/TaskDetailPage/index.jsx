@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import NavBar from '../components/NavBar/NavBar';
-import TaskModal from '../components/modals/TaskModal/TaskModal';
-import './TaskDetailPage.scss';
+import NavBar from '../../components/NavBar';
+import TaskModal from '../../components/modals/TaskModal';
+import './styles.scss';
 
 const TaskDetailPage = () => {
   const { id } = useParams();

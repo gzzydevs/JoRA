@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ModalProvider } from './contexts/ModalContext';
 import withTaskContext from './hocs/withTaskContext';
-import { ModalManager } from './components/ModalManager';
+import ModalManager from './components/ModalManager';
 import KanbanPage from './pages/KanbanPage';
 import BacklogPage from './pages/BacklogPage';
 import ReleasePage from './pages/ReleasePage';

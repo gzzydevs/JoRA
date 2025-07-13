@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import NavBar from '../components/NavBar/NavBar';
-import { useTaskContext } from '../hooks/useTaskContext';
-import './BacklogPage.scss';
+import NavBar from '../../components/NavBar';
+import { useTaskContext } from '../../hooks/useTaskContext';
+import './styles.scss';
 
 const BacklogPage = () => {
   const { tasks, isLoading, error } = useTaskContext();

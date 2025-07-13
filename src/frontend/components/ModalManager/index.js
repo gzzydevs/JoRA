@@ -1,1 +1,1 @@
-export { default as ModalManager } from './ModalManager';
+export { default as ModalManager } from './index';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFilterBar } from './useFilterBar';
-import './FilterBar.scss';
+import './styles.scss';
 
 const FilterBar = () => {
   const {

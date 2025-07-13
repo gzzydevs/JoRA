@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useEpicModal } from './useEpicModal';
-import './EpicModal.scss';
+import './styles.scss';
 
 const EpicModal = ({ 
   epicId = null, 

@@ -1,10 +1,10 @@
 import React from 'react';
-import NavBar from '../components/NavBar/NavBar';
-import FilterBar from '../components/FilterBar/FilterBar';
-import TaskColumn from '../components/TaskColumn/TaskColumn';
-import { FloatingActionButton } from '../components/FloatingActionButton';
-import { useTaskContext } from '../hooks/useTaskContext';
-import './KanbanPage.scss';
+import NavBar from '../../components/NavBar';
+import FilterBar from '../../components/FilterBar';
+import TaskColumn from '../../components/TaskColumn';
+import FloatingActionButton from '../../components/FloatingActionButton';
+import { useTaskContext } from '../../hooks/useTaskContext';
+import './styles.scss';
 
 const KanbanPage = () => {
   const { tasksByState, isLoading, error } = useTaskContext();

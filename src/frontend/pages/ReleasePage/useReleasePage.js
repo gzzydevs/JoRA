@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useTaskContext } from '../hooks/useTaskContext';
-import apiService from '../services/api';
+import { useTaskContext } from '../../hooks/useTaskContext';
+import apiService from '../../services/api';
 
 export const useReleasePage = (version) => {
   const { releases, setSelectedVersion } = useTaskContext();

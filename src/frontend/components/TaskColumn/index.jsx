@@ -1,7 +1,7 @@
 import React from 'react';
-import Task from '../Task/Task';
+import Task from '../Task';
 import { useTaskColumn } from './useTaskColumn';
-import './TaskColumn.scss';
+import './styles.scss';
 
 const TaskColumn = ({ icon, title, tasks, state }) => {
   const {
