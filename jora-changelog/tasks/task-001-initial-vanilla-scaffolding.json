@@ -8,7 +8,11 @@
   "epic": "core-functionality",
   "author": "gzzy",
   "assignee": "gzzy",
-  "tags": ["scaffolding", "vanilla-js", "initial"],
+  "tags": [
+    "scaffolding",
+    "vanilla-js",
+    "initial"
+  ],
   "estimatedPoints": 13,
   "estimatedDate": "2025-06-15",
   "subtasks": [
@@ -18,7 +22,7 @@
       "completed": true
     },
     {
-      "id": "subtask-2", 
+      "id": "subtask-2",
       "text": "Implementar funcionalidades básicas en app.js",
       "completed": true
     },
@@ -29,5 +33,5 @@
     }
   ],
   "createdAt": "2025-06-01T10:00:00Z",
-  "updatedAt": "2025-06-15T18:00:00Z"
+  "updatedAt": "2025-07-13T21:55:24.117Z"
 }
