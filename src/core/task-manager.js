@@ -346,6 +346,7 @@ class TaskManager {
   async generateRelease(version, description = '') {
     const tasks = await this.loadAllTasks();
     const tasksToRelease = tasks.filter(task => task.state === 'ready_to_release');
+    const convertedToEpics = tasks.filter(task => task.state === 'converted_to_epic');
     
     if (tasksToRelease.length === 0) {
       throw new Error('No tasks ready for release');
@@ -355,15 +356,18 @@ class TaskManager {
       version,
       description,
       tasks: tasksToRelease,
+      convertedToEpics: convertedToEpics, // Include converted tasks for reference but don't move them
       generatedAt: new Date().toISOString(),
-      taskCount: tasksToRelease.length
+      taskCount: tasksToRelease.length,
+      convertedCount: convertedToEpics.length
     };
     
     // Save release file
     const releasePath = path.join(this.releasesPath, `v${version}.json`);
     await fs.writeFile(releasePath, JSON.stringify(release, null, 2));
     
-    // Remove released tasks from the main tasks directory
+    // Remove only ready_to_release tasks from the main tasks directory
+    // Leave converted_to_epic tasks as they represent historical conversions
     for (const task of tasksToRelease) {
       await this.deleteTask(task.id);
     }

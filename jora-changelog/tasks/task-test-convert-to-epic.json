@@ -2,12 +2,12 @@
   "id": "task-test-convert-to-epic",
   "title": "Test Large Task for Epic Conversion",
   "description": "Esta es una tarea grande de prueba que debería mostrar el botón 'Convert to Epic' porque tiene múltiples subtareas y estimación alta.",
-  "state": "todo",
+  "state": "cancelled",
   "priority": "medium",
   "type": "feature",
   "epic": "ui-improvements",
   "author": "gzzy",
-  "assignee": "AI_AGENT",
+  "assignee": "gzzy",
   "tags": ["test", "epic-conversion", "large-task"],
   "estimatedPoints": 15,
   "estimatedDate": "2025-07-20",
@@ -15,7 +15,7 @@
     {
       "id": "test-subtask-1",
       "text": "Implementar primera funcionalidad",
-      "completed": true
+      "completed": false
     },
     {
       "id": "test-subtask-2", 
@@ -39,5 +39,5 @@
     }
   ],
   "createdAt": "2025-07-13T20:00:00Z",
-  "updatedAt": "2025-07-13T20:00:00Z"
+  "updatedAt": "2025-01-12T15:35:00Z"
 }

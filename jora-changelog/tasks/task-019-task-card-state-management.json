@@ -1,0 +1,49 @@
+{
+  "id": "task-019-task-card-state-management",
+  "title": "Cambio de estado desde la tarjeta de tarea",
+  "description": "Implementar la capacidad de cambiar el estado de una tarea directamente desde su tarjeta en el Kanban, con actualización en tiempo real del contexto y la UI.\n\n**Funcionalidad requerida:**\n- Dropdown o botones en la tarjeta para cambiar estado\n- Actualización optimística del contexto TaskContext\n- Feedback visual durante el cambio\n- Manejo de errores y rollback si falla\n- Compatibilidad con drag & drop existente\n\n**UX consideraciones:**\n- No interferir con el drag & drop actual\n- Feedback claro del estado actual y opciones\n- Animación suave de transición entre columnas\n- Acceso rápido a estados más comunes",
+  "state": "in_backlog",
+  "type": "feature",
+  "priority": "medium",
+  "epic": "ui-improvements",
+  "author": "gzzy",
+  "assignee": "gzzy",
+  "tags": ["ui", "kanban", "state-management"],
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Diseñar UX para cambio de estado en tarjeta",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Agregar dropdown/buttons de estado en Task component",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Implementar lógica de cambio con optimistic updates",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Agregar animaciones de transición entre columnas",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Testear compatibilidad con drag & drop existente",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Implementar manejo de errores y rollback",
+      "completed": false
+    }
+  ],
+  "estimatedPoints": 6,
+  "estimatedDate": null,
+  "images": [],
+  "createdAt": "2025-01-12T15:20:00Z",
+  "updatedAt": "2025-01-12T15:20:00Z"
+}

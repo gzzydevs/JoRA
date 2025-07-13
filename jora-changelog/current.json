@@ -17,7 +17,11 @@
     "task-014-unify-screen-styles",
     "task-015-epic-completion-feature",
     "task-016-unique-id-system",
-    "task-017-react-router-bug-fix"
+    "task-017-react-router-bug-fix",
+    "task-018-release-system-epic-handling",
+    "task-019-task-card-state-management",
+    "task-020-cancelled-state-implementation",
+    "task-021-task-dependencies-blocked-state"
   ],
-  "lastUpdated": "2025-01-12T15:10:00Z"
+  "lastUpdated": "2025-01-12T15:45:00Z"
 }
