@@ -20,6 +20,11 @@ class ApiService {
         throw new Error(`API Error (${response.status}): ${errorText}`);
       }
       
+      // Handle 204 No Content responses (e.g., DELETE operations)
+      if (response.status === 204) {
+        return null;
+      }
+      
       const result = await response.json();
       console.log(`API response from ${url}:`, result);
       return result;
