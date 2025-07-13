@@ -1,2 +1,2 @@
-export { default } from './index';
+export { default } from './index.jsx';
 export { useEpicModal } from './useEpicModal';

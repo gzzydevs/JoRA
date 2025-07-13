@@ -1,1 +1,1 @@
-export { default as FloatingActionButton } from './index';
+export { default } from './index.jsx';

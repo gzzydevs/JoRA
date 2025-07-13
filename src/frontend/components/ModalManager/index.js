@@ -1,1 +1,1 @@
-export { default as ModalManager } from './index';
+export { default } from './index.jsx';
