@@ -157,7 +157,7 @@ export const useTaskModal = (taskId) => {
 
       if (task) {
         // Update existing task
-        await updateTask(taskData);
+        await updateTask(task.id, taskData);
         setTask(taskData);
       } else {
         // Create new task
@@ -236,6 +236,28 @@ export const useTaskModal = (taskId) => {
       document.execCommand('copy');
       document.body.removeChild(textarea);
       alert('✅ Prompt copied to clipboard! You can now paste it to an AI agent to convert this task to an epic.');
+    }
+  };
+
+  // Reactivate cancelled task
+  const handleReactivate = async () => {
+    if (!task || task.state !== 'cancelled') return;
+
+    try {
+      const reactivatedTask = {
+        ...task,
+        state: 'in_backlog', // Move back to backlog when reactivated
+        updatedAt: new Date().toISOString()
+      };
+
+      await updateTask(reactivatedTask.id, { state: 'in_backlog' });
+      setTask(reactivatedTask);
+      setFormData(prev => ({ ...prev, state: 'in_backlog' }));
+      
+      alert('✅ Task has been reactivated and moved to backlog.');
+    } catch (err) {
+      console.error('Failed to reactivate task:', err);
+      setError('Failed to reactivate task');
     }
   };
 
@@ -363,6 +385,7 @@ Please implement these changes and update all JoRA data files accordingly.`;
     handleDelete,
     toggleEdit,
     handleConvertToEpic,
+    handleReactivate,
     shouldShowConvertToEpic
   };
 };

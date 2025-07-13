@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import NavBar from '../../components/NavBar';
 import BacklogColumn from '../../components/BacklogColumn';
@@ -7,6 +7,12 @@ import './styles.scss';
 
 const BacklogPage = () => {
   const { tasks, isLoading, error } = useTaskContext();
+  const [showCancelled, setShowCancelled] = useState(false);
+
+  // Filter tasks based on showCancelled toggle
+  const visibleTasks = showCancelled 
+    ? tasks 
+    : tasks.filter(t => t.state !== 'cancelled');
 
   if (isLoading) {
     return (
@@ -54,32 +60,50 @@ const BacklogPage = () => {
                 ← Back to Kanban
               </Link>
             </div>
-            <h1>Project Backlog</h1>
-            <p>All tasks across all states</p>
+            <div className="backlog-title-section">
+              <h1>Project Backlog</h1>
+              <p>All tasks across all states</p>
+            </div>
+            <div className="backlog-controls">
+              <label className="toggle-cancelled">
+                <input
+                  type="checkbox"
+                  checked={showCancelled}
+                  onChange={(e) => setShowCancelled(e.target.checked)}
+                />
+                Show cancelled tasks
+              </label>
+            </div>
           </div>
           
           <div className="backlog-content">
             <div className="backlog-stats">
               <div className="stat-card">
-                <div className="stat-number">{tasks.filter(t => t.state === 'in_backlog').length}</div>
+                <div className="stat-number">{visibleTasks.filter(t => t.state === 'in_backlog').length}</div>
                 <div className="stat-label">In Backlog</div>
               </div>
               <div className="stat-card">
-                <div className="stat-number">{tasks.filter(t => t.state === 'todo').length}</div>
+                <div className="stat-number">{visibleTasks.filter(t => t.state === 'todo').length}</div>
                 <div className="stat-label">To Do</div>
               </div>
               <div className="stat-card">
-                <div className="stat-number">{tasks.filter(t => t.state === 'in_progress').length}</div>
+                <div className="stat-number">{visibleTasks.filter(t => t.state === 'in_progress').length}</div>
                 <div className="stat-label">In Progress</div>
               </div>
               <div className="stat-card">
-                <div className="stat-number">{tasks.filter(t => t.state === 'in_review').length}</div>
+                <div className="stat-number">{visibleTasks.filter(t => t.state === 'in_review').length}</div>
                 <div className="stat-label">In Review</div>
               </div>
               <div className="stat-card">
-                <div className="stat-number">{tasks.filter(t => t.state === 'ready_to_release').length}</div>
+                <div className="stat-number">{visibleTasks.filter(t => t.state === 'ready_to_release').length}</div>
                 <div className="stat-label">Ready to Release</div>
               </div>
+              {showCancelled && (
+                <div className="stat-card cancelled">
+                  <div className="stat-number">{tasks.filter(t => t.state === 'cancelled').length}</div>
+                  <div className="stat-label">Cancelled</div>
+                </div>
+              )}
             </div>
 
             <div className="backlog-board">
@@ -90,33 +114,41 @@ const BacklogPage = () => {
                 <BacklogColumn 
                   state="in_backlog"
                   title="📋 In Backlog" 
-                  tasks={tasks.filter(t => t.state === 'in_backlog')}
+                  tasks={visibleTasks.filter(t => t.state === 'in_backlog')}
                   description="Future tasks and ideas"
                 />
                 <BacklogColumn 
                   state="todo"
                   title="📝 Next Sprint" 
-                  tasks={tasks.filter(t => t.state === 'todo')}
+                  tasks={visibleTasks.filter(t => t.state === 'todo')}
                   description="Ready for next sprint"
                 />
                 <BacklogColumn 
                   state="in_progress"
                   title="🔄 In Progress" 
-                  tasks={tasks.filter(t => t.state === 'in_progress')}
+                  tasks={visibleTasks.filter(t => t.state === 'in_progress')}
                   description="Currently being worked"
                 />
                 <BacklogColumn 
                   state="in_review"
                   title="👀 In Review" 
-                  tasks={tasks.filter(t => t.state === 'in_review')}
+                  tasks={visibleTasks.filter(t => t.state === 'in_review')}
                   description="Under review"
                 />
                 <BacklogColumn 
                   state="ready_to_release"
                   title="✅ Ready to Release" 
-                  tasks={tasks.filter(t => t.state === 'ready_to_release')}
+                  tasks={visibleTasks.filter(t => t.state === 'ready_to_release')}
                   description="Ready for next release"
                 />
+                {showCancelled && (
+                  <BacklogColumn 
+                    state="cancelled"
+                    title="❌ Cancelled" 
+                    tasks={tasks.filter(t => t.state === 'cancelled')}
+                    description="Cancelled or obsolete tasks"
+                  />
+                )}
               </div>
             </div>
           </div>

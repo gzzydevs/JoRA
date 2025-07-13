@@ -20,6 +20,24 @@
     background-color: var(--color-primary)08;
     transform: scale(1.02);
   }
+
+  &[data-state="cancelled"] {
+    border-left: 4px solid #ef4444;
+    opacity: 0.85;
+    
+    .backlog-column-header {
+      background-color: #ef44441a;
+    }
+    
+    .backlog-column-count {
+      background-color: #ef4444;
+    }
+    
+    .backlog-task-list .task-card {
+      opacity: 0.8;
+      border-left: 2px solid #ef4444;
+    }
+  }
 }
 
 .backlog-column-header {

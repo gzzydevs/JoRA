@@ -27,6 +27,7 @@ const TaskModal = ({
     handleDelete,
     toggleEdit,
     handleConvertToEpic,
+    handleReactivate,
     shouldShowConvertToEpic,
     error
   } = useTaskModal(taskId);
@@ -114,6 +115,15 @@ const TaskModal = ({
                     🔄 Convert to Epic
                   </button>
                 )}
+                {task?.state === 'cancelled' && (
+                  <button 
+                    className="btn btn-success btn-sm reactivate-btn" 
+                    onClick={handleReactivate}
+                    title="Reactivate this cancelled task"
+                  >
+                    🔄 Reactivate
+                  </button>
+                )}
               </>
             ) : (
               <div className="edit-actions">
@@ -195,6 +205,7 @@ const TaskModal = ({
                     <option value="in_progress">In Progress</option>
                     <option value="in_review">In Review</option>
                     <option value="ready_to_release">Ready to Release</option>
+                    <option value="cancelled">Cancelled</option>
                   </select>
                 ) : (
                   <div className={`task-display-state state-${task?.state.replace('_', '-')}`}>

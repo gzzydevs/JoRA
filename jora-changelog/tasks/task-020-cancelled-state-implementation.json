@@ -2,7 +2,7 @@
   "id": "task-020-cancelled-state-implementation",
   "title": "Implementar estado 'cancelled' para tareas",
   "description": "Agregar un nuevo estado 'cancelled' para tareas que fueron canceladas o no se van a completar. Este estado debe manejarse de forma especial en la UI, mostrándose solo en el backlog por defecto.\n\n**Requerimientos:**\n- Nuevo estado 'cancelled' después de 'ready_to_release'\n- Tareas canceladas solo visibles en vista de Backlog\n- Posibilidad de reactivar tareas canceladas\n- Filtrado especial para incluir/excluir canceladas\n- No interferir con flujo normal de Kanban\n\n**Casos de uso:**\n- Tareas que se vuelven obsoletas\n- Features que se decide no implementar\n- Tests que fueron convertidos a épicas\n- Mantenimiento del historial sin cluttering",
-  "state": "in_backlog",
+  "state": "ready_to_release",
   "type": "feature",
   "priority": "medium",
   "epic": "core-functionality",
@@ -13,37 +13,37 @@
     {
       "id": "subtask-1",
       "text": "Agregar 'cancelled' a estados válidos en sistema",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-2",
       "text": "Actualizar TaskContext para filtrar cancelled del Kanban",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-3",
       "text": "Mostrar cancelled solo en BacklogPage",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-4",
       "text": "Agregar toggle para mostrar/ocultar cancelled en backlog",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-5",
       "text": "Implementar opción 'reactivar' para tareas cancelled",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-6",
       "text": "Actualizar estilos para diferenciar tareas cancelled",
-      "completed": false
+      "completed": true
     }
   ],
   "estimatedPoints": 4,
   "estimatedDate": null,
   "images": [],
   "createdAt": "2025-01-12T15:25:00Z",
-  "updatedAt": "2025-01-12T15:25:00Z"
+  "updatedAt": "2025-01-12T16:00:00Z"
 }

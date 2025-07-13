@@ -18,23 +18,67 @@
 
 .backlog-header {
   margin-bottom: $spacing-xl;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: $spacing-md;
 
   .backlog-navigation {
     margin-bottom: $spacing-lg;
     text-align: left;
   }
 
-  h1 {
-    font-size: $font-size-3xl;
-    font-weight: $font-weight-bold;
-    color: var(--text-primary);
-    margin-bottom: $spacing-sm;
+  .backlog-title-section {
+    text-align: center;
+    flex: 1;
+
+    h1 {
+      font-size: $font-size-3xl;
+      font-weight: $font-weight-bold;
+      color: var(--text-primary);
+      margin-bottom: $spacing-sm;
+    }
+
+    p {
+      color: var(--text-secondary);
+      font-size: $font-size-lg;
+    }
   }
 
-  p {
+  .backlog-controls {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+  }
+
+  .toggle-cancelled {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    font-size: $font-size-sm;
     color: var(--text-secondary);
-    font-size: $font-size-lg;
+    cursor: pointer;
+    user-select: none;
+
+    input[type='checkbox'] {
+      margin: 0;
+      cursor: pointer;
+    }
+
+    &:hover {
+      color: var(--text-primary);
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+
+    .backlog-navigation {
+      align-self: flex-start;
+    }
   }
 }
 
@@ -69,6 +113,14 @@
     color: var(--text-secondary);
     font-size: $font-size-sm;
     font-weight: $font-weight-medium;
+  }
+
+  &.cancelled {
+    border-left: 4px solid #ef4444;
+
+    .stat-number {
+      color: #ef4444;
+    }
   }
 }
 
@@ -227,7 +279,7 @@
 
   p {
     margin-bottom: $spacing-sm;
-    
+
     &:first-child {
       font-size: $font-size-lg;
       font-weight: $font-weight-medium;
@@ -242,7 +294,7 @@
     color: var(--text-primary);
     margin-bottom: $spacing-sm;
   }
-  
+
   p {
     color: var(--text-secondary);
     font-size: $font-size-base;

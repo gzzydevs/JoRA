@@ -201,6 +201,12 @@
     background-color: #e8f5e8;
     color: #388e3c;
   }
+
+  &.state-cancelled {
+    background-color: #ffebee;
+    color: #d32f2f;
+    border: 1px solid #ffcdd2;
+  }
 }
 
 .task-display-priority {
