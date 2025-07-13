@@ -29,5 +29,19 @@
     "id": "alex-tech",
     "name": "Alex Tech",
     "email": "alex.tech@company.com"
+  },
+  {
+    "id": "author-1752447196284",
+    "name": "a.ascheri",
+    "email": "ascheriagustin@gmail.com",
+    "createdAt": "2025-07-13T22:53:16.284Z",
+    "updatedAt": "2025-07-13T22:53:16.284Z"
+  },
+  {
+    "id": "author-1752447317376",
+    "name": "gzzy",
+    "email": "barbycus@gmail.com",
+    "createdAt": "2025-07-13T22:55:17.376Z",
+    "updatedAt": "2025-07-13T22:55:17.376Z"
   }
 ]
