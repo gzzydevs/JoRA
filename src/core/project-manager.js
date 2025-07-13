@@ -5,7 +5,7 @@ const path = require('path');
  * Initialize a JoRA project in the given directory
  */
 async function initializeProject(projectPath) {
-  const todoPath = path.join(projectPath, 'cl-todo');
+  const todoPath = path.join(projectPath, 'jora-changelog');
   
   // Check if already initialized
   try {

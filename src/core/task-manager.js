@@ -4,10 +4,73 @@ const path = require('path');
 class TaskManager {
   constructor(projectPath) {
     this.projectPath = projectPath;
-    this.todoPath = path.join(projectPath, 'cl-todo');
+    this.todoPath = this.getProjectDataPath(projectPath);
     this.tasksPath = path.join(this.todoPath, 'tasks');
     this.epicsPath = path.join(this.todoPath, 'epics');
     this.releasesPath = path.join(this.todoPath, 'releases');
+  }
+
+  // Determine the correct project data path and migrate if needed
+  getProjectDataPath(projectPath) {
+    const newPath = path.join(projectPath, 'jora-changelog');
+    const oldPath = path.join(projectPath, 'cl-todo');
+    
+    // Check if new path exists
+    try {
+      require('fs').accessSync(newPath);
+      console.log('🎯 Using jora-changelog directory');
+      return newPath;
+    } catch (err) {
+      // New path doesn't exist, check for old path
+      try {
+        require('fs').accessSync(oldPath);
+        console.log('🔄 Found cl-todo directory, will migrate to jora-changelog...');
+        this.migrateFromOldPath(oldPath, newPath);
+        return newPath;
+      } catch (err2) {
+        // Neither exists, use new path (will be created)
+        console.log('📁 Will create new jora-changelog directory');
+        return newPath;
+      }
+    }
+  }
+
+  // Migrate from cl-todo to jora-changelog
+  migrateFromOldPath(oldPath, newPath) {
+    try {
+      console.log(`📦 Migrating data from ${oldPath} to ${newPath}...`);
+      
+      // Copy the entire directory synchronously (we need this to happen before continuing)
+      const fs = require('fs');
+      
+      function copyDirSync(src, dest) {
+        if (!fs.existsSync(dest)) {
+          fs.mkdirSync(dest, { recursive: true });
+        }
+        
+        const entries = fs.readdirSync(src, { withFileTypes: true });
+        
+        for (const entry of entries) {
+          const srcPath = path.join(src, entry.name);
+          const destPath = path.join(dest, entry.name);
+          
+          if (entry.isDirectory()) {
+            copyDirSync(srcPath, destPath);
+          } else {
+            fs.copyFileSync(srcPath, destPath);
+          }
+        }
+      }
+      
+      copyDirSync(oldPath, newPath);
+      console.log('✅ Migration completed successfully!');
+      console.log('💡 You can safely delete the old cl-todo directory');
+      
+    } catch (error) {
+      console.error('❌ Migration failed:', error.message);
+      console.log('🔙 Falling back to cl-todo directory');
+      return oldPath;
+    }
   }
   
   // Generate a simple unique ID

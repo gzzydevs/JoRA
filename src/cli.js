@@ -36,10 +36,11 @@ const cli = yargs(hideBin(process.argv))
     },
     async (argv) => {
       const projectPath = process.cwd();
-      const todoPath = path.join(projectPath, 'cl-todo');
+      const todoPath = path.join(projectPath, 'jora-changelog');
+      const oldTodoPath = path.join(projectPath, 'cl-todo');
       
-      // Check if JoRA is initialized
-      if (!fs.existsSync(todoPath)) {
+      // Check if JoRA is initialized (check both new and old paths)
+      if (!fs.existsSync(todoPath) && !fs.existsSync(oldTodoPath)) {
         console.log('❌ JoRA not initialized in this directory.');
         console.log('Run: jora init');
         process.exit(1);
@@ -60,7 +61,7 @@ const cli = yargs(hideBin(process.argv))
       try {
         await initializeProject(projectPath);
         console.log('✅ JoRA initialized successfully!');
-        console.log('📁 Created: cl-todo/ directory with initial structure');
+        console.log('📁 Created: jora-changelog/ directory with initial structure');
         console.log('🚀 Run: jora');
       } catch (error) {
         console.error('❌ Error initializing JoRA:', error.message);
@@ -74,7 +75,7 @@ const cli = yargs(hideBin(process.argv))
     {},
     (argv) => {
       const projectPath = process.cwd();
-      const todoPath = path.join(projectPath, 'cl-todo');
+      const todoPath = path.join(projectPath, 'jora-changelog');
       
       if (!fs.existsSync(todoPath)) {
         console.log('❌ JoRA not initialized in this directory.');
