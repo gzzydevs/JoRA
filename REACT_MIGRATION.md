@@ -1,77 +1,93 @@
 # JoRA React Frontend Migration
 
-## ✅ Migration Status - SESSION 1 & 2 COMPLETED
+## ✅ Migration Status - COMPLETED 🎉
 
-La migración de JoRA a React ha avanzado significativamente con **optimizaciones de performance** y **sistema de routing avanzado**.
+La migración de JoRA a React ha sido **COMPLETADA** exitosamente con todas las funcionalidades principales implementadas, incluyendo el nuevo estado "In Backlog" y drag & drop avanzado.
 
 ### Funcionalidades Migradas ✅
 - ✅ **Estructura de carpetas modular**
-- ✅ **Context API para manejo de estado**
-- ✅ **Componentes reutilizables**
+- ✅ **Context API para manejo de estado global**
+- ✅ **Componentes reutilizables con hooks**
 - ✅ **Sistema de estilos con SCSS y variables CSS**
 - ✅ **Dark mode funcional**
 - ✅ **Navegación con React Router**
 - ✅ **Drag & Drop optimizado** (sin reload completo)
-- ✅ **Filtros de tareas**
-- ✅ **Página de Kanban**
-- ✅ **Página de Backlog**
+- ✅ **Estados de tareas**: In Backlog → To Do → In Progress → In Review → Ready to Release
+- ✅ **Filtros de tareas avanzados**
+- ✅ **Página de Kanban** (trabajo activo)
+- ✅ **Página de Backlog** (con drag & drop entre estados)
 - ✅ **Página de Release con agrupación por tipo**
+- ✅ **Páginas de Authors y Epics**
+- ✅ **TaskModal completo** (crear/editar/eliminar)
+- ✅ **EpicModal completo** (crear/editar/eliminar)
+- ✅ **AuthorModal completo** (crear/editar/eliminar con validación)
 - ✅ **Selector de versiones en NavBar**
-- ✅ **Routing /release/:version**
 - ✅ **API Integration completa**
 - ✅ **Loading states y error handling**
 - ✅ **Design responsive**
+- ✅ **Migración de carpeta cl-todo → jora-changelog**
+- ✅ **Limpieza de archivos redundantes (.js duplicados)**
 
-### Funcionalidades Pendientes 🚧
-- 🚧 **TaskModal híbrido** (/task/:id routing)
-- 🚧 **EpicModal híbrido** (/epic/:id routing)
-- 🚧 **AuthorModal, ReleaseModal**
-- 🚧 **Soporte Markdown**
+### Frontend Legacy Eliminado ✅
+- ✅ **Carpeta src/web/ eliminada** (monolito legacy)
+- ✅ **Solo React frontend activo**
 
 ## 🏗️ Arquitectura
 
 ### Estructura Final
 ```
-src/frontend/
+src/frontend/                    ✅ React Frontend (ÚNICO ACTIVO)
 ├── components/
-│   ├── NavBar/           ✅ Navegación principal
-│   │   ├── NavBar.jsx
-│   │   ├── useNavBar.js
-│   │   └── NavBar.scss
-│   ├── TaskColumn/       ✅ Columnas del kanban
-│   │   ├── TaskColumn.jsx
-│   │   ├── useTaskColumn.js
-│   │   └── TaskColumn.scss
-│   ├── Task/             ✅ Tarjetas de tareas
-│   │   ├── Task.jsx
-│   │   ├── useTask.js
-│   │   └── Task.scss
-│   ├── FilterBar/        ✅ Barra de filtros
-│   │   ├── FilterBar.jsx
-│   │   ├── useFilterBar.js
-│   │   └── FilterBar.scss
-│   └── modals/           🚧 En progreso
+│   ├── NavBar/                 ✅ Navegación principal con selector de versiones
+│   ├── TaskColumn/             ✅ Columnas del kanban con drag & drop
+│   ├── BacklogColumn/          ✅ Columnas del backlog con drag & drop
+│   ├── Task/                   ✅ Tarjetas de tareas draggables
+│   ├── FilterBar/              ✅ Barra de filtros avanzados
+│   ├── FloatingActionButton/   ✅ Botón para crear tareas
+│   ├── VersionSelector/        ✅ Selector de versiones
+│   ├── ModalManager/           ✅ Gestor central de modales
+│   └── modals/                 ✅ Modales completos
+│       ├── TaskModal/          ✅ CRUD de tareas
+│       ├── EpicModal/          ✅ CRUD de épicas  
+│       └── AuthorModal/        ✅ CRUD de autores
 ├── contexts/
-│   ├── TaskContext.jsx   ✅ Contexto principal
-│   └── ThemeContext.jsx  ✅ Dark mode
+│   ├── TaskContext.jsx         ✅ Contexto principal con estado global
+│   ├── ModalContext.jsx        ✅ Contexto de modales
+│   └── ThemeContext.jsx        ✅ Dark mode
 ├── hooks/
-│   ├── useTaskContext.js ✅ Hook reutilizable
-│   ├── useTheme.js       ✅ Hook de tema
-│   └── useApi.js         ✅ Hook para API calls
-├── hocs/
-│   └── withTaskContext.jsx ✅ HOC para contexto
+│   ├── useTaskContext.js       ✅ Hook principal
+│   ├── useTheme.js             ✅ Hook de tema
+│   └── useOptimisticTasks.js   ✅ Hook para drag & drop optimizado
 ├── pages/
-│   ├── KanbanPage.jsx    ✅ Vista principal
-│   └── BacklogPage.jsx   ✅ Vista de backlog
+│   ├── KanbanPage/             ✅ Vista de trabajo activo (sin backlog)
+│   ├── BacklogPage/            ✅ Vista de organización con todas las tareas
+│   ├── AuthorsPage/            ✅ Gestión de autores
+│   ├── EpicsPage/              ✅ Gestión de épicas
+│   ├── ReleasePage/            ✅ Vista de releases
+│   ├── TaskDetailPage/         ✅ Detalle de tarea
+│   ├── EpicDetailPage/         ✅ Detalle de épica
+│   ├── NewTaskPage/            ✅ Crear tarea
+│   └── NewEpicPage/            ✅ Crear épica
 ├── services/
-│   └── api.js            ✅ Servicio de API
+│   └── api.js                  ✅ Servicio de API con manejo de 204
 ├── styles/
-│   ├── variables.scss    ✅ Variables de diseño
-│   ├── themes.scss       ✅ Temas claro/oscuro
-│   └── globals.scss      ✅ Estilos globales
-├── App.jsx               ✅ App principal
-├── index.jsx             ✅ Punto de entrada
-└── index.html            ✅ HTML base
+│   ├── variables.scss          ✅ Variables de diseño
+│   ├── themes.scss             ✅ Temas claro/oscuro con --card-bg
+│   └── globals.scss            ✅ Estilos globales
+├── App.jsx                     ✅ App principal con TaskProvider global
+├── index.jsx                   ✅ Entry point
+└── index.html                  ✅ HTML base
+
+jora-changelog/                 ✅ Datos del proyecto (migrado de cl-todo)
+├── tasks/                      ✅ Tareas en formato JSON
+├── epics/                      ✅ Épicas del proyecto
+├── releases/                   ✅ Releases generados
+├── authors.json                ✅ Lista de autores
+├── tags.json                   ✅ Etiquetas disponibles
+├── config.json                 ✅ Configuración del proyecto
+└── current.json                ✅ Estado actual
+
+src/web/                        ❌ ELIMINADO (era el frontend legacy)
 ```
 
 ## 🎨 Sistema de Estilos
@@ -95,22 +111,39 @@ src/frontend/
 ## 🔄 Estado Global (TaskContext)
 
 ### Datos
-- `tasks`: Array de tareas
-- `epics`: Array de épicas
-- `authors`: Array de autores
+- `tasks`: Array de tareas con 5 estados
+- `epics`: Array de épicas con progreso
+- `authors`: Array de autores con validación
 - `tags`: Array de etiquetas
 - `config`: Configuración del proyecto
+- `releases`: Array de releases generados
 
-### Estados
-- `filters`: Filtros activos
-- `isLoading`: Estado de carga
+### Estados de Tareas
+1. **📋 In Backlog** - Ideas y tareas futuras (no aparece en Kanban)
+2. **📝 To Do** - Listo para próximo sprint
+3. **🔄 In Progress** - En desarrollo activo  
+4. **👀 In Review** - En revisión
+5. **✅ Ready to Release** - Listo para release
+
+### Estados Computados
+- `tasksByState`: Tareas agrupadas por estado
+- `filteredTasks`: Tareas filtradas según criterios activos
+
+### Estados de UI
+- `isLoading`: Estado de carga global
 - `error`: Errores de API
+- `successMessage`: Mensajes de éxito
 
-### Acciones
-- `createTask`, `updateTask`, `deleteTask`
-- `updateTaskState` (drag & drop)
-- `createEpic`, `createAuthor`
+### Acciones CRUD
+- **Tasks**: `createTask`, `updateTask`, `deleteTask`, `updateTaskState`
+- **Epics**: `createEpic`, `updateEpic`, `deleteEpic`  
+- **Authors**: `createAuthor`, `updateAuthor`, `deleteAuthor`
+- **Releases**: `createRelease`
+
+### Filtros y Utilidades
 - `setFilters`, `resetFilters`
+- `showError`, `showSuccess`
+- `refreshData`, `loadProjectData`
 
 ## 🛠️ Comandos de Desarrollo
 
@@ -145,8 +178,30 @@ El frontend React consume los mismos endpoints del backend:
 - [ ] AuthorModal (crear autores)
 - [ ] ReleaseModal (generar releases)
 
+## 🏗️ Estado de Migración - ✅ COMPLETADA
+
+### ✅ Frontend React - MIGRADO COMPLETAMENTE
+- [x] ✅ Migración a React 18+ completa
+- [x] ✅ Context API y estado global (TaskContext, ModalContext, ThemeContext)
+- [x] ✅ Componentes principales (Kanban, Task, Modal, Backlog)
+- [x] ✅ Routing con React Router
+- [x] ✅ Modales CRUD para tasks y epics  
+- [x] ✅ Drag & drop para estados de tareas
+- [x] ✅ **Nuevo estado "In Backlog" implementado**
+- [x] ✅ **Separación Kanban/Backlog** (In Backlog no aparece en Kanban)
+- [x] ✅ **Migración de datos: `cl-todo` → `jora-changelog`**
+- [x] ✅ **Limpieza de archivos redundantes** (`.js` duplicados eliminados)
+- [x] ✅ **Eliminación completa del frontend legacy** (`src/web` borrado)
+- [x] ✅ **Documentación actualizada** 
+
+### 🔄 Pendientes No Críticas
+- [ ] Modal routing y navegación markdown
+- [ ] 📱 Diseño responsive y mobile-first
+- [ ] 🎨 Sistema de temas y modo oscuro
+- [ ] ⚡ Optimizaciones de performance
+
 ### Funcionalidades Avanzadas
-- [ ] Página de Release
+- [ ] Página de Release  
 - [ ] Upload de imágenes
 - [ ] Subtareas
 - [ ] Fechas estimadas
