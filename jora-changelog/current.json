@@ -3,6 +3,7 @@
     "task-028-boton-de-save-changes-commit-p",
     "task-031-fix-saveconfig-error-api",
     "task-032-ready-release-column-redesign",
+    "task-033-static-site-generator-readonly",
     "task-022-pkg-vite-investigation",
     "task-017-react-router-bug-fix",
     "task-026-fix-hot-reloading-dev-experience",
@@ -28,5 +29,5 @@
     "task-029-auto-branch-switch-for-save",
     "task-030-optimize-drag-drop-unchanged-detection"
   ],
-  "lastUpdated": "2025-07-14T15:40:00.000Z"
+  "lastUpdated": "2025-07-14T16:05:00.000Z"
 }

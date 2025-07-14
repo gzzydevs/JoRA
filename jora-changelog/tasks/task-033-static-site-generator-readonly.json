@@ -1,0 +1,68 @@
+{
+  "id": "task-033-static-site-generator-readonly",
+  "title": "Static Site Generator for Read-Only Project History",
+  "description": "Crear un generador de sitio estático que permita visualizar el historial completo del proyecto sin necesidad de API calls. El sitio debe mostrar tanto releases anteriores como el estado actual del tablero, pero en modo solo lectura.\n\n**Target deployment:** GitHub Pages en `nombre-proyecto.github.io/jora`\n\n**Funcionalidades principales:**\n- Mostrar tableros de releases anteriores (versiones cerradas)\n- Mostrar estado actual del tablero (sin modificaciones)\n- Generación de archivos HTML/CSS/JS estáticos\n- Sin dependencias de API o servidor backend\n- Navegación entre diferentes releases/versiones\n- Vista histórica completa del proyecto\n- Configuración para GitHub Pages con subpath `/jora`\n\n**Casos de uso:**\n- Portfolio público del progreso del proyecto\n- Documentación histórica para stakeholders\n- Backup estático para consulta offline\n- Hosting público en GitHub Pages\n- Compartir progreso sin dar acceso al sistema completo\n- URL amigable: `usuario.github.io/jora`\n\n**Requerimientos técnicos:**\n- Pre-generar todas las vistas desde los JSON existentes\n- UI similar al Kanban actual pero sin interactividad\n- Responsive design para mobile/desktop\n- SEO friendly con meta tags apropiados\n- Lightweight y de carga rápida\n- Configuración correcta de paths para GitHub Pages subpath\n- Build process compatible con GitHub Actions",
+  "state": "in_backlog",
+  "priority": "medium",
+  "type": "feature",
+  "epic": "distribution-automation",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": ["static-site", "generator", "readonly", "history", "releases", "portfolio", "github-pages"],
+  "estimatedPoints": 13,
+  "estimatedDate": "2025-07-28",
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Diseñar arquitectura del generador estático para GitHub Pages",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Crear parser de datos JSON a formato estático",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Implementar templates para vista de releases",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Crear vista read-only del tablero actual",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Implementar navegación entre versiones",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Configurar paths correctos para GitHub Pages subpath /jora",
+      "completed": false
+    },
+    {
+      "id": "subtask-7",
+      "text": "Agregar metadata y SEO para cada página",
+      "completed": false
+    },
+    {
+      "id": "subtask-8",
+      "text": "Optimizar para performance y carga rápida",
+      "completed": false
+    },
+    {
+      "id": "subtask-9",
+      "text": "Crear GitHub Action para build y deploy automático",
+      "completed": false
+    },
+    {
+      "id": "subtask-10",
+      "text": "Probar deployment en GitHub Pages y documentar proceso",
+      "completed": false
+    }
+  ],
+  "createdAt": "2025-07-14T16:00:00Z",
+  "updatedAt": "2025-07-14T16:00:00Z"
+}
