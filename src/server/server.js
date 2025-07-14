@@ -543,31 +543,16 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
         
         // Check for any local changes that would block checkout
         try {
-          // Try a dry-run checkout to see if it would fail
-          console.log('🔍 Testing checkout feasibility...');
-          try {
-            execSync(`git checkout --quiet --dry-run ${joraBacklogBranch}`, { cwd: projectRoot });
-          } catch (checkoutTestError) {
-            console.log('⚠️ Checkout would fail:', checkoutTestError.message);
+          // Check if there are any changes in working directory or staging area
+          const statusOutput = execSync('git status --porcelain', { cwd: projectRoot, encoding: 'utf8' });
+          const hasAnyChanges = statusOutput.trim().length > 0;
+          
+          if (hasAnyChanges) {
+            console.log('⚠️ Local changes detected that would block checkout');
             return res.status(400).json({
               success: false,
               error: 'There are local changes in the current branch. Please stash your changes or use a different branch.',
-              action: 'checkout_blocked',
-              details: checkoutTestError.message
-            });
-          }
-          
-          // Also check unstaged changes
-          const unstagedOutput = execSync('git diff --name-only', { cwd: projectRoot, encoding: 'utf8' });
-          const unstagedFiles = unstagedOutput.split('\n').filter(f => f.trim());
-          
-          if (unstagedFiles.length > 0) {
-            console.log('⚠️ Unstaged changes detected:', unstagedFiles);
-            return res.status(400).json({
-              success: false,
-              error: 'There are local changes in the current branch. Please stash your changes or use a different branch.',
-              action: 'unstaged_changes',
-              unstagedFiles
+              action: 'checkout_blocked'
             });
           }
         } catch (error) {
