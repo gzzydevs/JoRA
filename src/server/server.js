@@ -543,18 +543,28 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
         
         // Check for any local changes that would block checkout
         try {
-          // Check if there are any changes in working directory or staging area
+          // Check if there are changes in NON-jora-changelog files
           const statusOutput = execSync('git status --porcelain', { cwd: projectRoot, encoding: 'utf8' });
-          const hasAnyChanges = statusOutput.trim().length > 0;
+          const allChangedFiles = statusOutput.split('\n')
+            .filter(line => line.trim())
+            .map(line => line.substring(3)); // Remove status chars like "M  " or "A  "
           
-          if (hasAnyChanges) {
-            console.log('⚠️ Local changes detected that would block checkout');
+          // Filter out jora-changelog files - these are OK to have changes
+          const nonJoraChanges = allChangedFiles.filter(file => 
+            !file.startsWith('jora-changelog/')
+          );
+          
+          if (nonJoraChanges.length > 0) {
+            console.log('⚠️ Non-jora-changelog changes detected:', nonJoraChanges);
             return res.status(400).json({
               success: false,
               error: 'There are local changes in the current branch. Please stash your changes or use a different branch.',
-              action: 'checkout_blocked'
+              action: 'checkout_blocked',
+              blockedFiles: nonJoraChanges
             });
           }
+          
+          console.log('✅ Only jora-changelog changes detected, proceeding...');
         } catch (error) {
           console.log('⚠️ Could not check local changes');
         }
