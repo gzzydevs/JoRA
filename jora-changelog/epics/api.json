@@ -1,0 +1,8 @@
+{
+  "id": "api",
+  "name": "API Development",
+  "description": "Backend API and server functionality",
+  "color": "#3b82f6",
+  "createdAt": "2025-06-01T10:00:00.000Z",
+  "status": "active"
+}

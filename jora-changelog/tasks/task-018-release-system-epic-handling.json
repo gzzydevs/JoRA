@@ -1,0 +1,49 @@
+{
+  "id": "task-018-release-system-epic-handling",
+  "title": "Mejorar sistema de Release para tareas convertidas a épicas",
+  "description": "Actualizar el sistema de generación de releases para manejar correctamente las tareas que fueron convertidas a épicas. Actualmente el sistema mueve todas las tareas 'ready_to_release' al release, pero necesitamos decidir qué hacer con las tareas que tienen estado 'converted_to_epic'.\n\n**Problema:**\n- Tareas convertidas a épicas quedan en limbo durante releases\n- No está claro si deben incluirse en el release o no\n- Épicas derivadas podrían tener tareas que sí están listas para release\n\n**Propuesta de solución:**\n- Tareas con estado 'converted_to_epic' NO se incluyen en releases automáticos\n- Se incluye una sección especial 'convertedToEpics' en el release JSON\n- Las tareas derivadas de la épica sí pueden estar ready_to_release independientemente\n- Agregar metadata de épicas relacionadas en el release",
+  "state": "in_backlog",
+  "type": "improvement",
+  "priority": "medium",
+  "epic": "core-functionality",
+  "author": "gzzy",
+  "assignee": "gzzy",
+  "tags": ["release", "epic-conversion"],
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Analizar comportamiento actual del sistema de release",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Definir tratamiento de tareas 'converted_to_epic' en releases",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Actualizar generateRelease() para excluir converted_to_epic",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Agregar sección 'convertedToEpics' en JSON de release",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Incluir metadata de épicas relacionadas en release",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Testear release con tareas convertidas y tareas normales",
+      "completed": false
+    }
+  ],
+  "estimatedPoints": 5,
+  "estimatedDate": null,
+  "images": [],
+  "createdAt": "2025-01-12T15:15:00Z",
+  "updatedAt": "2025-01-12T15:15:00Z"
+}

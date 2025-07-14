@@ -1,0 +1,53 @@
+{
+  "id": "task-032-ready-release-column-redesign",
+  "title": "Redesign Ready for Release Column Layout",
+  "description": "Investigar y potencialmente implementar un rediseño de la columna 'Ready for Release' para mejorar la experiencia de usuario durante el proceso de release.\n\n**Propuesta de Discovery:**\n- Mover la columna Ready for Release al final (abajo) del Kanban\n- Que ocupe todo el ancho disponible (full width)\n- Cuando las tarjetas se arrastren hacia esa zona, mostrar:\n  - Texto grande de fondo que diga 'READY FOR RELEASE'\n  - Cambiar el color de fondo a verde durante el drag\n  - Crear una experiencia visual más impactante\n\n**Objetivos:**\n- Hacer más evidente cuándo una tarea está lista para release\n- Mejorar la experiencia visual del drag & drop\n- Crear una separación clara entre desarrollo y release\n- Facilitar la identificación de tareas listas para release\n\n**Consideraciones:**\n- Mantener funcionalidad actual intacta\n- Evaluar impacto en responsive design\n- Considerar accesibilidad y contraste\n- Revisar si interfiere con otros workflows",
+  "state": "in_backlog",
+  "priority": "low",
+  "type": "feature",
+  "epic": "ui-improvements",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": ["kanban", "ux", "design", "ready-for-release", "drag-drop", "visual"],
+  "estimatedPoints": 8,
+  "estimatedDate": "2025-07-22",
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Crear mockup/wireframe del diseño propuesto",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Evaluar impacto técnico en el layout actual",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Diseñar la animación del drag con texto de fondo",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Implementar prototipo de la nueva columna",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Probar experiencia en mobile y desktop",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Validar accesibilidad y contraste",
+      "completed": false
+    },
+    {
+      "id": "subtask-7",
+      "text": "Implementar versión final si se aprueba",
+      "completed": false
+    }
+  ],
+  "createdAt": "2025-07-14T15:35:00Z",
+  "updatedAt": "2025-07-14T15:35:00Z"
+}

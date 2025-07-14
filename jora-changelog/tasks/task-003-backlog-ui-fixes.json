@@ -1,0 +1,38 @@
+{
+  "id": "task-003-backlog-ui-fixes",
+  "title": "Fix Backlog Page Drag & Drop Issues",
+  "description": "Corregir problemas de drag & drop en la página de backlog. Las tarjetas no se pueden arrastrar correctamente o la interfaz presenta comportamientos inesperados.",
+  "state": "in_backlog",
+  "priority": "high",
+  "type": "bug",
+  "epic": "ui-improvements",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": [
+    "backlog",
+    "drag-drop",
+    "ui",
+    "bug"
+  ],
+  "estimatedPoints": 5,
+  "estimatedDate": "2025-07-15",
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Identificar problemas específicos en BacklogColumn",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Corregir handlers de drag & drop",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Testear funcionalidad en diferentes estados",
+      "completed": false
+    }
+  ],
+  "createdAt": "2025-07-13T15:00:00Z",
+  "updatedAt": "2025-07-13T18:57:20.085Z"
+}

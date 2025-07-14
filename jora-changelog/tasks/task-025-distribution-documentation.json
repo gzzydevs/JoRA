@@ -1,0 +1,49 @@
+{
+  "id": "task-025-distribution-documentation",
+  "title": "Crear documentación de distribución y deployment",
+  "description": "Documentar completamente el proceso de distribución, instalación y deployment de JoRA para usuarios finales y desarrolladores.\n\n**Documentación para usuarios:**\n- Guía de instalación de binarios por plataforma\n- Troubleshooting común\n- Configuración inicial\n- Actualización de versiones\n\n**Documentación para desarrolladores:**\n- Proceso de build local\n- Configuración de GitHub Actions\n- Release process y versionado\n- Debugging de builds\n\n**Archivos a crear/actualizar:**\n- `INSTALL.md` - Guía de instalación para usuarios\n- `BUILD.md` - Guía de build para desarrolladores  \n- `RELEASE.md` - Proceso de releases y tags\n- Actualizar `README.md` con sección de distribución\n- Crear scripts de ejemplo para development\n\n**Incluir:**\n- Screenshots del proceso de instalación\n- Comandos específicos por plataforma\n- Links directos a releases\n- FAQ de problemas comunes\n- Workflow diagram del CI/CD",
+  "state": "in_backlog",
+  "type": "documentation",
+  "priority": "medium",
+  "epic": "distribution-automation",
+  "author": "gzzy",
+  "assignee": "gzzy",
+  "tags": ["documentation", "distribution", "installation", "v0.1.0"],
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Crear INSTALL.md con guías por plataforma",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Crear BUILD.md para desarrolladores",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Documentar proceso de releases (RELEASE.md)",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Actualizar README.md con sección distribución",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Crear FAQ de troubleshooting",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Añadir workflow diagram del CI/CD",
+      "completed": false
+    }
+  ],
+  "estimatedPoints": 3,
+  "estimatedDate": "2025-07-20",
+  "images": [],
+  "createdAt": "2025-07-13T21:50:00Z",
+  "updatedAt": "2025-07-13T21:50:00Z"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "critical-fixes",
+  "name": "Critical Fixes",
+  "description": "Emergency bug fixes and critical issues",
+  "color": "#ef4444",
+  "createdAt": "2025-07-01T10:00:00.000Z",
+  "status": "active"
+}

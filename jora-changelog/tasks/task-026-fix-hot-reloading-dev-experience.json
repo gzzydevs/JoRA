@@ -1,0 +1,54 @@
+{
+  "id": "task-026-fix-hot-reloading-dev-experience",
+  "title": "Fix hot reloading y mejorar dev experience",
+  "description": "Actualmente el desarrollo requiere rebuild manual y restart del servidor cuando se hacen cambios. Necesitamos configurar hot reloading completo que funcione tanto para frontend (Vite) como backend (Express) simultáneamente.\n\n**Problema actual:**\n- `npm start` requiere rebuild manual del frontend\n- Cambios en backend requieren restart manual\n- No hay hot reloading unificado\n- Development experience lenta y tediosa\n\n**Objetivos:**\n- Hot reloading automático del frontend con Vite\n- Auto-restart del backend en cambios con nodemon\n- Proxy configuration para evitar CORS issues\n- Un solo comando para development completo\n- Fast refresh para componentes React\n\n**Soluciones a investigar:**\n1. **Concurrently**: Correr Vite dev server + nodemon en paralelo\n2. **Vite proxy**: Configurar proxy hacia backend en vite.config.js\n3. **Nodemon**: Auto-restart backend en cambios de archivos\n4. **Scripts NPM**: Unificar en `npm run dev`\n\n**Resultado esperado:**\n- `npm run dev` levanta todo con hot reloading\n- Cambios en React se ven instantáneamente\n- Cambios en backend se aplican automáticamente\n- No más rebuilds manuales en development",
+  "state": "in_backlog",
+  "type": "improvement",
+  "priority": "medium",
+  "epic": "core-functionality",
+  "author": "gzzy",
+  "assignee": "gzzy",
+  "tags": ["dev-experience", "hot-reload", "vite", "nodemon", "development"],
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Instalar y configurar nodemon para auto-restart del backend",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Configurar Vite proxy hacia backend en vite.config.js",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Instalar concurrently para correr frontend + backend en paralelo",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Crear script 'npm run dev' unificado para development",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Configurar Fast Refresh de React correctamente",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Testing completo del hot reloading en ambas partes",
+      "completed": false
+    },
+    {
+      "id": "subtask-7",
+      "text": "Actualizar documentación de desarrollo",
+      "completed": false
+    }
+  ],
+  "estimatedPoints": 3,
+  "estimatedDate": "2025-07-16",
+  "images": [],
+  "createdAt": "2025-07-13T22:00:00Z",
+  "updatedAt": "2025-07-13T22:00:00Z"
+}

@@ -67,7 +67,7 @@ export const TaskProvider = ({ children }) => {
   const [releases, setReleases] = useState([]);
   
   const [selectedVersion, setSelectedVersion] = useState('current');
-  const [filters, setFilters] = useState({ epic: '', author: '', search: '' });
+  const [filters, setFilters] = useState({ epic: '', author: '', search: '', showCancelled: false });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -75,6 +75,11 @@ export const TaskProvider = ({ children }) => {
   // Computed values
   const filteredTasks = useMemo(() => {
     return tasks.filter(task => {
+      // Exclude converted tasks from main views
+      if (task.state === 'converted_to_epic') return false;
+      // Exclude cancelled tasks from Kanban views (they'll be shown only in Backlog)
+      if (task.state === 'cancelled' && !filters.showCancelled) return false;
+      
       if (filters.epic && task.epic !== filters.epic) return false;
       if (filters.author && task.author !== filters.author) return false;
       if (filters.search) {
@@ -87,7 +92,7 @@ export const TaskProvider = ({ children }) => {
   }, [tasks, filters]);
 
   const tasksByState = useMemo(() => {
-    const states = ['in_backlog', 'todo', 'in_progress', 'in_review', 'ready_to_release'];
+    const states = ['in_backlog', 'todo', 'in_progress', 'in_review', 'ready_to_release', 'converted_to_epic', 'cancelled'];
     return states.reduce((acc, state) => {
       acc[state] = filteredTasks.filter(task => task.state === state);
       return acc;
@@ -164,7 +169,7 @@ export const TaskProvider = ({ children }) => {
 
   // Filter actions
   const resetFilters = () => {
-    setFilters({ epic: '', author: '', search: '' });
+    setFilters({ epic: '', author: '', search: '', showCancelled: false });
   };
 
   // Task actions

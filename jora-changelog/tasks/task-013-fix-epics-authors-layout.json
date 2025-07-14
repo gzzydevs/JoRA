@@ -1,0 +1,43 @@
+{
+  "id": "task-013-fix-epics-authors-layout",
+  "title": "Fix Navigation Layout for Epics and Authors Pages",
+  "description": "Corregir la navegación en las páginas de épicas y autores. Actualmente no tienen navbar ni botón para volver al backlog, lo que crea una mala experiencia de usuario.",
+  "state": "in_backlog",
+  "priority": "medium",
+  "type": "bug",
+  "epic": "ui-improvements",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": ["navigation", "layout", "epics", "authors", "ux"],
+  "estimatedPoints": 5,
+  "estimatedDate": "2025-07-25",
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Agregar NavBar a EpicsPage",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Agregar NavBar a AuthorsPage",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Implementar botón 'Back to Kanban' consistente",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Verificar navegación responsive en mobile",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Unificar layout pattern entre todas las páginas",
+      "completed": false
+    }
+  ],
+  "createdAt": "2025-07-13T20:30:00Z",
+  "updatedAt": "2025-07-13T20:30:00Z"
+}

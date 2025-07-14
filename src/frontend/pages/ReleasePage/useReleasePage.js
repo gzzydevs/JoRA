@@ -1,12 +1,15 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTaskContext } from '../../hooks/useTaskContext';
+import { useNavigate } from 'react-router-dom';
 import apiService from '../../services/api';
 
 export const useReleasePage = (version) => {
-  const { releases, setSelectedVersion } = useTaskContext();
+  const { releases, setSelectedVersion, showSuccess, showError, refreshData } = useTaskContext();
+  const navigate = useNavigate();
   const [releaseData, setReleaseData] = useState(null);
   const [releaseTasks, setReleaseTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUndoing, setIsUndoing] = useState(false);
   const [error, setError] = useState(null);
 
   // Task type icons mapping
@@ -81,12 +84,36 @@ export const useReleasePage = (version) => {
     }, {});
   }, [releaseTasks, taskTypeIcons]);
 
+  // Undo release function
+  const handleUndoRelease = async () => {
+    if (!window.confirm(`Are you sure you want to undo release v${version}? This will restore all tasks back to "ready_to_release" state.`)) {
+      return;
+    }
+
+    setIsUndoing(true);
+    try {
+      const result = await apiService.delete(`/api/releases/${version}`);
+      showSuccess(`${result.message}. ${result.restoredTasks} tasks restored.`);
+      
+      // Reload data and navigate back to current version
+      await refreshData();
+      navigate('/');
+    } catch (error) {
+      console.error('Error undoing release:', error);
+      showError(error.response?.data?.error || 'Failed to undo release');
+    } finally {
+      setIsUndoing(false);
+    }
+  };
+
   return {
     releaseData,
     releaseTasks,
     groupedTasks,
     isLoading,
+    isUndoing,
     error,
     taskTypeIcons,
+    handleUndoRelease,
   };
 };

@@ -133,3 +133,54 @@
     }
   }
 }
+
+// Git sync notification badge
+.notification-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: var(--color-error);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+// Git status indicator
+.git-status-error {
+  color: var(--color-error);
+  font-size: 18px;
+  margin-left: $spacing-xs;
+  cursor: help;
+}
+
+// Button states for git operations
+.btn-warning {
+  background-color: #f59e0b;
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: #d97706;
+  }
+}
+
+.btn-danger {
+  background-color: var(--color-error);
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background-color: #dc2626;
+  }
+}

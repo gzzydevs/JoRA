@@ -1,0 +1,48 @@
+{
+  "id": "task-008-typescript-migration",
+  "title": "TypeScript Migration",
+  "description": "Migrar todo el proyecto de JavaScript a TypeScript para mejorar la type safety, developer experience y mantenibilidad del código.",
+  "state": "in_backlog",
+  "priority": "low",
+  "type": "refactor",
+  "epic": "advanced-workflow",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": [
+    "typescript",
+    "migration",
+    "type-safety",
+    "dx"
+  ],
+  "estimatedPoints": 13,
+  "estimatedDate": "2025-08-15",
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Configurar TypeScript + Vite",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Migrar componentes principales",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Definir types para API y data models",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Migrar hooks y contexts",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Configurar strict mode y resolver tipos",
+      "completed": false
+    }
+  ],
+  "createdAt": "2025-07-13T15:25:00Z",
+  "updatedAt": "2025-07-13T18:55:44.778Z"
+}

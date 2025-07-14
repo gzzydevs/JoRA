@@ -10,8 +10,10 @@ const ReleasePage = () => {
     releaseData,
     groupedTasks,
     isLoading,
+    isUndoing,
     error,
-    taskTypeIcons
+    taskTypeIcons,
+    handleUndoRelease
   } = useReleasePage(version);
 
   if (isLoading) {
@@ -59,13 +61,31 @@ const ReleasePage = () => {
             </div>
             
             <div className="release-title-section">
-              <h1>Release v{version}</h1>
+              <div className="release-title-row">
+                <h1>Release v{version}</h1>
+                {!releaseData?.isTestVersion && (
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm"
+                    onClick={handleUndoRelease}
+                    disabled={isUndoing}
+                    title="Undo this release and restore tasks"
+                  >
+                    {isUndoing ? '⏳ Undoing...' : '↩️ Undo Release'}
+                  </button>
+                )}
+              </div>
               {releaseData?.description && (
                 <p className="release-description">{releaseData.description}</p>
               )}
               {releaseData?.date && (
                 <p className="release-date">
                   Released on {new Date(releaseData.date).toLocaleDateString()}
+                </p>
+              )}
+              {releaseData?.isTestVersion && (
+                <p className="test-version-badge">
+                  🧪 Test Version - Tasks not affected
                 </p>
               )}
             </div>

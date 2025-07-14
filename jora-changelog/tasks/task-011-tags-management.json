@@ -1,0 +1,43 @@
+{
+  "id": "task-011-tags-management",
+  "title": "Create Tags Management Screen and Modal",
+  "description": "Implementar pantalla dedicada para gestión de tags y modal para crear/editar/eliminar tags. Mejorar la experiencia de usuario al trabajar con etiquetas.",
+  "state": "in_backlog",
+  "priority": "medium",
+  "type": "feature",
+  "epic": "ui-improvements",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": ["tags", "management", "modal", "ui"],
+  "estimatedPoints": 8,
+  "estimatedDate": "2025-07-30",
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Crear página TagsPage con lista de todos los tags",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Implementar TagModal para CRUD de tags",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Agregar navegación a tags en NavBar",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Implementar filtros y búsqueda de tags",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Mostrar estadísticas de uso por tag",
+      "completed": false
+    }
+  ],
+  "createdAt": "2025-07-13T20:20:00Z",
+  "updatedAt": "2025-07-13T20:20:00Z"
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "default",
+    "name": "Default User",
+    "email": "user@example.com"
+  },
+  {
+    "id": "john-doe",
+    "name": "John Doe UPDATED",
+    "email": "john.updated@company.com",
+    "updatedAt": "2025-07-13T18:54:33.966Z"
+  },
+  {
+    "id": "jane-smith",
+    "name": "Jane Smith",
+    "email": "jane.smith@company.com"
+  },
+  {
+    "id": "mike-wilson",
+    "name": "Mike Wilson",
+    "email": "mike.wilson@company.com"
+  },
+  {
+    "id": "sarah-connor",
+    "name": "Sarah Connor",
+    "email": "sarah.connor@company.com"
+  },
+  {
+    "id": "alex-tech",
+    "name": "Alex Tech",
+    "email": "alex.tech@company.com"
+  },
+  {
+    "id": "author-1752447196284",
+    "name": "a.ascheri",
+    "email": "ascheriagustin@gmail.com",
+    "createdAt": "2025-07-13T22:53:16.284Z",
+    "updatedAt": "2025-07-13T22:53:16.284Z"
+  },
+  {
+    "id": "author-1752447317376",
+    "name": "gzzy",
+    "email": "barbycus@gmail.com",
+    "createdAt": "2025-07-13T22:55:17.376Z",
+    "updatedAt": "2025-07-13T22:55:17.376Z"
+  }
+]

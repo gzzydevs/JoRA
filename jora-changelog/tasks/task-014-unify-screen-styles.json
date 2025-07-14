@@ -1,0 +1,48 @@
+{
+  "id": "task-014-unify-screen-styles",
+  "title": "Unify Styles Across All Screens and Modals",
+  "description": "Realizar ajustes de diseño para que las diferentes pantallas y modales sean más similares y consistentes. Esta tarea podría convertirse en épica si se vuelve muy grande.",
+  "state": "in_backlog",
+  "priority": "medium",
+  "type": "improvement",
+  "epic": "ui-polish",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": ["styles", "consistency", "ui", "design-system", "refactor"],
+  "estimatedPoints": 13,
+  "estimatedDate": "2025-08-10",
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Auditar estilos actuales en todas las pantallas",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Crear design system con componentes reutilizables",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Unificar spacing y typography",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Estandarizar colores y variables CSS",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Aplicar estilos consistentes a todos los modales",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Verificar responsive design en todas las pantallas",
+      "completed": false
+    }
+  ],
+  "createdAt": "2025-07-13T20:35:00Z",
+  "updatedAt": "2025-07-13T20:35:00Z"
+}

@@ -1,0 +1,54 @@
+{
+  "id": "task-021-task-dependencies-blocked-state",
+  "title": "Sistema de dependencias y estado 'blocked'",
+  "description": "Implementar un sistema completo de dependencias entre tareas y un estado 'blocked' para tareas que no pueden avanzar hasta que se completen otras tareas.\n\n**Funcionalidades principales:**\n- Estado 'blocked' para tareas con dependencias pendientes\n- Sistema de dependencias many-to-many entre tareas\n- Validación automática de dependencias circulares\n- UI para gestionar dependencias en TaskModal\n- Visualización de dependencias en tarjetas y detalles\n- Auto-transición cuando se resuelven bloqueos\n\n**Casos de uso:**\n- Tareas que dependen de APIs o infraestructura\n- Features que requieren otras features completadas\n- Workflow de desarrollo con prerrequisitos\n- Gestión de prioridades basada en dependencias\n\n**Complejidad:**\nEsta es una feature compleja que requiere:\n- Cambios en modelo de datos\n- Algoritmos de validación\n- UI/UX avanzada\n- Testing exhaustivo",
+  "state": "in_backlog",
+  "type": "feature",
+  "priority": "low",
+  "epic": "advanced-workflow",
+  "author": "gzzy",
+  "assignee": "gzzy",
+  "tags": ["complex", "workflow", "dependencies"],
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Diseñar modelo de datos para dependencias",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Implementar validación de dependencias circulares",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Agregar estado 'blocked' al sistema",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "UI para gestionar dependencias en TaskModal",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Visualización de dependencias en tarjetas",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Auto-resolución cuando se completan dependencias",
+      "completed": false
+    },
+    {
+      "id": "subtask-7",
+      "text": "Vista de grafo de dependencias (opcional)",
+      "completed": false
+    }
+  ],
+  "estimatedPoints": 13,
+  "estimatedDate": null,
+  "images": [],
+  "createdAt": "2025-01-12T15:30:00Z",
+  "updatedAt": "2025-01-12T15:30:00Z"
+}

@@ -270,6 +270,17 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       res.status(400).json({ error: error.message });
     }
   });
+
+  // Generate test release (doesn't affect tasks)
+  app.post('/api/releases/test', async (req, res) => {
+    try {
+      const { version, description, tasks } = req.body;
+      const release = await taskManager.generateTestRelease(version, description, tasks);
+      res.status(201).json(release);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  });
   
   // Get all releases
   app.get('/api/releases', async (req, res) => {
@@ -281,6 +292,424 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
     }
   });
   
+  // Undo/revert a release (restore tasks to ready_to_release)
+  app.delete('/api/releases/:version', async (req, res) => {
+    try {
+      const { version } = req.params;
+      const result = await taskManager.undoRelease(version);
+      res.json(result);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+  
+  // Git operations endpoints
+  
+  // Check git sync status with jora-backlog branch
+  app.get('/api/git/status', async (req, res) => {
+    const { execSync } = require('child_process');
+    
+    try {
+      console.log('� Checking git sync status...');
+      
+      const projectRoot = taskManager.projectPath || process.cwd();
+      
+      // Get current branch
+      const currentBranch = execSync('git branch --show-current', { 
+        cwd: projectRoot, 
+        encoding: 'utf8' 
+      }).trim();
+      
+      // Check if jora-backlog branch exists locally
+      const localBranches = execSync('git branch', { cwd: projectRoot, encoding: 'utf8' });
+      const joraBacklogExists = /\s+jora-backlog\s*$/m.test(localBranches) || /\*\s+jora-backlog\s*$/m.test(localBranches);
+      
+      // Check if origin/jora-backlog exists
+      let originJoraBacklogExists = false;
+      let commitsBehind = 0;
+      let commitsAhead = 0;
+      
+      try {
+        const remoteBranches = execSync('git branch -r', { cwd: projectRoot, encoding: 'utf8' });
+        originJoraBacklogExists = remoteBranches.includes('origin/jora-backlog');
+        
+        if (originJoraBacklogExists && joraBacklogExists) {
+          // Check how many commits behind/ahead we are
+          try {
+            const revListBehind = execSync('git rev-list --count jora-backlog..origin/jora-backlog', { 
+              cwd: projectRoot, 
+              encoding: 'utf8' 
+            }).trim();
+            commitsBehind = parseInt(revListBehind) || 0;
+            
+            const revListAhead = execSync('git rev-list --count origin/jora-backlog..jora-backlog', { 
+              cwd: projectRoot, 
+              encoding: 'utf8' 
+            }).trim();
+            commitsAhead = parseInt(revListAhead) || 0;
+          } catch (revError) {
+            console.log('⚠️ Could not check commit difference:', revError.message);
+          }
+        }
+      } catch (remoteError) {
+        console.log('⚠️ Could not check remote branches:', remoteError.message);
+      }
+      
+      // Check if there are staged changes
+      let hasStagedChanges = false;
+      let stagedFiles = [];
+      try {
+        const statusOutput = execSync('git status --porcelain', { cwd: projectRoot, encoding: 'utf8' });
+        const lines = statusOutput.split('\n').filter(line => line.trim());
+        stagedFiles = lines
+          .filter(line => line.startsWith('A ') || line.startsWith('M ') || line.startsWith('D '))
+          .map(line => line.substring(3));
+        hasStagedChanges = stagedFiles.length > 0;
+        console.log('📊 Staged files detected:', stagedFiles);
+      } catch (statusError) {
+        console.log('⚠️ Could not check git status:', statusError.message);
+      }
+      
+      // Check if staged files are only from jora-changelog
+      const validStagedFiles = stagedFiles.filter(file => file.startsWith('jora-changelog/') && file.endsWith('.json'));
+      const hasInvalidFiles = stagedFiles.length > 0 && validStagedFiles.length !== stagedFiles.length;
+      
+      const status = {
+        currentBranch,
+        joraBacklogExists,
+        originJoraBacklogExists,
+        commitsBehind,
+        commitsAhead,
+        isUpToDate: commitsBehind === 0,
+        canSave: currentBranch === 'jora-backlog' && !hasInvalidFiles,
+        hasStagedChanges,
+        stagedFiles: validStagedFiles,
+        invalidFiles: stagedFiles.filter(file => !file.startsWith('jora-changelog/') || !file.endsWith('.json')),
+        needsSync: commitsBehind > 0,
+        hasLocalChanges: commitsAhead > 0,
+        onCorrectBranch: currentBranch === 'jora-backlog',
+        requiredBranch: 'jora-backlog'
+      };
+      
+      console.log('📊 Git status:', status);
+      res.json(status);
+      
+    } catch (error) {
+      console.error('❌ Error checking git status:', error);
+      res.status(500).json({ 
+        error: error.message,
+        currentBranch: 'unknown',
+        canSave: false,
+        needsSync: false
+      });
+    }
+  });
+
+  // Sync with origin/jora-backlog (fetch + merge)
+  app.post('/api/git/sync', async (req, res) => {
+    const { execSync } = require('child_process');
+    
+    try {
+      console.log('🔄 Starting git sync operation...');
+      
+      const projectRoot = taskManager.projectPath || process.cwd();
+      
+      // Get current branch
+      const currentBranch = execSync('git branch --show-current', { 
+        cwd: projectRoot, 
+        encoding: 'utf8' 
+      }).trim();
+      
+      // Fetch latest changes
+      console.log('📥 Fetching latest changes...');
+      execSync('git fetch origin', { cwd: projectRoot });
+      
+      // Check if origin/jora-backlog exists
+      const remoteBranches = execSync('git branch -r', { cwd: projectRoot, encoding: 'utf8' });
+      const originJoraBacklogExists = remoteBranches.includes('origin/jora-backlog');
+      
+      if (!originJoraBacklogExists) {
+        return res.json({
+          success: true,
+          message: 'No remote jora-backlog branch to sync with',
+          action: 'no_remote'
+        });
+      }
+      
+      // Check if local jora-backlog exists
+      const localBranches = execSync('git branch', { cwd: projectRoot, encoding: 'utf8' });
+      const joraBacklogExists = /\s+jora-backlog\s*$/m.test(localBranches) || /\*\s+jora-backlog\s*$/m.test(localBranches);
+      
+      if (!joraBacklogExists) {
+        // Create local jora-backlog tracking origin/jora-backlog
+        console.log('🌿 Creating local jora-backlog branch...');
+        execSync('git checkout -b jora-backlog origin/jora-backlog', { cwd: projectRoot });
+        if (currentBranch !== 'jora-backlog') {
+          execSync(`git checkout ${currentBranch}`, { cwd: projectRoot });
+        }
+      } else {
+        // Merge origin/jora-backlog into local jora-backlog
+        const wasOnJoraBacklog = currentBranch === 'jora-backlog';
+        
+        if (!wasOnJoraBacklog) {
+          execSync('git checkout jora-backlog', { cwd: projectRoot });
+        }
+        
+        try {
+          console.log('� Merging origin/jora-backlog...');
+          execSync('git merge origin/jora-backlog', { cwd: projectRoot });
+        } catch (mergeError) {
+          // Handle merge conflicts
+          if (!wasOnJoraBacklog) {
+            execSync(`git checkout ${currentBranch}`, { cwd: projectRoot });
+          }
+          return res.status(409).json({
+            success: false,
+            message: 'Merge conflict detected! Please resolve conflicts manually.',
+            action: 'conflict',
+            error: mergeError.message
+          });
+        }
+        
+        if (!wasOnJoraBacklog) {
+          execSync(`git checkout ${currentBranch}`, { cwd: projectRoot });
+        }
+      }
+      
+      console.log('✅ Git sync completed successfully');
+      res.json({
+        success: true,
+        message: 'Successfully synced with origin/jora-backlog',
+        action: 'synced'
+      });
+      
+    } catch (error) {
+      console.error('❌ Git sync failed:', error);
+      res.status(500).json({
+        success: false,
+        error: error.message,
+        action: 'failed'
+      });
+    }
+  });
+
+  // Save changes (Commit & Push) - SIMPLIFIED: Only works in jora-backlog branch
+  app.post('/api/git/save-changes', async (req, res) => {
+    const { execSync } = require('child_process');
+    
+    try {
+      console.log('🔄 Starting git save operation...');
+      
+      const projectRoot = taskManager.projectPath || process.cwd();
+      
+      // 1. Get current branch and enforce jora-backlog requirement
+      const currentBranch = execSync('git branch --show-current', { 
+        cwd: projectRoot, 
+        encoding: 'utf8' 
+      }).trim();
+      console.log('📍 Current branch:', currentBranch);
+      
+      if (currentBranch !== 'jora-backlog') {
+        return res.status(400).json({
+          success: false,
+          error: 'You must be on the jora-backlog branch to save changes. Please switch to jora-backlog branch first.',
+          action: 'wrong_branch',
+          currentBranch,
+          requiredBranch: 'jora-backlog'
+        });
+      }
+      
+      // 2. Add ALL jora-changelog files that have changes
+      console.log('📝 Adding all jora-changelog changes...');
+      try {
+        execSync('git add jora-changelog/*.json', { cwd: projectRoot });
+        execSync('git add jora-changelog/tasks/*.json', { cwd: projectRoot });
+        execSync('git add jora-changelog/epics/*.json', { cwd: projectRoot });
+        execSync('git add jora-changelog/releases/*.json', { cwd: projectRoot });
+      } catch (addError) {
+        console.log('ℹ️ Some jora-changelog files not found (normal)');
+      }
+      
+      // 3. Check if we have anything to commit
+      let hasChangesToCommit = false;
+      try {
+        const statusOutput = execSync('git diff --cached --name-status', { cwd: projectRoot, encoding: 'utf8' });
+        hasChangesToCommit = statusOutput.trim().length > 0;
+        console.log('📊 Staged changes:', statusOutput.trim() || 'none');
+      } catch (statusError) {
+        console.log('⚠️ Could not check staged changes:', statusError.message);
+      }
+      
+      if (!hasChangesToCommit) {
+        return res.json({
+          success: true,
+          message: 'No changes to commit',
+          action: 'no_changes'
+        });
+      }
+      
+      // 5. Commit changes
+      try {
+        console.log('� Committing changes...');
+        const commitMessage = `jora auto update - ${new Date().toISOString()}`;
+        execSync(`git commit -m "${commitMessage}"`, { cwd: projectRoot });
+      } catch (commitError) {
+        // Switch back if needed
+        if (needToSwitchBack) {
+          try {
+            execSync(`git checkout ${currentBranch}`, { cwd: projectRoot });
+          } catch (checkoutError) {
+            console.error('⚠️ Could not switch back to original branch');
+          }
+        }
+        
+        const errorMessage = commitError.message || commitError.toString();
+        if (errorMessage.includes('nothing to commit') || errorMessage.includes('no changes added')) {
+          return res.json({
+            success: true,
+            message: 'No changes to commit',
+            action: 'no_changes'
+          });
+        }
+        
+        throw new Error('Failed to commit: ' + commitError.message);
+      }
+      
+      // 6. Push to remote
+      try {
+        console.log('🚀 Pushing to remote...');
+        execSync(`git push origin ${joraBacklogBranch}`, { cwd: projectRoot });
+      } catch (pushError) {
+        console.error('⚠️ Push failed:', pushError.message);
+        // Don't fail completely if push fails
+      }
+      
+      // 7. Switch back to original branch
+      if (needToSwitchBack) {
+        try {
+          console.log(`🔄 Switching back to ${currentBranch}...`);
+          execSync(`git checkout ${currentBranch}`, { cwd: projectRoot });
+        } catch (checkoutError) {
+          console.error('⚠️ Could not switch back to original branch:', checkoutError.message);
+        }
+      }
+      
+      console.log('✅ Git save operation completed successfully');
+      res.json({
+        success: true,
+        message: 'Changes saved successfully to jora-backlog branch!',
+        action: 'success',
+        originalBranch: currentBranch
+      });
+      
+    } catch (error) {
+      console.error('❌ Git save operation failed:', error);
+      res.status(500).json({
+        success: false,
+        error: error.message,
+        action: 'failed'
+      });
+    }
+  });
+
+  // Recreate jora-backlog branch from current branch
+  app.post('/api/git/recreate-jora-backlog', async (req, res) => {
+    const { execSync } = require('child_process');
+    
+    try {
+      console.log('🔄 Recreating jora-backlog branch...');
+      
+      const projectRoot = taskManager.projectPath || process.cwd();
+      
+      // 1. Get current branch
+      const currentBranch = execSync('git branch --show-current', { 
+        cwd: projectRoot, 
+        encoding: 'utf8' 
+      }).trim();
+      console.log('📍 Current branch:', currentBranch);
+      
+      if (currentBranch === 'jora-backlog') {
+        return res.status(400).json({
+          success: false,
+          error: 'You are already on jora-backlog branch. Switch to another branch first.',
+          action: 'already_on_target'
+        });
+      }
+      
+      // 2. Check for uncommitted changes
+      try {
+        const statusOutput = execSync('git status --porcelain', { cwd: projectRoot, encoding: 'utf8' });
+        if (statusOutput.trim().length > 0) {
+          return res.status(400).json({
+            success: false,
+            error: 'You have uncommitted changes. Please commit or stash them first.',
+            action: 'uncommitted_changes'
+          });
+        }
+      } catch (statusError) {
+        console.log('⚠️ Could not check git status');
+      }
+      
+      // 3. Delete existing jora-backlog branch (local and remote)
+      try {
+        console.log('🗑️ Deleting existing jora-backlog branch...');
+        
+        // Delete local branch
+        try {
+          execSync('git branch -D jora-backlog', { cwd: projectRoot });
+          console.log('✅ Deleted local jora-backlog branch');
+        } catch (deleteError) {
+          console.log('ℹ️ Local jora-backlog branch did not exist');
+        }
+        
+        // Delete remote branch
+        try {
+          execSync('git push origin --delete jora-backlog', { cwd: projectRoot });
+          console.log('✅ Deleted remote jora-backlog branch');
+        } catch (deleteRemoteError) {
+          console.log('ℹ️ Remote jora-backlog branch did not exist');
+        }
+        
+      } catch (error) {
+        console.log('⚠️ Could not delete existing branches (normal if they don\'t exist)');
+      }
+      
+      // 4. Create new jora-backlog branch from current branch
+      try {
+        console.log('🌿 Creating new jora-backlog branch from', currentBranch);
+        execSync('git checkout -b jora-backlog', { cwd: projectRoot });
+      } catch (createError) {
+        throw new Error('Failed to create jora-backlog branch: ' + createError.message);
+      }
+      
+      // 5. Push new branch to remote
+      try {
+        console.log('🚀 Pushing new jora-backlog branch to remote...');
+        execSync('git push -u origin jora-backlog', { cwd: projectRoot });
+      } catch (pushError) {
+        console.error('⚠️ Push failed:', pushError.message);
+        // Don't fail completely
+      }
+      
+      console.log('✅ jora-backlog branch recreated successfully');
+      res.json({
+        success: true,
+        message: `jora-backlog branch recreated from ${currentBranch} and is now the current branch`,
+        action: 'recreated',
+        sourceBranch: currentBranch,
+        currentBranch: 'jora-backlog'
+      });
+      
+    } catch (error) {
+      console.error('❌ Failed to recreate jora-backlog branch:', error);
+      res.status(500).json({
+        success: false,
+        error: error.message,
+        action: 'failed'
+      });
+    }
+  });
+
   // Start server
   const server = app.listen(port, '0.0.0.0', () => {
     const url = `http://localhost:${port}`;

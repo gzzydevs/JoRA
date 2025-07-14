@@ -74,8 +74,33 @@ class TaskManager {
   }
   
   // Generate a simple unique ID
-  generateId() {
-    return 'task-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+  async generateId(title = '') {
+    // Create a slug from the title if provided
+    const slug = title 
+      ? title.toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, '') // Remove special chars
+          .replace(/\s+/g, '-')         // Replace spaces with dashes
+          .slice(0, 30)                 // Limit length
+      : 'auto-generated';
+    
+    // Get next counter by reading existing tasks
+    try {
+      const existingTasks = await this.loadAllTasks();
+      const maxNumber = existingTasks
+        .map(task => {
+          const match = task.id.match(/^task-(\d+)-/);
+          return match ? parseInt(match[1]) : 0;
+        })
+        .reduce((max, num) => Math.max(max, num), 21); // Start from 022 to avoid conflicts
+      
+      const nextNumber = (maxNumber + 1).toString().padStart(3, '0');
+      return `task-${nextNumber}-${slug}`;
+    } catch (error) {
+      // Fallback to timestamp if reading tasks fails
+      const timestamp = Date.now();
+      const counter = timestamp.toString().slice(-3);
+      return `task-${counter}-${slug}`;
+    }
   }
   
   // Load all tasks
@@ -112,7 +137,7 @@ class TaskManager {
   // Create new task
   async createTask(taskData) {
     const task = {
-      id: this.generateId(),
+      id: await this.generateId(taskData.title),
       title: taskData.title || 'Untitled Task',
       description: taskData.description || '',
       state: taskData.state || 'in_backlog',
@@ -346,6 +371,7 @@ class TaskManager {
   async generateRelease(version, description = '') {
     const tasks = await this.loadAllTasks();
     const tasksToRelease = tasks.filter(task => task.state === 'ready_to_release');
+    const convertedToEpics = tasks.filter(task => task.state === 'converted_to_epic');
     
     if (tasksToRelease.length === 0) {
       throw new Error('No tasks ready for release');
@@ -355,15 +381,18 @@ class TaskManager {
       version,
       description,
       tasks: tasksToRelease,
+      convertedToEpics: convertedToEpics, // Include converted tasks for reference but don't move them
       generatedAt: new Date().toISOString(),
-      taskCount: tasksToRelease.length
+      taskCount: tasksToRelease.length,
+      convertedCount: convertedToEpics.length
     };
     
     // Save release file
     const releasePath = path.join(this.releasesPath, `v${version}.json`);
     await fs.writeFile(releasePath, JSON.stringify(release, null, 2));
     
-    // Remove released tasks from the main tasks directory
+    // Remove only ready_to_release tasks from the main tasks directory
+    // Leave converted_to_epic tasks as they represent historical conversions
     for (const task of tasksToRelease) {
       await this.deleteTask(task.id);
     }
@@ -375,6 +404,35 @@ class TaskManager {
     
     this.releases.push(release);
     this.projectData.config = config;
+    
+    return release;
+  }
+  
+  // Generate a test release (doesn't move tasks)
+  async generateTestRelease(version, description = '', tasksToInclude = null) {
+    const tasks = await this.loadAllTasks();
+    const tasksToRelease = tasksToInclude || tasks.filter(task => task.state === 'ready_to_release');
+    
+    if (tasksToRelease.length === 0) {
+      throw new Error('No tasks specified for test release');
+    }
+    
+    const release = {
+      version,
+      description,
+      tasks: tasksToRelease,
+      isTestVersion: true,
+      generatedAt: new Date().toISOString(),
+      taskCount: tasksToRelease.length
+    };
+    
+    // Save test release file with special naming
+    const releasePath = path.join(this.releasesPath, `test-v${version}.json`);
+    await fs.writeFile(releasePath, JSON.stringify(release, null, 2));
+    
+    // Don't modify tasks or config for test releases
+    // Add to releases list for UI purposes
+    this.releases.push(release);
     
     return release;
   }
@@ -407,6 +465,17 @@ class TaskManager {
       return JSON.parse(configContent);
     } catch (error) {
       return { projectName: 'JoRA', version: '1.0.0' };
+    }
+  }
+
+  // Save config
+  async saveConfig(config) {
+    try {
+      const configPath = path.join(this.todoPath, 'config.json');
+      await fs.writeFile(configPath, JSON.stringify(config, null, 2), 'utf8');
+    } catch (error) {
+      console.error('Error saving config:', error);
+      throw error;
     }
   }
 
@@ -456,6 +525,69 @@ class TaskManager {
       };
       return this.projectData;
     }
+  }
+  
+  // Undo a release (restore tasks to ready_to_release state)
+  async undoRelease(version) {
+    const releasePath = path.join(this.releasesPath, `v${version}.json`);
+    
+    // Check if release exists
+    try {
+      await fs.access(releasePath);
+    } catch (error) {
+      throw new Error(`Release v${version} not found`);
+    }
+    
+    // Load release data
+    const releaseContent = await fs.readFile(releasePath, 'utf8');
+    const release = JSON.parse(releaseContent);
+    
+    // Don't undo test releases
+    if (release.isTestVersion) {
+      throw new Error('Cannot undo test releases');
+    }
+    
+    // Restore tasks to ready_to_release state
+    const restoredTasks = [];
+    for (const task of release.tasks) {
+      // Set state back to ready_to_release
+      task.state = 'ready_to_release';
+      task.updatedAt = new Date().toISOString();
+      
+      // Save task back to tasks directory
+      const taskPath = path.join(this.tasksPath, `${task.id}.json`);
+      await fs.writeFile(taskPath, JSON.stringify(task, null, 2));
+      restoredTasks.push(task);
+    }
+    
+    // Remove release file
+    await fs.unlink(releasePath);
+    
+    // Update releases list
+    this.releases = this.releases.filter(r => r.version !== version);
+    
+    // Reset config version to previous release or default
+    const config = await this.loadConfig();
+    const remainingReleases = await this.loadAllReleases();
+    if (remainingReleases.length > 0) {
+      // Set to latest remaining release
+      const latestRelease = remainingReleases.sort((a, b) => 
+        new Date(b.generatedAt) - new Date(a.generatedAt)
+      )[0];
+      config.currentVersion = latestRelease.version;
+    } else {
+      // No releases left, reset to default
+      config.currentVersion = '0.0.1';
+    }
+    await this.saveConfig(config);
+    
+    this.projectData.config = config;
+    
+    return {
+      message: `Release v${version} has been undone`,
+      restoredTasks: restoredTasks.length,
+      currentVersion: config.currentVersion
+    };
   }
 }
 

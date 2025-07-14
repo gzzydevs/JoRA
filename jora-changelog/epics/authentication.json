@@ -1,0 +1,8 @@
+{
+  "id": "authentication",
+  "name": "Authentication System",
+  "description": "User login, logout and security features",
+  "color": "#ef4444",
+  "createdAt": "2025-06-01T10:00:00.000Z",
+  "status": "completed"
+}

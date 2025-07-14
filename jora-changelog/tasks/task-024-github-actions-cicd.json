@@ -1,0 +1,55 @@
+{
+  "id": "task-024-github-actions-cicd",
+  "title": "Configurar GitHub Actions CI/CD pipeline",
+  "description": "Implementar pipeline completo de CI/CD con GitHub Actions que automáticamente compile binarios multiplataforma y los publique en GitHub Releases cuando se cree un tag de release.\n\n**Workflows a crear:**\n\n1. **CI Pipeline** (`.github/workflows/ci.yml`):\n   - Trigger en push y PR\n   - Lint, test y build de frontend\n   - Validación en Node.js múltiples versiones\n\n2. **Release Pipeline** (`.github/workflows/release.yml`):\n   - Trigger en tags `v*` (ej: v0.1.0)\n   - Build automático en runners: ubuntu, windows, macos\n   - Upload de binarios a GitHub Release\n   - Generación automática de changelog\n\n**Matrix strategy:**\n```yaml\nstrategy:\n  matrix:\n    os: [ubuntu-latest, windows-latest, macos-latest]\n    include:\n      - os: ubuntu-latest\n        asset_name: jora-linux-x64\n      - os: windows-latest  \n        asset_name: jora-windows-x64.exe\n      - os: macos-latest\n        asset_name: jora-macos-universal\n```\n\n**Features:**\n- Caching de node_modules para speed\n- Parallel builds en diferentes OS\n- Automatic release notes generation\n- Artifact upload con nombres consistentes",
+  "state": "todo",
+  "type": "feature",
+  "priority": "high",
+  "epic": "distribution-automation",
+  "author": "gzzy",
+  "assignee": "gzzy",
+  "tags": [
+    "github-actions",
+    "cicd",
+    "automation",
+    "release",
+    "v0.1.0"
+  ],
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Crear workflow de CI básico (.github/workflows/ci.yml)",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Configurar matrix strategy para múltiples OS",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Implementar workflow de release automático",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Configurar upload de binarios a GitHub Releases",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Implementar generación automática de changelog",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Testing completo del pipeline con tag de prueba",
+      "completed": false
+    }
+  ],
+  "estimatedPoints": 8,
+  "estimatedDate": "2025-07-19",
+  "images": [],
+  "createdAt": "2025-07-13T21:45:00Z",
+  "updatedAt": "2025-07-13T21:55:10.656Z"
+}

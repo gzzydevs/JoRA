@@ -1,0 +1,52 @@
+{
+  "id": "task-017-react-router-bug-fix",
+  "title": "Arreglar bug de React Router: pantalla en blanco en acceso directo",
+  "description": "Solucionar el problema crítico donde acceder directamente a una URL de tarea (ej: /task/task-009) muestra una pantalla en blanco en lugar de cargar la página correctamente.\n\n**Síntomas:**\n- Acceso directo por URL muestra pantalla en blanco\n- Navegación interna desde la app funciona correctamente\n- Refresh del navegador en páginas de tarea falla\n- Problema afecta experiencia de usuario y compartir enlaces\n\n**Posibles causas:**\n- Falta de configuración de fallback en servidor de desarrollo\n- Problema con lazy loading de rutas\n- Contexto no inicializado en carga directa\n- Falta de configuración en Vite para SPA routing",
+  "state": "todo",
+  "type": "bug",
+  "priority": "high",
+  "epic": "critical-fixes",
+  "author": "gzzy",
+  "assignee": "author-1752447196284",
+  "tags": [
+    "critical",
+    "routing"
+  ],
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Reproducir el bug sistemáticamente",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Verificar configuración de Vite para SPA routing",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Revisar configuración de servidor Express para fallback",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Verificar inicialización de contexto en rutas directas",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Implementar solución y testear todos los casos",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Validar que compartir URLs funciona correctamente",
+      "completed": false
+    }
+  ],
+  "estimatedPoints": 5,
+  "estimatedDate": "",
+  "images": [],
+  "createdAt": "2025-01-12T15:05:00Z",
+  "updatedAt": "2025-07-13T22:54:56.604Z"
+}
