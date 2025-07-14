@@ -485,34 +485,17 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       }).trim();
       console.log('📍 Current branch:', currentBranch);
       
-      // 2. Add only jora-changelog files (but first check what's already staged)
-      let hasValidStagedFiles = false;
+      // 2. Add ALL jora-changelog files that have changes
+      console.log('📝 Adding all jora-changelog changes...');
       try {
-        const existingStaged = execSync('git diff --cached --name-only', { cwd: projectRoot, encoding: 'utf8' });
-        const existingStagedFiles = existingStaged.split('\n').filter(f => f.trim());
-        const validExistingFiles = existingStagedFiles.filter(file => 
-          file.startsWith('jora-changelog/') && file.endsWith('.json')
-        );
-        hasValidStagedFiles = validExistingFiles.length > 0;
-        console.log('📊 Existing staged files:', existingStagedFiles);
-        console.log('📊 Valid existing staged files:', validExistingFiles);
-      } catch (error) {
-        console.log('⚠️ Could not check existing staged files');
-      }
-      
-      if (!hasValidStagedFiles) {
-        console.log('📝 Adding jora-changelog files...');
-        try {
-          execSync('git add jora-changelog/*.json', { cwd: projectRoot });
-          execSync('git add jora-changelog/tasks/*.json', { cwd: projectRoot });
-          execSync('git add jora-changelog/epics/*.json', { cwd: projectRoot });
-          execSync('git add jora-changelog/releases/*.json', { cwd: projectRoot });
-        } catch (addError) {
-          // Some files might not exist, that's ok
-          console.log('ℹ️ Some jora-changelog files not found (normal)');
-        }
-      } else {
-        console.log('📝 Using already staged jora-changelog files...');
+        // Add all modified/new jora-changelog files
+        execSync('git add jora-changelog/*.json', { cwd: projectRoot });
+        execSync('git add jora-changelog/tasks/*.json', { cwd: projectRoot });
+        execSync('git add jora-changelog/epics/*.json', { cwd: projectRoot });
+        execSync('git add jora-changelog/releases/*.json', { cwd: projectRoot });
+      } catch (addError) {
+        // Some files might not exist, that's ok
+        console.log('ℹ️ Some jora-changelog files not found (normal)');
       }
       
       // 3. Check if we have anything to commit
