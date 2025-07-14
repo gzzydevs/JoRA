@@ -468,6 +468,17 @@ class TaskManager {
     }
   }
 
+  // Save config
+  async saveConfig(config) {
+    try {
+      const configPath = path.join(this.todoPath, 'config.json');
+      await fs.writeFile(configPath, JSON.stringify(config, null, 2), 'utf8');
+    } catch (error) {
+      console.error('Error saving config:', error);
+      throw error;
+    }
+  }
+
   // Load authors
   async loadAuthors() {
     try {

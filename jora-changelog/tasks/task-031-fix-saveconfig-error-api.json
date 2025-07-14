@@ -1,0 +1,38 @@
+{
+  "id": "task-031-fix-saveconfig-error-api",
+  "title": "Fix saveConfig API Error in Release Modal",
+  "description": "Resolver el error 'this.saveConfig is not a function' que aparece en el modal de release. Aunque el modal funciona correctamente y el deshacer también, el error se muestra en consola y puede confundir a los usuarios.\n\n**Contexto:**\n- El modal de release funciona correctamente\n- El botón de deshacer funciona bien\n- Pero aparece error API (400): {\"error\":\"this.saveConfig is not a function\"}\n- Posiblemente necesite revisar la implementación del método saveConfig en TaskManager\n\n**Requerimientos:**\n- Eliminar el error de consola\n- Verificar que saveConfig esté correctamente implementado\n- Asegurar que no haya problemas de binding o contexto\n- Mantener la funcionalidad actual intacta",
+  "state": "in_backlog",
+  "priority": "low",
+  "type": "bug",
+  "epic": "critical-fixes",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": ["api", "error", "release", "modal", "saveconfig"],
+  "estimatedPoints": 2,
+  "estimatedDate": "2025-07-16",
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Reproducir y documentar el error saveConfig",
+      "completed": false
+    },
+    {
+      "id": "subtask-2", 
+      "text": "Verificar implementación de saveConfig en TaskManager",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Revisar binding de métodos en server.js",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Probar que el error se resuelve sin afectar funcionalidad",
+      "completed": false
+    }
+  ],
+  "createdAt": "2025-07-14T15:30:00Z",
+  "updatedAt": "2025-07-14T15:30:00Z"
+}

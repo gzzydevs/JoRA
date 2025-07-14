@@ -1,15 +1,15 @@
 {
   "tasks": [
     "task-028-boton-de-save-changes-commit-p",
+    "task-031-fix-saveconfig-error-api",
+    "task-032-ready-release-column-redesign",
+    "task-022-pkg-vite-investigation",
+    "task-017-react-router-bug-fix",
     "task-026-fix-hot-reloading-dev-experience",
-    "task-001-initial-vanilla-scaffolding",
     "task-023-multiplatform-build-system",
     "task-024-github-actions-cicd",
-    "task-027-hacer-funcional-el-boton-de-re",
     "task-025-distribution-documentation",
-    "task-022-pkg-vite-investigation",
     "task-006-pkg-distribution",
-    "task-009-convert-to-epic-button",
     "task-015-epic-completion-feature",
     "task-014-unify-screen-styles",
     "task-013-fix-epics-authors-layout",
@@ -21,14 +21,12 @@
     "task-005-jest-testing-suite",
     "task-007-github-integration",
     "task-008-typescript-migration",
-    "task-002-react-migration",
-    "task-016-unique-id-system",
-    "task-020-cancelled-state-implementation",
     "task-test-convert-to-epic",
     "task-021-task-dependencies-blocked-state",
     "task-019-task-card-state-management",
     "task-018-release-system-epic-handling",
-    "task-017-react-router-bug-fix"
+    "task-029-auto-branch-switch-for-save",
+    "task-030-optimize-drag-drop-unchanged-detection"
   ],
-  "lastUpdated": "2025-07-13T22:30:08.461Z"
+  "lastUpdated": "2025-07-14T15:40:00.000Z"
 }
