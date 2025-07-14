@@ -2,7 +2,7 @@
   "id": "task-022-pkg-vite-investigation",
   "title": "Investigar y resolver problemas PKG + Vite",
   "description": "Investigar problemas actuales con PKG para generar binarios que funcionen correctamente con la arquitectura de Vite + React. Resolver incompatibilidades y encontrar la configuración correcta.\n\n**Problemas conocidos:**\n- PKG no puede empaquetar assets de Vite correctamente\n- Paths relativos no funcionan en binarios\n- Dynamic imports pueden fallar\n- Node modules no se incluyen correctamente\n\n**Investigación requerida:**\n- Alternativas a PKG (nexe, pkg-fetch, ncc)\n- Configuración específica para Vite\n- Workarounds para assets estáticos\n- Pruebas con diferentes versiones de Node.js\n\n**Entregables:**\n- Análisis de problemas actuales\n- Recomendación de solución\n- Configuración funcional de build\n- Primer binario funcional de prueba",
-  "state": "in_review",
+  "state": "in_progress",
   "type": "investigation",
   "priority": "critical",
   "epic": "distribution-automation",
@@ -46,5 +46,5 @@
   "estimatedDate": "2025-07-15",
   "images": [],
   "createdAt": "2025-07-13T21:35:00Z",
-  "updatedAt": "2025-07-14T01:09:28.116Z"
+  "updatedAt": "2025-07-14T01:13:38.928Z"
 }
