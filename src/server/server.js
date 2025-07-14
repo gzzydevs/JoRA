@@ -543,22 +543,31 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
         
         // Check for any local changes that would block checkout
         try {
-          // Check unstaged changes
-          const unstagedOutput = execSync('git diff --name-only', { cwd: projectRoot, encoding: 'utf8' });
-          const unstagedFiles = unstagedOutput.split('\n').filter(f => f.trim());
-          
-          // Check if there are any changes (staged or unstaged) that would be lost
-          const allChangesOutput = execSync('git status --porcelain', { cwd: projectRoot, encoding: 'utf8' });
-          const allChanges = allChangesOutput.split('\n').filter(f => f.trim());
-          
-          if (unstagedFiles.length > 0 || allChanges.length > 0) {
-            console.log('⚠️ Local changes detected that would block checkout:', { unstagedFiles, allChanges });
+          // Try a dry-run checkout to see if it would fail
+          console.log('🔍 Testing checkout feasibility...');
+          try {
+            execSync(`git checkout --quiet --dry-run ${joraBacklogBranch}`, { cwd: projectRoot });
+          } catch (checkoutTestError) {
+            console.log('⚠️ Checkout would fail:', checkoutTestError.message);
             return res.status(400).json({
               success: false,
               error: 'There are local changes in the current branch. Please stash your changes or use a different branch.',
-              action: 'local_changes',
-              unstagedFiles,
-              allChanges
+              action: 'checkout_blocked',
+              details: checkoutTestError.message
+            });
+          }
+          
+          // Also check unstaged changes
+          const unstagedOutput = execSync('git diff --name-only', { cwd: projectRoot, encoding: 'utf8' });
+          const unstagedFiles = unstagedOutput.split('\n').filter(f => f.trim());
+          
+          if (unstagedFiles.length > 0) {
+            console.log('⚠️ Unstaged changes detected:', unstagedFiles);
+            return res.status(400).json({
+              success: false,
+              error: 'There are local changes in the current branch. Please stash your changes or use a different branch.',
+              action: 'unstaged_changes',
+              unstagedFiles
             });
           }
         } catch (error) {
