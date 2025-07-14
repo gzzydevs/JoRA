@@ -2,7 +2,7 @@
   "id": "task-028-boton-de-save-changes-commit-p",
   "title": "Boton de \"Save changes (Commit & Push)\" ",
   "description": "hay que crear un boton que permita guardar los cambios, que por ahora solo sea un boton que ejecute: un git checkout -b jora (si es que no existe), un git add (regex de jsons dentro de jora-changelog), luego un git commit -m\"jora auto update\" y luego haga un push y luego vuelva a la branch en la que estaba\n\npuede hacerse con un script supongo  y que el backend lo ejecute",
-  "state": "in_review",
+  "state": "in_progress",
   "type": "feature",
   "priority": "critical",
   "epic": "distribution-automation",
@@ -55,5 +55,5 @@
   "estimatedDate": "",
   "images": [],
   "createdAt": "2025-07-13T22:30:08.453Z",
-  "updatedAt": "2025-07-14T00:32:10.006Z"
+  "updatedAt": "2025-07-14T01:09:26.845Z"
 }
