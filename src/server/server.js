@@ -541,22 +541,28 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       if (currentBranch !== joraBacklogBranch) {
         needToSwitchBack = true;
         
-        // Check for unstaged changes that would block checkout
+        // Check for any local changes that would block checkout
         try {
+          // Check unstaged changes
           const unstagedOutput = execSync('git diff --name-only', { cwd: projectRoot, encoding: 'utf8' });
           const unstagedFiles = unstagedOutput.split('\n').filter(f => f.trim());
           
-          if (unstagedFiles.length > 0) {
-            console.log('⚠️ Unstaged changes detected:', unstagedFiles);
+          // Check if there are any changes (staged or unstaged) that would be lost
+          const allChangesOutput = execSync('git status --porcelain', { cwd: projectRoot, encoding: 'utf8' });
+          const allChanges = allChangesOutput.split('\n').filter(f => f.trim());
+          
+          if (unstagedFiles.length > 0 || allChanges.length > 0) {
+            console.log('⚠️ Local changes detected that would block checkout:', { unstagedFiles, allChanges });
             return res.status(400).json({
               success: false,
               error: 'There are local changes in the current branch. Please stash your changes or use a different branch.',
-              action: 'unstaged_changes',
-              unstagedFiles
+              action: 'local_changes',
+              unstagedFiles,
+              allChanges
             });
           }
         } catch (error) {
-          console.log('⚠️ Could not check unstaged changes');
+          console.log('⚠️ Could not check local changes');
         }
         
         // First, capture what files are staged

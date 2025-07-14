@@ -2,7 +2,7 @@
   "id": "task-027-hacer-funcional-el-boton-de-re",
   "title": "Hacer funcional el boton de release",
   "description": "el boton de release no esta haciendo nada actualmente, pero quiero que cuando se presione el boton de release, te salte un popup que te pida el nombre de la version, y que por ejemplo puedas marcar si es un version de test\n\nsi es una version de test, no va a afectar el tablero pero va a existir listada\nsi no esta marcada como version de tests, va a mover todas las tareas en ready for relase a estado done y me gustaria que cuando pase eso, las tareas queden todas agrupadas (con el json original) en un array dentro de la version, cosa que se puedan volver a crear, sumado a esto voy a pedir un boton para poder deshacer una version",
-  "state": "in_progress",
+  "state": "in_review",
   "type": "feature",
   "priority": "critical",
   "epic": "distribution-automation",
@@ -35,5 +35,5 @@
   "estimatedDate": null,
   "images": [],
   "createdAt": "2025-07-13T21:52:18.244Z",
-  "updatedAt": "2025-07-13T22:32:16.247Z"
+  "updatedAt": "2025-07-14T00:35:33.204Z"
 }
