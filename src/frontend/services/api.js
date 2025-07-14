@@ -125,6 +125,23 @@ class ApiService {
       body: JSON.stringify(releaseData)
     });
   }
+
+  // Git operations
+  async getGitStatus() {
+    return this.request('/api/git/status');
+  }
+
+  async syncWithRemote() {
+    return this.request('/api/git/sync', {
+      method: 'POST'
+    });
+  }
+
+  async saveChanges() {
+    return this.request('/api/git/save-changes', {
+      method: 'POST'
+    });
+  }
 }
 
 // Create and export a singleton instance

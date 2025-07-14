@@ -1,6 +1,7 @@
 import React from 'react';
 import VersionSelector from '../VersionSelector';
 import { useNavBar } from './useNavBar';
+import GitConflictModal from '../GitConflictModal';
 import './styles.scss';
 
 const NavBar = () => {
@@ -14,7 +15,18 @@ const NavBar = () => {
     handleEpics,
     handleAuthors,
     handleNewAuthor,
-    handleRelease
+    handleRelease,
+    handleSaveChanges,
+    handleSyncWithRemote,
+    gitStatus,
+    canSaveChanges,
+    needsUpdate,
+    hasInvalidFiles,
+    isSaving,
+    isSyncing,
+    gitError,
+    modalState,
+    closeModal
   } = useNavBar();
 
   return (
@@ -101,8 +113,62 @@ const NavBar = () => {
           >
             🚀 Release
           </button>
+
+          <div className="navbar-divider" />
+
+          {/* Sync Button with notification badge */}
+          <button
+            type="button"
+            className={`btn btn-sm ${needsUpdate ? 'btn-warning' : 'btn-secondary'}`}
+            onClick={handleSyncWithRemote}
+            disabled={isSyncing}
+            title={needsUpdate ? `${gitStatus.commitsBehind} commits behind remote` : 'Sync with remote jora-backlog'}
+            style={{ position: 'relative' }}
+          >
+            {isSyncing ? '⏳ Syncing...' : '🔄 Update'}
+            {needsUpdate && (
+              <span className="notification-badge">
+                {gitStatus.commitsBehind}
+              </span>
+            )}
+          </button>
+
+          {/* Save Button with validation */}
+          <button
+            type="button"
+            className={`btn btn-sm ${
+              canSaveChanges ? 'btn-primary' : 
+              hasInvalidFiles ? 'btn-danger' : 
+              needsUpdate ? 'btn-warning' : 'btn-secondary'
+            }`}
+            onClick={handleSaveChanges}
+            disabled={!canSaveChanges || isSaving}
+            title={
+              hasInvalidFiles ? 'Invalid files in staging (only jora-changelog/*.json allowed)' :
+              needsUpdate ? 'Please sync with remote first' :
+              !canSaveChanges ? 'No changes to save' :
+              'Save changes to jora-backlog branch'
+            }
+          >
+            {isSaving ? '⏳ Saving...' : '💾 Save Changes'}
+          </button>
+
+          {/* Git Status Indicator */}
+          {gitError && (
+            <span className="git-status-error" title={gitError}>
+              ⚠️
+            </span>
+          )}
         </div>
       </div>
+      
+      {/* Git Conflict Modal */}
+      <GitConflictModal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        message={modalState.message}
+        type={modalState.type}
+      />
     </nav>
   );
 };

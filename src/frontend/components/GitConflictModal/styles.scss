@@ -1,0 +1,113 @@
+.git-conflict-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(2px);
+}
+
+.git-conflict-modal {
+  background: white;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90vw;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.git-conflict-modal__header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  &.error {
+    background: linear-gradient(135deg, #fee2e2, #fef2f2);
+    border-bottom-color: #fecaca;
+  }
+
+  &.warning {
+    background: linear-gradient(135deg, #fef3c7, #fffbeb);
+    border-bottom-color: #fde68a;
+  }
+
+  &.success {
+    background: linear-gradient(135deg, #dcfce7, #f0fdf4);
+    border-bottom-color: #bbf7d0;
+  }
+
+  &.info {
+    background: linear-gradient(135deg, #dbeafe, #eff6ff);
+    border-bottom-color: #bfdbfe;
+  }
+}
+
+.git-conflict-modal__icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.git-conflict-modal__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.git-conflict-modal__content {
+  padding: 24px;
+}
+
+.git-conflict-modal__message {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #4b5563;
+  white-space: pre-line;
+}
+
+.git-conflict-modal__footer {
+  padding: 16px 24px 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.git-conflict-modal__button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
