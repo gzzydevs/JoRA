@@ -34,6 +34,31 @@ class ApiService {
     }
   }
 
+  // Generic HTTP methods
+  async get(url) {
+    return this.request(url);
+  }
+
+  async post(url, data) {
+    return this.request(url, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async put(url, data) {
+    return this.request(url, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async delete(url) {
+    return this.request(url, {
+      method: 'DELETE'
+    });
+  }
+
   // Project data
   async getProject() {
     return this.request('/api/project');
@@ -147,3 +172,6 @@ class ApiService {
 // Create and export a singleton instance
 const apiService = new ApiService();
 export default apiService;
+
+// Also export as named export for convenience
+export const api = apiService;

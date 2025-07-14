@@ -50,8 +50,7 @@ export const useNavBar = () => {
   };
 
   const handleRelease = () => {
-    // TODO: Open release modal or navigate to new release page
-    console.log('Open release modal');
+    openModal('release');
   };
 
   const handleSaveChanges = async () => {

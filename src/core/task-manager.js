@@ -408,6 +408,35 @@ class TaskManager {
     return release;
   }
   
+  // Generate a test release (doesn't move tasks)
+  async generateTestRelease(version, description = '', tasksToInclude = null) {
+    const tasks = await this.loadAllTasks();
+    const tasksToRelease = tasksToInclude || tasks.filter(task => task.state === 'ready_to_release');
+    
+    if (tasksToRelease.length === 0) {
+      throw new Error('No tasks specified for test release');
+    }
+    
+    const release = {
+      version,
+      description,
+      tasks: tasksToRelease,
+      isTestVersion: true,
+      generatedAt: new Date().toISOString(),
+      taskCount: tasksToRelease.length
+    };
+    
+    // Save test release file with special naming
+    const releasePath = path.join(this.releasesPath, `test-v${version}.json`);
+    await fs.writeFile(releasePath, JSON.stringify(release, null, 2));
+    
+    // Don't modify tasks or config for test releases
+    // Add to releases list for UI purposes
+    this.releases.push(release);
+    
+    return release;
+  }
+  
   // Load all releases
   async loadAllReleases() {
     try {
@@ -485,6 +514,69 @@ class TaskManager {
       };
       return this.projectData;
     }
+  }
+  
+  // Undo a release (restore tasks to ready_to_release state)
+  async undoRelease(version) {
+    const releasePath = path.join(this.releasesPath, `v${version}.json`);
+    
+    // Check if release exists
+    try {
+      await fs.access(releasePath);
+    } catch (error) {
+      throw new Error(`Release v${version} not found`);
+    }
+    
+    // Load release data
+    const releaseContent = await fs.readFile(releasePath, 'utf8');
+    const release = JSON.parse(releaseContent);
+    
+    // Don't undo test releases
+    if (release.isTestVersion) {
+      throw new Error('Cannot undo test releases');
+    }
+    
+    // Restore tasks to ready_to_release state
+    const restoredTasks = [];
+    for (const task of release.tasks) {
+      // Set state back to ready_to_release
+      task.state = 'ready_to_release';
+      task.updatedAt = new Date().toISOString();
+      
+      // Save task back to tasks directory
+      const taskPath = path.join(this.tasksPath, `${task.id}.json`);
+      await fs.writeFile(taskPath, JSON.stringify(task, null, 2));
+      restoredTasks.push(task);
+    }
+    
+    // Remove release file
+    await fs.unlink(releasePath);
+    
+    // Update releases list
+    this.releases = this.releases.filter(r => r.version !== version);
+    
+    // Reset config version to previous release or default
+    const config = await this.loadConfig();
+    const remainingReleases = await this.loadAllReleases();
+    if (remainingReleases.length > 0) {
+      // Set to latest remaining release
+      const latestRelease = remainingReleases.sort((a, b) => 
+        new Date(b.generatedAt) - new Date(a.generatedAt)
+      )[0];
+      config.currentVersion = latestRelease.version;
+    } else {
+      // No releases left, reset to default
+      config.currentVersion = '0.0.1';
+    }
+    await this.saveConfig(config);
+    
+    this.projectData.config = config;
+    
+    return {
+      message: `Release v${version} has been undone`,
+      restoredTasks: restoredTasks.length,
+      currentVersion: config.currentVersion
+    };
   }
 }
 

@@ -3,6 +3,7 @@ import { useModal } from '../../contexts/ModalContext';
 import TaskModal from '../modals/TaskModal';
 import EpicModal from '../modals/EpicModal';
 import AuthorModal from '../modals/AuthorModal';
+import ReleaseModal from '../modals/ReleaseModal';
 
 const ModalManager = () => {
   const { activeModal, modalProps, closeModal } = useModal();
@@ -30,6 +31,13 @@ const ModalManager = () => {
       case 'author':
         return (
           <AuthorModal
+            onClose={closeModal}
+          />
+        );
+      case 'release':
+        return (
+          <ReleaseModal
+            isOpen={true}
             onClose={closeModal}
           />
         );

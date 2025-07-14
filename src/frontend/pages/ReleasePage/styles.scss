@@ -26,6 +26,28 @@
   .release-title-section {
     text-align: center;
 
+    .release-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: $spacing-sm;
+
+      h1 {
+        font-size: $font-size-3xl;
+        font-weight: $font-weight-bold;
+        color: var(--text-primary);
+        margin: 0;
+      }
+
+      .btn {
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+    }
+
     h1 {
       font-size: $font-size-3xl;
       font-weight: $font-weight-bold;
@@ -46,6 +68,18 @@
       color: var(--text-secondary);
       font-size: $font-size-sm;
       font-style: italic;
+    }
+
+    .test-version-badge {
+      background: var(--warning-background);
+      color: var(--warning-color);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: $font-size-sm;
+      font-weight: $font-weight-medium;
+      display: inline-block;
+      margin-top: $spacing-sm;
+      border: 1px solid var(--warning-color);
     }
   }
 }

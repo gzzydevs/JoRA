@@ -270,6 +270,17 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       res.status(400).json({ error: error.message });
     }
   });
+
+  // Generate test release (doesn't affect tasks)
+  app.post('/api/releases/test', async (req, res) => {
+    try {
+      const { version, description, tasks } = req.body;
+      const release = await taskManager.generateTestRelease(version, description, tasks);
+      res.status(201).json(release);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  });
   
   // Get all releases
   app.get('/api/releases', async (req, res) => {
@@ -278,6 +289,17 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       res.json(releases);
     } catch (error) {
       res.status(500).json({ error: error.message });
+    }
+  });
+  
+  // Undo/revert a release (restore tasks to ready_to_release)
+  app.delete('/api/releases/:version', async (req, res) => {
+    try {
+      const { version } = req.params;
+      const result = await taskManager.undoRelease(version);
+      res.json(result);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
     }
   });
   
