@@ -2,7 +2,7 @@
   "id": "task-035-resolve-pkg-vite-compatibility",
   "title": "Resolver definitivamente nexe + Vite para binarios funcionales",
   "description": "Migrar de PKG (deprecado) a nexe e implementar la solución definitiva para generar binarios funcionales multiplataforma. Esta es la tarea BLOQUEANTE para v0.2.0 compilable.\n\n## 🎯 **Objetivo**\nLograr que `npm run build` genere binarios funcionales para Windows, macOS y Linux que ejecuten JoRA sin dependencias externas usando nexe.\n\n## 🚧 **Problemas Conocidos (desde task-022)**\n- PKG está deprecado y tiene problemas con Vite\n- Paths relativos no funcionan en binarios\n- Dynamic imports pueden fallar\n- Node modules no se incluyen correctamente\n- Frontend build no se sirve desde el binario\n\n## 🔬 **Solución: nexe (ELEGIDO)**\n\n### **¿Por qué nexe?**\n- ✅ Activamente mantenido (vs PKG deprecado)\n- ✅ Mejor soporte para modern Node.js\n- ✅ Más compatible con Vite builds\n- ✅ Cross-compilation support\n- ✅ Mejor asset bundling\n\n### **nexe Implementation Strategy:**\n```bash\n# Install nexe globally\nnpm install -g nexe\n\n# Cross-compilation desde macOS:\nnexe -t windows-x64-18.0.0 -o dist/jora-win.exe src/cli.js\nnexe -t linux-x64-18.0.0 -o dist/jora-linux src/cli.js  \nnexe -t darwin-x64-18.0.0 -o dist/jora-mac src/cli.js\n```\n\n4. **electron-builder** (Desktop app approach)\n   - Más pesado pero más confiable\n   - Native OS integration\n\n5. **esbuild + Custom bundling**\n   - Modern bundler más compatible\n   - Better tree shaking\n\n## 🧪 **Testing Matrix**\n\n### **Platforms to test:**\n- ✅ **Windows 10/11** (x64)\n- ✅ **macOS** (Intel + Apple Silicon)\n- ✅ **Linux Ubuntu** (x64)\n\n### **Test scenarios:**\n- ✅ Binario ejecuta sin Node.js instalado\n- ✅ Frontend se sirve correctamente\n- ✅ API endpoints funcionan\n- ✅ JSON database read/write funciona\n- ✅ Git operations funcionan (save button)\n- ✅ Port binding works (3333)\n\n## 📋 **Plan de Implementación**\n\n### **Fase 1: Diagnóstico completo**\n```bash\n# Current build process\nnpm run build:frontend  # ✅ Funciona\nnpm run build           # ❌ Binarios no funcionan\n\n# Test each binary\n./dist/jora-linux\n./dist/jora-win.exe\n./dist/jora-mac\n```\n\n### **Fase 2: Solución PKG (primera opción)**\n```javascript\n// package.json - Enhanced PKG config\n\"pkg\": {\n  \"assets\": [\n    \"dist/frontend/**/*\",\n    \"jora-changelog/**/*\",\n    \"node_modules/express/**/*\"\n  ],\n  \"scripts\": [\n    \"src/**/*.js\"\n  ],\n  \"targets\": [\n    \"node18-linux-x64\",\n    \"node18-win-x64\", \n    \"node18-macos-x64\"\n  ],\n  \"outputPath\": \"dist\"\n}\n```\n\n### **Fase 3: Alternativa si PKG falla**\nImplementar electron-builder o nexe según testing\n\n### **Fase 4: Optimización**\n- Bundle size reduction\n- Startup time optimization\n- Memory usage optimization\n\n## 🔧 **Archivos a modificar**\n\n### **Build Scripts:**\n```json\n// package.json\n\"scripts\": {\n  \"build\": \"npm run build:frontend && npm run build:binaries\",\n  \"build:binaries\": \"npm run build:linux && npm run build:win && npm run build:mac\",\n  \"build:linux\": \"pkg . --targets node18-linux-x64 --output dist/jora-linux\",\n  \"build:win\": \"pkg . --targets node18-win-x64 --output dist/jora-win.exe\",\n  \"build:mac\": \"pkg . --targets node18-macos-x64 --output dist/jora-mac\",\n  \"test:binaries\": \"node scripts/test-binaries.js\"\n}\n```\n\n### **Server modifications:**\n```javascript\n// src/server/server.js\n// Fix static file serving in bundled mode\nconst frontendPath = process.pkg \n  ? path.join(path.dirname(process.execPath), 'frontend')\n  : path.join(__dirname, '../../dist/frontend');\n```\n\n## ✅ **Criterios de éxito para v0.2.0**\n\n### **Must Have:**\n- ✅ `./jora-linux` ejecuta y abre browser en localhost:3333\n- ✅ `./jora-win.exe` funciona en Windows sin Node.js\n- ✅ `./jora-mac` funciona en macOS\n- ✅ Todas las funcionalidades de JoRA operativas en binarios\n- ✅ Size < 100MB por binario\n\n### **Nice to Have:**\n- ✅ Auto-detection de puerto libre\n- ✅ Startup time < 5 seconds\n- ✅ Graceful error handling\n- ✅ Version info en binarios\n\n## 🚀 **Testing Commands**\n```bash\n# Build test\nnpm run build\n\n# Local test\n./dist/jora-linux &\ncurl http://localhost:3333\n\n# Clean environment test\n# (En VM sin Node.js instalado)\n./jora-linux\n```\n\n---\n\n**NOTA CRÍTICA:** Esta tarea es BLOQUEANTE absoluto para v0.2.0. Sin binarios funcionales, v0.2.0 no puede ser la primera versión compilable. Estimación: 13-21 puntos dependiendo de cuántas alternativas hay que probar.",
-  "state": "todo",
+  "state": "ready_to_release",
   "type": "discovery",
   "priority": "critical",
   "epic": "distribution-automation",
@@ -14,7 +14,7 @@
     "binary",
     "compilation",
     "distribution",
-    "v0.2.0",
+    "v0.1.1",
     "blocker",
     "critical"
   ],
@@ -22,17 +22,17 @@
     {
       "id": "subtask-1",
       "text": "Completar diagnóstico detallado de problemas PKG + Vite actuales",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-2",
       "text": "Probar configuración avanzada de PKG con assets customizados",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-3",
       "text": "Evaluar nexe como alternativa a PKG",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-4",
@@ -47,7 +47,7 @@
     {
       "id": "subtask-6",
       "text": "Implementar solución elegida con testing en 3 platforms",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-7",
@@ -62,12 +62,12 @@
     {
       "id": "subtask-9",
       "text": "Documentar proceso de build definitivo",
-      "completed": false
+      "completed": true
     },
     {
       "id": "subtask-10",
       "text": "Validar que TODAS las funcionalidades JoRA funcionan en binarios",
-      "completed": false
+      "completed": true
     }
   ],
   "estimatedPoints": 21,

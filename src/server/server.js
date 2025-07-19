@@ -23,8 +23,12 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   // Root route 
   app.get('/', (req, res) => {
     try {
-      // Try to serve the React build first, fallback to old web
-      const reactIndexPath = path.join(__dirname, '../../dist/frontend/index.html');
+      // Fix static file serving in bundled mode
+      const frontendPath = process.pkg 
+        ? path.join(path.dirname(process.execPath), 'frontend')
+        : path.join(__dirname, '../../dist/frontend');
+      
+      const reactIndexPath = path.join(frontendPath, 'index.html');
       const webIndexPath = path.join(__dirname, '../web/index.html');
       
       let indexPath;
@@ -48,7 +52,10 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   });
   
   // Serve static files AFTER the root route
-  const reactBuildPath = path.join(__dirname, '../../dist/frontend');
+  // Fix static file serving in bundled mode
+  const reactBuildPath = process.pkg 
+    ? path.join(path.dirname(process.execPath), 'frontend')
+    : path.join(__dirname, '../../dist/frontend');
   const webPath = path.join(__dirname, '../web');
   
   // Try React build first, fallback to legacy web
