@@ -30,7 +30,9 @@
       "node_modules/react-router-dom/**/*"
     ],
     "scripts": [
-      "src/**/*.js"
+      "src/cli.js",
+      "src/core/**/*.js",
+      "src/server/**/*.js"
     ],
     "targets": [
       "node18-linux-x64",

@@ -24,24 +24,54 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   app.get('/', (req, res) => {
     try {
       // Fix static file serving in bundled mode
-      const frontendPath = process.pkg 
-        ? path.join(path.dirname(process.execPath), 'frontend')
-        : path.join(__dirname, '../../dist/frontend');
+      let frontendPath, indexPath;
       
-      const reactIndexPath = path.join(frontendPath, 'index.html');
-      const webIndexPath = path.join(__dirname, '../web/index.html');
-      
-      let indexPath;
-      if (fs.existsSync(reactIndexPath)) {
-        console.log('📦 Serving React frontend');
-        indexPath = reactIndexPath;
+      if (process.pkg) {
+        // In packaged mode, files are in the snapshot filesystem
+        frontendPath = '/snapshot/JoRA/dist/frontend';
+        indexPath = path.join(frontendPath, 'index.html');
       } else {
-        console.log('⚠️  React build not found, serving legacy frontend');
-        indexPath = webIndexPath;
+        // In development mode
+        frontendPath = path.join(__dirname, '../../dist/frontend');
+        indexPath = path.join(frontendPath, 'index.html');
       }
       
-      const indexContent = fs.readFileSync(indexPath, 'utf8');
-      res.send(indexContent);
+      if (fs.existsSync(indexPath)) {
+        console.log('📦 Serving React frontend from:', frontendPath);
+        const indexContent = fs.readFileSync(indexPath, 'utf8');
+        res.send(indexContent);
+      } else {
+        console.log('⚠️  React build not found, creating basic interface');
+        res.send(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>JoRA - Task Management</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 40px; }
+              .warning { background: #fff3cd; border: 1px solid #ffeaa7; padding: 20px; border-radius: 5px; }
+              .api-link { background: #d1ecf1; border: 1px solid #bee5eb; padding: 15px; margin: 20px 0; border-radius: 5px; }
+            </style>
+          </head>
+          <body>
+            <h1>🎯 JoRA - Task Management</h1>
+            <div class="warning">
+              <h3>⚠️ Frontend not available</h3>
+              <p>The React frontend was not found. JoRA is running in API-only mode.</p>
+            </div>
+            <div class="api-link">
+              <h3>📡 API Access</h3>
+              <p>You can still access the API directly:</p>
+              <ul>
+                <li><a href="/api/tasks">/api/tasks</a> - View all tasks</li>
+                <li><a href="/api/epics">/api/epics</a> - View all epics</li>
+                <li><a href="/api/git/status">/api/git/status</a> - Git status</li>
+              </ul>
+            </div>
+          </body>
+          </html>
+        `);
+      }
     } catch (error) {
       res.status(500).send(`
         <h1>JoRA Error</h1>
@@ -53,18 +83,21 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   
   // Serve static files AFTER the root route
   // Fix static file serving in bundled mode
-  const reactBuildPath = process.pkg 
-    ? path.join(path.dirname(process.execPath), 'frontend')
-    : path.join(__dirname, '../../dist/frontend');
-  const webPath = path.join(__dirname, '../web');
+  let staticPath;
   
-  // Try React build first, fallback to legacy web
-  if (fs.existsSync(reactBuildPath)) {
-    console.log('📦 Serving React static files from:', reactBuildPath);
-    app.use(express.static(reactBuildPath));
+  if (process.pkg) {
+    // In packaged mode, files are in the snapshot filesystem
+    staticPath = '/snapshot/JoRA/dist/frontend';
   } else {
-    console.log('⚠️  React build not found, serving legacy static files from:', webPath);
-    app.use(express.static(webPath));
+    // In development mode
+    staticPath = path.join(__dirname, '../../dist/frontend');
+  }
+  
+  if (fs.existsSync(staticPath)) {
+    console.log('📦 Serving React static files from:', staticPath);
+    app.use(express.static(staticPath));
+  } else {
+    console.log('⚠️  React build not found, no static files served');
   }
   
   // API Routes
@@ -321,6 +354,31 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       
       const projectRoot = taskManager.projectPath || process.cwd();
       
+      // Check if we're in a git repository first
+      try {
+        execSync('git rev-parse --git-dir', { cwd: projectRoot, encoding: 'utf8' });
+      } catch (gitError) {
+        console.log('⚠️ No git repository detected in project directory');
+        return res.json({
+          error: 'No git repository found',
+          isGitRepository: false,
+          currentBranch: null,
+          joraBacklogExists: false,
+          originJoraBacklogExists: false,
+          commitsBehind: 0,
+          commitsAhead: 0,
+          isUpToDate: true,
+          canSave: false,
+          hasStagedChanges: false,
+          stagedFiles: [],
+          invalidFiles: [],
+          needsSync: false,
+          hasLocalChanges: false,
+          onCorrectBranch: false,
+          requiredBranch: 'jora-backlog',
+          message: 'JoRA works best when run from within a git repository. Consider initializing git in your project directory.'
+        });
+      }
       // Get current branch
       const currentBranch = execSync('git branch --show-current', { 
         cwd: projectRoot, 
@@ -421,6 +479,13 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       
       const projectRoot = taskManager.projectPath || process.cwd();
       
+      // Check if we're in a git repository first
+      try {
+        execSync('git rev-parse --git-dir', { cwd: projectRoot, encoding: 'utf8' });
+      } catch (gitError) {
+        console.log('⚠️ No git repository detected in project directory');
+        return res.status(500).json({ error: 'Git repository not found' });
+      }
       // Get current branch
       const currentBranch = execSync('git branch --show-current', { 
         cwd: projectRoot, 
@@ -509,6 +574,13 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       
       const projectRoot = taskManager.projectPath || process.cwd();
       
+      // Check if we're in a git repository first
+      try {
+        execSync('git rev-parse --git-dir', { cwd: projectRoot, encoding: 'utf8' });
+      } catch (gitError) {
+        console.log('⚠️ No git repository detected in project directory');
+        return res.status(500).json({ error: 'Git repository not found' });
+      }
       // 1. Get current branch
       const currentBranch = execSync('git branch --show-current', { 
         cwd: projectRoot, 
@@ -665,6 +737,13 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       
       const projectRoot = taskManager.projectPath || process.cwd();
       
+      // Check if we're in a git repository first
+      try {
+        execSync('git rev-parse --git-dir', { cwd: projectRoot, encoding: 'utf8' });
+      } catch (gitError) {
+        console.log('⚠️ No git repository detected in project directory');
+        return res.status(500).json({ error: 'Git repository not found' });
+      }
       // 1. Get current branch
       const currentBranch = execSync('git branch --show-current', { 
         cwd: projectRoot, 
