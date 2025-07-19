@@ -6,11 +6,17 @@
   "priority": "medium",
   "assignee": "gzzy",
   "state": "todo",
-  "tags": ["ui", "backend", "api", "comments", "task-management"],
+  "tags": [
+    "ui",
+    "backend",
+    "api",
+    "comments",
+    "task-management"
+  ],
   "epic": "core-functionality",
   "estimatedHours": 8,
   "createdAt": "2025-07-19T18:50:00.000Z",
-  "updatedAt": "2025-07-19T18:50:00.000Z",
+  "updatedAt": "2025-07-19T22:36:46.169Z",
   "dependencies": [],
   "parentTask": null,
   "subtasks": [
@@ -20,7 +26,7 @@
       "completed": false
     },
     {
-      "id": "subtask-2", 
+      "id": "subtask-2",
       "title": "Create backend API endpoints for comments CRUD",
       "completed": false
     },
@@ -31,7 +37,7 @@
     },
     {
       "id": "subtask-4",
-      "title": "Design and implement CommentForm component", 
+      "title": "Design and implement CommentForm component",
       "completed": false
     },
     {

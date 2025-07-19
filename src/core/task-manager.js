@@ -183,22 +183,26 @@ class TaskManager {
 
   // Update existing task
   async updateTask(taskId, updates) {
-    const task = await this.loadTask(taskId);
-    
-    // Check if there are actual changes
-    if (!this.hasChanges(task, updates)) {
-      // No changes detected, return task without updating updatedAt
+    try {
+      const task = await this.loadTask(taskId);
+      
+      // Check if there are actual changes
+      if (!this.hasChanges(task, updates)) {
+        // No changes detected, return task without updating updatedAt
+        return task;
+      }
+      
+      // Update fields only if there are actual changes
+      Object.assign(task, updates, {
+        updatedAt: new Date().toISOString()
+      });
+      
+      await this.saveTask(task);
+      
       return task;
+    } catch (error) {
+      throw new Error(`Failed to update task ${taskId}: ${error.message}`);
     }
-    
-    // Update fields only if there are actual changes
-    Object.assign(task, updates, {
-      updatedAt: new Date().toISOString()
-    });
-    
-    await this.saveTask(task);
-    
-    return task;
   }
   
   // Delete task
@@ -214,8 +218,25 @@ class TaskManager {
   
   // Save task to file
   async saveTask(task) {
-    const taskPath = path.join(this.tasksPath, `${task.id}.json`);
-    await fs.writeFile(taskPath, JSON.stringify(task, null, 2));
+    try {
+      // Ensure tasks directory exists
+      await this.ensureDirectoryExists(this.tasksPath);
+      
+      const taskPath = path.join(this.tasksPath, `${task.id}.json`);
+      await fs.writeFile(taskPath, JSON.stringify(task, null, 2));
+    } catch (error) {
+      throw new Error(`Failed to save task ${task.id}: ${error.message}`);
+    }
+  }
+
+  // Ensure directory exists
+  async ensureDirectoryExists(dirPath) {
+    try {
+      await fs.access(dirPath);
+    } catch (error) {
+      console.log(`Creating directory: ${dirPath}`);
+      await fs.mkdir(dirPath, { recursive: true });
+    }
   }
   
   // Update current.json index

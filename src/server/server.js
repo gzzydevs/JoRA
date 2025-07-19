@@ -148,6 +148,7 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       const task = await taskManager.updateTask(req.params.id, req.body);
       res.json(task);
     } catch (error) {
+      console.error(`Error updating task ${req.params.id}:`, error.message);
       res.status(400).json({ error: error.message });
     }
   });

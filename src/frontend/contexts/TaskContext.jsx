@@ -229,6 +229,20 @@ export const TaskProvider = ({ children }) => {
 
   const updateTaskState = async (taskId, newState) => {
     try {
+      // Validate inputs
+      if (!taskId) {
+        throw new Error('Task ID is required');
+      }
+      if (!newState) {
+        throw new Error('New state is required');
+      }
+      
+      // Validate state
+      const validStates = ['in_backlog', 'todo', 'in_progress', 'in_review', 'ready_to_release', 'converted_to_epic', 'cancelled'];
+      if (!validStates.includes(newState)) {
+        throw new Error(`Invalid state: ${newState}. Valid states are: ${validStates.join(', ')}`);
+      }
+      
       const updatedTask = await apiService.updateTask(taskId, { state: newState });
       
       // Update local state immediately without full reload
@@ -241,7 +255,7 @@ export const TaskProvider = ({ children }) => {
       return updatedTask;
     } catch (err) {
       console.error('Error updating task state:', err);
-      setError('Failed to update task state');
+      setError(`Failed to update task state: ${err.message}`);
       throw err;
     }
   };
