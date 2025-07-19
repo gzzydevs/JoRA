@@ -548,6 +548,7 @@ class TaskManager {
       const config = await this.loadConfig();
       const authors = await this.loadAuthors();
       const tags = await this.loadTags();
+      const releases = await this.loadAllReleases();
       
       // Assign to instance variable for use in other methods
       this.projectData = {
@@ -555,6 +556,9 @@ class TaskManager {
         authors,
         tags
       };
+      
+      // Initialize releases array
+      this.releases = releases || [];
       
       return this.projectData;
     } catch (error) {
@@ -564,6 +568,7 @@ class TaskManager {
         authors: [],
         tags: []
       };
+      this.releases = [];
       return this.projectData;
     }
   }

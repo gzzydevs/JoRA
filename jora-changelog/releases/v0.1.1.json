@@ -1,0 +1,203 @@
+{
+  "version": "0.1.1",
+  "description": "Release v0.1.1 con fixes importantes: save button con branch-aware logic y correción de timestamps innecesarios",
+  "tasks": [
+    {
+      "id": "task-034-fix-unnecessary-updated-date",
+      "title": "Fix: Solo actualizar updatedAt cuando hay cambios reales",
+      "description": "Resuelto bug donde la fecha `updatedAt` se actualizaba innecesariamente incluso cuando no había cambios reales en las tareas, épicas o autores.\n\n**Problema identificado:**\nEl sistema actualizaba `updatedAt` en cada llamada a `updateTask`, `updateEpic`, y `updateAuthor`, incluso cuando los datos no cambiaban realmente. Esto causaba confusión al usuario y registros incorrectos de modificación.\n\n**Solución implementada:**\n\n**1. Backend (TaskManager):**\n- Agregada función `hasChanges()` que compara valores originales vs nuevos\n- Soporta comparación profunda de arrays y objetos usando JSON.stringify\n- Ignora campo `updatedAt` en las comparaciones\n- Modificados métodos `updateTask()`, `updateEpic()`, y `updateAuthor()` para solo actualizar `updatedAt` si hay cambios reales\n\n**2. Frontend (Modals):**\n- Agregada función `hasChanges()` en `useTaskModal`, `useEpicModal`, y `useAuthorModal`\n- Validación en el frontend para evitar llamadas API innecesarias\n- Ignora campos metadata (`id`, `createdAt`, `updatedAt`) en comparaciones\n- Early return si no hay cambios detectados\n\n**Archivos modificados:**\n- `src/core/task-manager.js` - Core backend logic\n- `src/frontend/components/modals/TaskModal/useTaskModal.js`\n- `src/frontend/components/modals/EpicModal/useEpicModal.js`\n- `src/frontend/components/modals/AuthorModal/useAuthorModal.js`\n\n**Testing realizado:**\n✅ Test automatizado que verifica:\n- Sin cambios: `updatedAt` permanece igual\n- Con cambios reales: `updatedAt` se actualiza correctamente\n- Funcionalidad completa preservada\n\n**Beneficios:**\n- Mayor precisión en tracking de cambios\n- Mejor experiencia de usuario\n- Reducción de writes innecesarios al filesystem\n- Logs más limpios y precisos",
+      "state": "ready_to_release",
+      "type": "bugfix",
+      "priority": "medium",
+      "epic": "core-functionality",
+      "author": "gzzy",
+      "assignee": "gzzy",
+      "tags": [
+        "backend",
+        "frontend",
+        "bugfix",
+        "data-integrity",
+        "timestamps",
+        "optimization"
+      ],
+      "subtasks": [
+        {
+          "id": "subtask-1",
+          "text": "Implementar función hasChanges() en TaskManager",
+          "completed": true
+        },
+        {
+          "id": "subtask-2",
+          "text": "Modificar updateTask() para usar hasChanges()",
+          "completed": true
+        },
+        {
+          "id": "subtask-3",
+          "text": "Modificar updateEpic() para usar hasChanges()",
+          "completed": true
+        },
+        {
+          "id": "subtask-4",
+          "text": "Modificar updateAuthor() para usar hasChanges()",
+          "completed": true
+        },
+        {
+          "id": "subtask-5",
+          "text": "Implementar validación frontend en TaskModal",
+          "completed": true
+        },
+        {
+          "id": "subtask-6",
+          "text": "Implementar validación frontend en EpicModal",
+          "completed": true
+        },
+        {
+          "id": "subtask-7",
+          "text": "Implementar validación frontend en AuthorModal",
+          "completed": true
+        },
+        {
+          "id": "subtask-8",
+          "text": "Crear y ejecutar tests de validación",
+          "completed": true
+        }
+      ],
+      "estimatedPoints": 5,
+      "estimatedDate": "2025-07-19",
+      "images": [],
+      "createdAt": "2025-07-19T02:55:00Z",
+      "updatedAt": "2025-07-19T02:55:00Z"
+    },
+    {
+      "id": "task-028-boton-de-save-changes-commit-p",
+      "title": "Boton de \"Save changes (Commit & Push)\" ",
+      "description": "hay que crear un boton que permita guardar los cambios, que por ahora solo sea un boton que ejecute: un git checkout -b jora (si es que no existe), un git add (regex de jsons dentro de jora-changelog), luego un git commit -m\"jora auto update\" y luego haga un push y luego vuelva a la branch en la que estaba\n\npuede hacerse con un script supongo  y que el backend lo ejecute\n\n**NUEVA LÓGICA IMPLEMENTADA:**\n- El botón siempre funciona y aplica cambios del sistema\n- Solo hace commit automático si estás en la branch 'jora'\n- Si no estás en 'jora': cambios se aplican pero debes commitear manualmente\n- Esto da más control al desarrollador y evita commits accidentales",
+      "state": "ready_to_release",
+      "type": "feature",
+      "priority": "critical",
+      "epic": "distribution-automation",
+      "author": "default",
+      "assignee": "author-1752447196284",
+      "tags": [],
+      "subtasks": [
+        {
+          "id": "subtask-1",
+          "text": "Crear endpoint POST /api/git/save-changes en el servidor",
+          "completed": true
+        },
+        {
+          "id": "subtask-2",
+          "text": "Implementar lógica de git checkout -b jora y git add",
+          "completed": true
+        },
+        {
+          "id": "subtask-3",
+          "text": "Agregar git commit -m 'jora auto update'",
+          "completed": true
+        },
+        {
+          "id": "subtask-4",
+          "text": "Implementar git push y volver a branch original",
+          "completed": true
+        },
+        {
+          "id": "subtask-5",
+          "text": "Crear método saveChanges() en API service",
+          "completed": true
+        },
+        {
+          "id": "subtask-6",
+          "text": "Agregar botón 'Save Changes' en NavBar",
+          "completed": true
+        },
+        {
+          "id": "subtask-7",
+          "text": "Implementar handler con estados de loading y mensajes",
+          "completed": true
+        },
+        {
+          "id": "subtask-8",
+          "text": "Testear funcionalidad completa",
+          "completed": true
+        },
+        {
+          "text": "fixear boton de save changes para que pueda al mismo tiempo syncronizar la branch de jora-backlog y esta (si puede o sino que le de opciones con un modal), yo agregaria un commit y luego actualizaria la branch de tickets",
+          "completed": true
+        },
+        {
+          "text": "fixear boton de update, para que te avise si podes actualizar de una (hace git pull de jora-backlog y luego push) o si ya tenia cambios previos que te tire, disculpa ya tenes cambios en esta branch, arreglalos",
+          "completed": false
+        },
+        {
+          "text": "Implementar nueva lógica: solo auto-commit si está en branch 'jora', sino solo ejecutar cambios",
+          "completed": true
+        }
+      ],
+      "estimatedPoints": 13,
+      "estimatedDate": "",
+      "images": [],
+      "createdAt": "2025-07-13T22:30:08.453Z",
+      "updatedAt": "2025-07-18T15:30:00.000Z"
+    }
+  ],
+  "convertedToEpics": [
+    {
+      "id": "task-006-pkg-distribution",
+      "title": "PKG Distribution + GitHub Actions Release",
+      "description": "Resolver problemas con PKG para generar binarios distribuibles que funcionen correctamente. Crear GitHub Actions que automáticamente generen y publiquen binarios cuando se cree un release oficial en GitHub.",
+      "state": "converted_to_epic",
+      "priority": "critical",
+      "type": "feature",
+      "epic": "api",
+      "author": "gzzy",
+      "assignee": null,
+      "tags": [
+        "pkg",
+        "binary",
+        "distribution",
+        "deployment",
+        "github-actions",
+        "automation"
+      ],
+      "estimatedPoints": 13,
+      "estimatedDate": "2025-07-20",
+      "subtasks": [
+        {
+          "id": "subtask-1",
+          "text": "Investigar problemas actuales con PKG + Vite",
+          "completed": false
+        },
+        {
+          "id": "subtask-2",
+          "text": "Configurar build process para binarios multiplataforma",
+          "completed": false
+        },
+        {
+          "id": "subtask-3",
+          "text": "Testear binarios en diferentes OS (Windows, macOS, Linux)",
+          "completed": false
+        },
+        {
+          "id": "subtask-4",
+          "text": "Crear GitHub Action para build automático en releases",
+          "completed": false
+        },
+        {
+          "id": "subtask-5",
+          "text": "Configurar publicación automática de binarios en GitHub Releases",
+          "completed": false
+        },
+        {
+          "id": "subtask-6",
+          "text": "Crear documentación de distribución y deployment",
+          "completed": false
+        }
+      ],
+      "createdAt": "2025-07-13T15:15:00Z",
+      "updatedAt": "2025-07-13T21:30:00Z"
+    }
+  ],
+  "generatedAt": "2025-07-19T04:43:35.578Z",
+  "taskCount": 2,
+  "convertedCount": 1
+}

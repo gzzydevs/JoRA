@@ -3,8 +3,27 @@
 - ✅ **Convert to Epic Button** implementado y funcional (Task-009)
 - ✅ **Cancelled State** implementado con reactivación (Task-020)
 - ✅ **Unique ID System** implementado (semantic slugs) (Task-016)
-- 🚧 **PKG Distribution + GitHub Actions** - CRITICO para v0.1.0 (Task-006)
-- 🔄 **Actualmente**: 22 tareas activas, varias ready_to_release, falta v0.1.0 AI Agent Briefing
+- ✅ **Release System** funcional con botón de release (Task-027) - **EN v0.1.0**
+- ✅ **Save Changes/Commit** button con auto-branch logic (Task-028) - **READY**
+- ✅ **### **✅ Completado**
+- ✅ Migración completa a React
+- ✅ Arquitectura modular
+- ✅ Drag & Drop optimizado  
+- ✅ Modales híbridos
+- ✅ Routing dinámico
+- ✅ Sistema de versiones
+- ✅ **Release System** - botón funcional para crear releases
+- ✅ **Save & Commit** - automatización git con branch-aware logic
+- ✅ **Timestamp accuracy** - updatedAt solo con cambios reales
+
+### **🔄 En Desarrollo Actual (v0.1.0)**
+- 🔍 **PKG Investigation** (Task-022): Resolver problemas Vite+PKG para binarios
+- 📋 **Backlog UI Fixes** (Task-003): Corregir drag & drop en página de backlog
+- 📚 **Documentation** (Task-004): Documentación general de uso para usuarios
+- 🧪 **Testing Suite** (Task-005): Implementar tests con Jest en todos los componentes
+- 🔧 **Bug Fixes Menores**: API errors y optimizaciones performance** - solo actualiza updatedAt con cambios reales (Task-034) - **READY**
+- 🚧 **PKG Distribution** - Investigación activa para resolver Vite+PKG (Task-022)
+- 🔄 **Actualmente**: **29 tareas totales**, 2 ready_to_release, **v0.1.0 parcialmente poblada** AI Agent Briefing
 
 ## 📋 **Project Overview & Context**
 
@@ -23,7 +42,10 @@
 - ✅ **Convert to Epic Button** implementado y funcional
 - ✅ **Cancelled State** implementado con reactivación
 - ✅ **Unique ID System** implementado (semantic slugs)
-- 🔄 **Actualmente**: 22 tareas activas, varias ready_to_release
+- ✅ **Release System** funcional - usuarios pueden crear releases desde UI
+- ✅ **Save Changes/Commit** - botón inteligente con lógica branch-aware
+- ✅ **Timestamp Fix** - updatedAt solo se actualiza con cambios reales
+- 🔄 **Actualmente**: **29 tareas totales**, 2 ready_to_release, v0.1.0 en proceso
 
 ---
 
@@ -306,6 +328,7 @@ export const useTaskContext = () => {
    - Tareas agrupadas por tipo (feature, hotfix, documentation, etc.)
    - Progreso visual de la release
    - Navegación directa por URL
+   - **🔥 NUEVO**: Botón "Undo Release" para deshacer releases
 
 4. **TaskDetailPage** (`/task/:id`)
    - Modal híbrido (funciona como modal o página completa)
@@ -323,6 +346,7 @@ export const useTaskContext = () => {
 - **VersionSelector**: Selector de versiones con sincronización
 - **FloatingActionButton**: Botón para crear nuevas tareas
 - **ModalManager**: Gestión centralizada de modales
+- **🔥 NUEVO**: **Release Modal** - crear releases con preview y opciones
 
 ### **⚡ Funcionalidades Avanzadas**
 
@@ -331,6 +355,9 @@ export const useTaskContext = () => {
 - **Temas Dark/Light**: Cambio dinámico de temas
 - **Optimistic Updates**: UI responsive sin esperas
 - **Offline First**: Funciona sin conexión a internet
+- **🔥 NUEVO**: **Release System** - crear/deshacer releases desde UI
+- **🔥 NUEVO**: **Save & Commit** - botón inteligente para git operations
+- **🔥 NUEVO**: **Smart Timestamps** - updatedAt solo con cambios reales
 
 ---
 
@@ -413,7 +440,12 @@ PUT    /api/epics/:id   # Actualizar epic
 DELETE /api/epics/:id   # Eliminar epic
 
 GET    /api/releases    # Obtener releases
+POST   /api/releases    # Crear nueva release ⭐ NUEVO
+DELETE /api/releases/:version # Deshacer release ⭐ NUEVO
+POST   /api/git/save-changes # Save & commit automático ⭐ NUEVO
+
 GET    /api/authors     # Obtener autores
+PUT    /api/authors/:id # Actualizar autor con smart timestamps ⭐ NUEVO
 GET    /api/tags        # Obtener tags
 ```
 
@@ -568,5 +600,88 @@ Cuando completes una subtarea, actualiza el JSON:
 - `in_review` - Completado, esperando review
 - `ready_to_release` - Aprobado y listo
 - `converted_to_epic` - Convertido a épica (especial)
+
+---
+
+## 🎯 **NUEVAS TAREAS RECOMENDADAS (Julio 2025)**
+
+### **🔥 Prioridad CRÍTICA (v0.1.0)**
+
+#### 1. **Task-035: Resolver PKG + Vite Compatibility** 
+- **Prioridad:** CRITICAL | **Epic:** distribution-automation
+- **Descripción:** Finalizar investigación Task-022 y implementar solución definitiva para generar binarios funcionales. Evaluar alternativas (nexe, ncc, electron-builder)
+- **Estimación:** 13 puntos | **Tipo:** investigation + implementation
+
+#### 2. **Task-036: Automated GitHub Actions Release**
+- **Prioridad:** HIGH | **Epic:** distribution-automation  
+- **Descripción:** Configurar GitHub Actions para build automático y release de binarios multiplataforma cuando se crean tags
+- **Estimación:** 8 puntos | **Tipo:** feature
+
+### **🔧 Bugs y Fixes (Medium)**
+
+#### 3. **Task-037: Fix SaveConfig API Error** 
+- **Prioridad:** MEDIUM | **Epic:** critical-fixes
+- **Descripción:** Resolver error "this.saveConfig is not a function" en Release Modal (Task-031 actualizada)
+- **Estimación:** 3 puntos | **Tipo:** bugfix
+
+#### 4. **Task-038: Drag & Drop en Backlog Fix**
+- **Prioridad:** MEDIUM | **Epic:** ui-improvements
+- **Descripción:** Finalizar Task-003 - corregir drag & drop en página de backlog
+- **Estimación:** 5 puntos | **Tipo:** bugfix
+
+### **📊 Mejoras UX (Low-Medium)**
+
+#### 5. **Task-039: Release Progress Indicators**
+- **Prioridad:** LOW | **Epic:** ui-improvements
+- **Descripción:** Agregar indicadores visuales de progreso durante creación de releases y save operations
+- **Estimación:** 5 puntos | **Tipo:** improvement
+
+#### 6. **Task-040: Enhanced Error Handling**
+- **Prioridad:** MEDIUM | **Epic:** core-functionality  
+- **Descripción:** Implementar manejo de errores más robusto con notificaciones toast y retry mechanisms
+- **Estimación:** 8 puntos | **Tipo:** improvement
+
+#### 7. **Task-041: Performance Audit & Optimization**
+- **Prioridad:** LOW | **Epic:** performance
+- **Descripción:** Audit completo de performance con React DevTools, implementar lazy loading y code splitting
+- **Estimación:** 13 puntos | **Tipo:** optimization
+
+### **📚 Documentation & Testing**
+
+#### 8. **Task-042: Component Testing Suite**
+- **Prioridad:** MEDIUM | **Epic:** getting-started
+- **Descripción:** Expandir Task-005 con tests unitarios para TaskModal, EpicModal, y Release system
+- **Estimación:** 13 puntos | **Tipo:** test
+
+#### 9. **Task-043: API Documentation**
+- **Prioridad:** LOW | **Epic:** getting-started
+- **Descripción:** Crear documentación OpenAPI/Swagger para todos los endpoints REST
+- **Estimación:** 5 puntos | **Tipo:** documentation
+
+### **🔮 Post v0.1.0 (Future)**
+
+#### 10. **Task-044: Real-time Collaboration Prep**
+- **Prioridad:** LOW | **Epic:** real-time
+- **Descripción:** Preparar arquitectura para colaboración real-time futura (WebSockets, conflict resolution)
+- **Estimación:** 21 puntos | **Tipo:** poc
+
+---
+
+## 🎯 **PLAN DE ACCIÓN INMEDIATO**
+
+### **Para alcanzar v0.1.0 ESTABLE:**
+
+1. **🔥 CRÍTICO**: Resolver Task-022/035 (PKG + Vite) 
+2. **🔧 IMPORTANTE**: Fix Task-031/037 (saveConfig error)
+3. **📦 RELEASE**: Configurar GitHub Actions (Task-036)
+4. **🧪 TESTING**: Implementar tests básicos (Task-042)
+5. **📚 DOCS**: Documentación básica usuario (Task-004)
+
+### **Métricas objetivo v0.1.0:**
+- ✅ Binarios funcionales para Windows/macOS/Linux
+- ✅ Release system completamente funcional  
+- ✅ 0 errores críticos en consola
+- ✅ Tests básicos pasando
+- ✅ Documentación usuario básica
 
 ---

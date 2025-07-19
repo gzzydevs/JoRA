@@ -1,10 +1,8 @@
 {
   "tasks": [
-    "task-034-fix-unnecessary-updated-date",
-    "task-028-boton-de-save-changes-commit-p",
-    "task-031-fix-saveconfig-error-api",
-    "task-032-ready-release-column-redesign",
     "task-033-static-site-generator-readonly",
+    "task-032-ready-release-column-redesign",
+    "task-031-fix-saveconfig-error-api",
     "task-022-pkg-vite-investigation",
     "task-017-react-router-bug-fix",
     "task-026-fix-hot-reloading-dev-experience",
@@ -30,5 +28,5 @@
     "task-029-auto-branch-switch-for-save",
     "task-030-optimize-drag-drop-unchanged-detection"
   ],
-  "lastUpdated": "2025-07-19T02:55:00.000Z"
+  "lastUpdated": "2025-07-19T04:43:35.581Z"
 }

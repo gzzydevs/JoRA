@@ -20,6 +20,7 @@ export const useReleasePage = (version) => {
     poc: '🧪',
     improvement: '⚡',
     bug: '🐛',
+    bugfix: '🐛',  // Added missing bugfix type
     refactor: '♻️',
     test: '✅',
     chore: '🔧'
