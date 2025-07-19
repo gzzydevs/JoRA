@@ -139,6 +139,29 @@ export const useTaskModal = (taskId) => {
     }));
   };
 
+  // Helper function to check if there are actual changes
+  const hasChanges = (original, updates) => {
+    if (!original) return true; // New task, always has changes
+    
+    for (const [key, value] of Object.entries(updates)) {
+      if (key === 'updatedAt' || key === 'createdAt' || key === 'id') continue; // Skip metadata fields
+      
+      // Deep comparison for arrays and objects
+      if (Array.isArray(value) && Array.isArray(original[key])) {
+        if (JSON.stringify(value) !== JSON.stringify(original[key])) {
+          return true;
+        }
+      } else if (typeof value === 'object' && value !== null && typeof original[key] === 'object' && original[key] !== null) {
+        if (JSON.stringify(value) !== JSON.stringify(original[key])) {
+          return true;
+        }
+      } else if (original[key] !== value) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const handleSave = async () => {
     if (!formData.title?.trim()) {
       alert('Task title is required.');
@@ -152,15 +175,26 @@ export const useTaskModal = (taskId) => {
         ...formData,
         id: task?.id || `task-${Date.now()}`,
         createdAt: task?.createdAt || new Date().toISOString(),
-        updatedAt: new Date().toISOString()
       };
 
       if (task) {
+        // Check if there are actual changes before updating
+        if (!hasChanges(task, taskData)) {
+          console.log('No changes detected, skipping update');
+          setIsEditing(false);
+          setIsLoading(false);
+          return;
+        }
+        
+        // Add updatedAt only if there are changes
+        taskData.updatedAt = new Date().toISOString();
+        
         // Update existing task
         await updateTask(task.id, taskData);
         setTask(taskData);
       } else {
-        // Create new task
+        // Create new task - always add updatedAt for new tasks
+        taskData.updatedAt = new Date().toISOString();
         const newTask = await createTask(taskData);
         if (newTask) {
           navigate(`/task/${newTask.id}`);

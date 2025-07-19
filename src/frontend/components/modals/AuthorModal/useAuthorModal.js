@@ -62,6 +62,15 @@ export const useAuthorModal = (currentAuthor, onClose) => {
       };
 
       if (isEditing && currentAuthor?.id) {
+        // Check if there are actual changes before updating
+        const hasChanges = currentAuthor.name !== authorData.name || currentAuthor.email !== authorData.email;
+        
+        if (!hasChanges) {
+          console.log('No changes detected, skipping author update');
+          onClose();
+          return;
+        }
+        
         await updateAuthor(currentAuthor.id, authorData);
       } else {
         const newAuthor = {

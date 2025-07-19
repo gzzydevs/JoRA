@@ -104,6 +104,29 @@ export const useEpicModal = (epicId) => {
     }));
   };
 
+  // Helper function to check if there are actual changes
+  const hasChanges = (original, updates) => {
+    if (!original) return true; // New epic, always has changes
+    
+    for (const [key, value] of Object.entries(updates)) {
+      if (key === 'updatedAt' || key === 'createdAt' || key === 'id') continue; // Skip metadata fields
+      
+      // Deep comparison for arrays and objects
+      if (Array.isArray(value) && Array.isArray(original[key])) {
+        if (JSON.stringify(value) !== JSON.stringify(original[key])) {
+          return true;
+        }
+      } else if (typeof value === 'object' && value !== null && typeof original[key] === 'object' && original[key] !== null) {
+        if (JSON.stringify(value) !== JSON.stringify(original[key])) {
+          return true;
+        }
+      } else if (original[key] !== value) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const handleSave = async () => {
     if (!formData.name?.trim()) {
       alert('Epic name is required.');
@@ -117,15 +140,25 @@ export const useEpicModal = (epicId) => {
         ...formData,
         id: epic?.id || `epic-${Date.now()}`,
         createdAt: epic?.createdAt || new Date().toISOString(),
-        updatedAt: new Date().toISOString()
       };
 
       if (epic) {
+        // Check if there are actual changes before updating
+        if (!hasChanges(epic, epicData)) {
+          console.log('No changes detected, skipping epic update');
+          setIsLoading(false);
+          return;
+        }
+        
+        // Add updatedAt only if there are changes
+        epicData.updatedAt = new Date().toISOString();
+        
         // Update existing epic
         await updateEpic(epicData);
         setEpic(epicData);
       } else {
-        // Create new epic
+        // Create new epic - always add updatedAt for new epics
+        epicData.updatedAt = new Date().toISOString();
         const newEpic = await createEpic(epicData);
         if (newEpic) {
           navigate(`/epic/${newEpic.id}`);
