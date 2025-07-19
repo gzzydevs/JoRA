@@ -133,22 +133,15 @@ const NavBar = () => {
             )}
           </button>
 
-          {/* Save Button with validation */}
+          {/* Save Button - Always enabled, warns if not on jora branch */}
           <button
             type="button"
             className={`btn btn-sm ${
-              canSaveChanges ? 'btn-primary' : 
-              hasInvalidFiles ? 'btn-danger' : 
-              needsUpdate ? 'btn-warning' : 'btn-secondary'
+              isSaving ? 'btn-secondary' : 'btn-primary'
             }`}
             onClick={handleSaveChanges}
-            disabled={!canSaveChanges || isSaving}
-            title={
-              hasInvalidFiles ? 'Invalid files in staging (only jora-changelog/*.json allowed)' :
-              needsUpdate ? 'Please sync with remote first' :
-              !canSaveChanges ? 'No changes to save' :
-              'Save changes to jora-backlog branch'
-            }
+            disabled={isSaving}
+            title="Save changes (auto-commits only on 'jora' branch)"
           >
             {isSaving ? '⏳ Saving...' : '💾 Save Changes'}
           </button>

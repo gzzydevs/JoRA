@@ -493,7 +493,7 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
     }
   });
 
-  // Save changes (Commit & Push) - SIMPLIFIED: Only works in jora-backlog branch
+  // Save changes (Commit & Push) - NEW LOGIC: Only auto-commit if on 'jora' branch
   app.post('/api/git/save-changes', async (req, res) => {
     const { execSync } = require('child_process');
     
@@ -502,40 +502,81 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       
       const projectRoot = taskManager.projectPath || process.cwd();
       
-      // 1. Get current branch and enforce jora-backlog requirement
+      // 1. Get current branch
       const currentBranch = execSync('git branch --show-current', { 
         cwd: projectRoot, 
         encoding: 'utf8' 
       }).trim();
       console.log('📍 Current branch:', currentBranch);
       
-      if (currentBranch !== 'jora-backlog') {
-        return res.status(400).json({
+      // 2. Check if we're on the 'jora' branch
+      const isOnJoraBranch = currentBranch === 'jora';
+      
+      if (!isOnJoraBranch) {
+        // Not on jora branch - show warning but allow execution
+        console.log('⚠️ Not on jora branch - changes will be executed but NOT committed automatically');
+        
+        // Still execute changes (this applies any pending data updates)
+        // The task manager updates are already done by the time this endpoint is called
+        
+        return res.status(200).json({
           success: false,
-          error: 'You must be on the jora-backlog branch to save changes. Please switch to jora-backlog branch first.',
-          action: 'wrong_branch',
+          warning: true,
+          message: `You are on branch '${currentBranch}'. Changes have been applied but NOT committed automatically. Please commit manually if you want to save them.`,
+          action: 'wrong_branch_no_commit',
           currentBranch,
-          requiredBranch: 'jora-backlog'
+          requiredBranch: 'jora',
+          hint: 'Switch to "jora" branch for automatic commits, or commit manually'
         });
       }
       
-      // 2. Add ALL jora-changelog files that have changes
-      console.log('📝 Adding all jora-changelog changes...');
+      // 3. We're on jora branch - proceed with automatic commit
+      console.log('✅ On jora branch - proceeding with automatic commit...');
+      
+      // 4. Create jora branch if it doesn't exist
       try {
-        execSync('git add jora-changelog/*.json', { cwd: projectRoot });
-        execSync('git add jora-changelog/tasks/*.json', { cwd: projectRoot });
-        execSync('git add jora-changelog/epics/*.json', { cwd: projectRoot });
-        execSync('git add jora-changelog/releases/*.json', { cwd: projectRoot });
+        execSync('git show-ref --verify --quiet refs/heads/jora', { cwd: projectRoot });
+        console.log('� jora branch exists');
+      } catch (branchNotFound) {
+        console.log('🌿 Creating jora branch...');
+        try {
+          execSync('git checkout -b jora', { cwd: projectRoot });
+        } catch (createError) {
+          throw new Error('Failed to create jora branch: ' + createError.message);
+        }
+      }
+      
+      // 5. Add jora-changelog files
+      console.log('📝 Adding jora-changelog changes...');
+      try {
+        // Add specific jora-changelog files that may have changes
+        const addCommands = [
+          'git add jora-changelog/*.json',
+          'git add jora-changelog/tasks/*.json', 
+          'git add jora-changelog/epics/*.json',
+          'git add jora-changelog/releases/*.json'
+        ];
+        
+        for (const cmd of addCommands) {
+          try {
+            execSync(cmd, { cwd: projectRoot });
+          } catch (addError) {
+            // Ignore errors for files that don't exist
+            console.log(`ℹ️ ${cmd} - some files not found (normal)`);
+          }
+        }
       } catch (addError) {
         console.log('ℹ️ Some jora-changelog files not found (normal)');
       }
       
-      // 3. Check if we have anything to commit
+      // 6. Check if we have anything to commit
       let hasChangesToCommit = false;
+      let stagedFiles = '';
       try {
         const statusOutput = execSync('git diff --cached --name-status', { cwd: projectRoot, encoding: 'utf8' });
         hasChangesToCommit = statusOutput.trim().length > 0;
-        console.log('📊 Staged changes:', statusOutput.trim() || 'none');
+        stagedFiles = statusOutput.trim();
+        console.log('📊 Staged changes:', stagedFiles || 'none');
       } catch (statusError) {
         console.log('⚠️ Could not check staged changes:', statusError.message);
       }
@@ -543,63 +584,58 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       if (!hasChangesToCommit) {
         return res.json({
           success: true,
-          message: 'No changes to commit',
-          action: 'no_changes'
+          message: 'No changes to commit - all up to date',
+          action: 'no_changes',
+          currentBranch
         });
       }
       
-      // 5. Commit changes
+      // 7. Commit changes
       try {
-        console.log('� Committing changes...');
+        console.log('💾 Committing changes...');
         const commitMessage = `jora auto update - ${new Date().toISOString()}`;
         execSync(`git commit -m "${commitMessage}"`, { cwd: projectRoot });
+        console.log('✅ Changes committed successfully');
       } catch (commitError) {
-        // Switch back if needed
-        if (needToSwitchBack) {
-          try {
-            execSync(`git checkout ${currentBranch}`, { cwd: projectRoot });
-          } catch (checkoutError) {
-            console.error('⚠️ Could not switch back to original branch');
-          }
-        }
-        
         const errorMessage = commitError.message || commitError.toString();
         if (errorMessage.includes('nothing to commit') || errorMessage.includes('no changes added')) {
           return res.json({
             success: true,
-            message: 'No changes to commit',
-            action: 'no_changes'
+            message: 'No changes to commit - all up to date',
+            action: 'no_changes',
+            currentBranch
           });
         }
         
         throw new Error('Failed to commit: ' + commitError.message);
       }
       
-      // 6. Push to remote
+      // 8. Push to remote
       try {
         console.log('🚀 Pushing to remote...');
-        execSync(`git push origin ${joraBacklogBranch}`, { cwd: projectRoot });
+        execSync('git push origin jora', { cwd: projectRoot });
+        console.log('✅ Changes pushed successfully');
       } catch (pushError) {
         console.error('⚠️ Push failed:', pushError.message);
-        // Don't fail completely if push fails
-      }
-      
-      // 7. Switch back to original branch
-      if (needToSwitchBack) {
-        try {
-          console.log(`🔄 Switching back to ${currentBranch}...`);
-          execSync(`git checkout ${currentBranch}`, { cwd: projectRoot });
-        } catch (checkoutError) {
-          console.error('⚠️ Could not switch back to original branch:', checkoutError.message);
-        }
+        // Don't fail completely if push fails - commit was successful
+        return res.json({
+          success: true,
+          warning: true,
+          message: 'Changes committed locally but push failed. Check your internet connection.',
+          action: 'commit_success_push_failed',
+          currentBranch,
+          stagedFiles: stagedFiles.split('\n').filter(line => line.trim()),
+          error: pushError.message
+        });
       }
       
       console.log('✅ Git save operation completed successfully');
       res.json({
         success: true,
-        message: 'Changes saved successfully to jora-backlog branch!',
+        message: 'Changes saved and pushed successfully to jora branch!',
         action: 'success',
-        originalBranch: currentBranch
+        currentBranch,
+        stagedFiles: stagedFiles.split('\n').filter(line => line.trim())
       });
       
     } catch (error) {
@@ -607,7 +643,8 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       res.status(500).json({
         success: false,
         error: error.message,
-        action: 'failed'
+        action: 'failed',
+        currentBranch: currentBranch || 'unknown'
       });
     }
   });
