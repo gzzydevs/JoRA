@@ -23,7 +23,8 @@ export const useReleasePage = (version) => {
     bugfix: '🐛',  // Added missing bugfix type
     refactor: '♻️',
     test: '✅',
-    chore: '🔧'
+    chore: '🔧',
+    discovery: '🔍'  // New discovery type for investigation tasks
   };
 
   // Load release data
