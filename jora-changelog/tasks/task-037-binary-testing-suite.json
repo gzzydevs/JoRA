@@ -1,0 +1,66 @@
+{
+  "id": "task-036-binary-testing-suite",
+  "title": "Suite de testing automatizado para binarios v0.2.0",
+  "description": "Crear un sistema de testing robusto que valide automáticamente que los binarios de v0.2.0 funcionan correctamente en todas las plataformas target.\n\n## 🎯 **Objetivo**\nGarantizar que cada build de v0.2.0 produce binarios 100% funcionales mediante testing automatizado exhaustivo.\n\n## 🧪 **Testing Matrix**\n\n### **Platforms:**\n- **Linux x64** (Ubuntu 20.04, CentOS, Debian)\n- **Windows x64** (Windows 10, Windows 11)\n- **macOS** (Intel, Apple Silicon)\n\n### **Test Categories:**\n\n#### **🚀 Startup Tests**\n```bash\n# Test 1: Binary execution\n./jora-linux --version\n./jora-linux --help\n\n# Test 2: Server startup\n./jora-linux &\nPID=$!\nsleep 5\ncurl -f http://localhost:3333 || exit 1\nkill $PID\n```\n\n#### **🌐 Frontend Tests**\n```bash\n# Test 3: Frontend serving\ncurl http://localhost:3333/ | grep \"JoRA\"\ncurl http://localhost:3333/static/js/bundle.js\ncurl http://localhost:3333/static/css/main.css\n```\n\n#### **📡 API Tests**\n```bash\n# Test 4: Core API endpoints\ncurl http://localhost:3333/api/config\ncurl http://localhost:3333/api/tasks\ncurl http://localhost:3333/api/epics\ncurl http://localhost:3333/api/releases\n```\n\n#### **💾 Data Tests**\n```bash\n# Test 5: JSON database operations\n# Create test task via API\n# Verify file was written\n# Delete test task\n# Verify file cleanup\n```\n\n## 📋 **Implementation Plan**\n\n### **Fase 1: Core Testing Infrastructure**\n```javascript\n// scripts/test-binaries.js\nconst { spawn, exec } = require('child_process');\nconst fs = require('fs');\nconst path = require('path');\n\nclass BinaryTester {\n  constructor(binaryPath, platform) {\n    this.binaryPath = binaryPath;\n    this.platform = platform;\n    this.results = [];\n  }\n\n  async runStartupTests() {\n    // Test binary execution\n    // Test version command\n    // Test help command\n  }\n\n  async runServerTests() {\n    // Start server in background\n    // Wait for port binding\n    // Test health endpoint\n    // Cleanup\n  }\n\n  async runAPITests() {\n    // Test all critical endpoints\n    // Verify JSON responses\n    // Test CRUD operations\n  }\n\n  async runFrontendTests() {\n    // Test static file serving\n    // Test HTML page loads\n    // Test JS/CSS assets\n  }\n\n  generateReport() {\n    // Generate detailed test report\n    // Include timing data\n    // Highlight failures\n  }\n}\n```\n\n### **Fase 2: Platform-Specific Testing**\n```bash\n#!/bin/bash\n# scripts/test-linux.sh\necho \"Testing Linux binary...\"\n./dist/jora-linux --version\nnode scripts/test-binaries.js ./dist/jora-linux linux\n\n# scripts/test-windows.ps1\n# PowerShell script for Windows testing\n\n# scripts/test-macos.sh\n# macOS specific testing\n```\n\n### **Fase 3: CI Integration**\n```yaml\n# .github/workflows/binary-tests.yml (para task-036 GitHub Actions)\nname: Binary Tests\non:\n  push:\n    branches: [main, release/*]\n  pull_request:\n    branches: [main]\n\njobs:\n  test-binaries:\n    strategy:\n      matrix:\n        os: [ubuntu-latest, windows-latest, macos-latest]\n    runs-on: ${{ matrix.os }}\n    steps:\n      - uses: actions/checkout@v3\n      - name: Setup Node.js\n        uses: actions/setup-node@v3\n        with:\n          node-version: '18'\n      - name: Install dependencies\n        run: npm ci\n      - name: Build frontend\n        run: npm run build:frontend\n      - name: Build binaries\n        run: npm run build:binaries\n      - name: Test binaries\n        run: npm run test:binaries\n      - name: Upload test results\n        uses: actions/upload-artifact@v3\n        with:\n          name: test-results-${{ matrix.os }}\n          path: test-results/\n```\n\n## 🔧 **Archivos a crear:**\n\n### **Testing Scripts:**\n- `scripts/test-binaries.js` - Core testing engine\n- `scripts/test-linux.sh` - Linux specific tests  \n- `scripts/test-windows.ps1` - Windows specific tests\n- `scripts/test-macos.sh` - macOS specific tests\n- `scripts/validate-v0.2.0.js` - V0.2.0 validation suite\n\n### **Test Data:**\n- `test-data/sample-tasks.json` - Test data for CRUD\n- `test-data/sample-config.json` - Test configuration\n\n### **Reports:**\n- `test-results/` - Directory for test outputs\n- `test-results/report.html` - Visual test report\n\n## 📊 **Success Criteria**\n\n### **Must Pass:**\n- ✅ All binaries start without errors\n- ✅ Server binds to port 3333 successfully\n- ✅ Frontend loads completely\n- ✅ All API endpoints respond correctly\n- ✅ CRUD operations work on JSON database\n- ✅ No memory leaks during 30-minute run\n\n### **Performance Targets:**\n- ✅ Binary startup < 5 seconds\n- ✅ Frontend load < 3 seconds\n- ✅ API response time < 500ms\n- ✅ Memory usage < 200MB after 1 hour\n\n## 🚨 **Error Detection**\n\n### **Critical Errors (Build fails):**\n- Binary won't execute\n- Server fails to start\n- Frontend returns 404\n- API returns 500 errors\n- Data corruption detected\n\n### **Warning Errors (Note but continue):**\n- Slow startup times\n- High memory usage\n- Missing optional features\n\n---\n\n**NOTA:** Esta suite es ESENCIAL para v0.2.0 compilable. Sin testing robusto, no podemos garantizar que los binarios funcionen correctamente en producción.",
+  "state": "todo",
+  "type": "feature",
+  "priority": "high",
+  "epic": "distribution-automation",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": [
+    "testing",
+    "binary",
+    "automation",
+    "v0.2.0",
+    "quality-assurance",
+    "ci-cd"
+  ],
+  "subtasks": [
+    {
+      "id": "subtask-1", 
+      "text": "Crear BinaryTester class base",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Implementar startup tests (version, help, execution)",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Implementar server tests (port binding, health check)",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Implementar API tests (endpoints, responses, CRUD)",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Implementar frontend tests (static files, loading)",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Crear platform-specific test scripts",
+      "completed": false
+    },
+    {
+      "id": "subtask-7",
+      "text": "Implementar test reporting y metrics",
+      "completed": false
+    },
+    {
+      "id": "subtask-8",
+      "text": "Crear validation suite específica para v0.2.0",
+      "completed": false
+    }
+  ],
+  "estimatedPoints": 13,
+  "estimatedDate": "2025-07-28",
+  "images": [],
+  "createdAt": "2025-07-18T21:18:00Z",
+  "updatedAt": "2025-07-18T21:18:00Z"
+}

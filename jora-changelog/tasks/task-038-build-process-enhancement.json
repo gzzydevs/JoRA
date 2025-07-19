@@ -1,0 +1,66 @@
+{
+  "id": "task-038-build-process-enhancement",
+  "title": "Mejorar build process para v0.2.0 compilable production-ready",
+  "description": "Optimizar y robustecer el proceso completo de build para que v0.2.0 sea una versión compilable production-ready con builds reproducibles y optimizados.\n\n## 🎯 **Objetivo**\nEstablecer un build process robusto, reproducible y optimizado que genere binarios production-ready de alta calidad para v0.2.0.\n\n## 🔧 **Mejoras al Build Process**\n\n### **1. Build Script Optimization**\n```json\n// package.json - Enhanced build scripts\n{\n  \"scripts\": {\n    // Current builds\n    \"build\": \"npm run clean && npm run build:frontend && npm run build:binaries && npm run validate:binaries\",\n    \"build:frontend\": \"vite build\",\n    \"build:binaries\": \"npm run build:linux && npm run build:win && npm run build:mac\",\n    \n    // New optimized builds\n    \"clean\": \"rimraf dist tmp coverage test-results\",\n    \"prebuild\": \"npm run lint && npm run test\",\n    \"postbuild\": \"npm run validate:binaries && npm run generate:checksums\",\n    \n    // Platform-specific optimized builds\n    \"build:linux\": \"cross-env NODE_ENV=production pkg . --targets node18-linux-x64 --output dist/jora-linux --compress GZip\",\n    \"build:win\": \"cross-env NODE_ENV=production pkg . --targets node18-win-x64 --output dist/jora-win.exe --compress GZip\", \n    \"build:mac\": \"cross-env NODE_ENV=production pkg . --targets node18-macos-x64 --output dist/jora-mac --compress GZip\",\n    \n    // Validation and quality\n    \"validate:binaries\": \"node scripts/validate-binaries.js\",\n    \"generate:checksums\": \"node scripts/generate-checksums.js\",\n    \"test:build\": \"npm run build && npm run test:binaries\",\n    \n    // Development builds\n    \"build:dev\": \"npm run build:frontend && npm run build:dev:binary\",\n    \"build:dev:binary\": \"pkg . --targets node18-$(node -p 'process.platform')-x64 --output dist/jora-dev\"\n  }\n}\n```\n\n### **2. Enhanced PKG Configuration**\n```json\n// package.json - Optimized PKG config\n{\n  \"pkg\": {\n    \"assets\": [\n      \"dist/frontend/**/*\",\n      \"jora-changelog/**/*.json\",\n      \"package.json\",\n      \"LICENSE\",\n      \"README.md\"\n    ],\n    \"scripts\": [\n      \"src/**/*.js\"\n    ],\n    \"targets\": [\n      \"node18-linux-x64\",\n      \"node18-win-x64\",\n      \"node18-macos-x64\"\n    ],\n    \"outputPath\": \"dist\",\n    \"options\": [\n      \"--no-bytecode\",\n      \"--public-packages=*\",\n      \"--public\"\n    ]\n  }\n}\n```\n\n### **3. Build Validation Scripts**\n```javascript\n// scripts/validate-binaries.js\nconst fs = require('fs');\nconst path = require('path');\nconst { execSync } = require('child_process');\n\nclass BuildValidator {\n  constructor() {\n    this.results = {\n      linux: { exists: false, executable: false, size: 0 },\n      windows: { exists: false, executable: false, size: 0 },\n      macos: { exists: false, executable: false, size: 0 }\n    };\n  }\n\n  validateBinary(platform, binaryPath) {\n    console.log(`🔍 Validating ${platform} binary...`);\n    \n    // Check existence\n    if (!fs.existsSync(binaryPath)) {\n      throw new Error(`❌ ${platform} binary not found: ${binaryPath}`);\n    }\n    this.results[platform].exists = true;\n    \n    // Check size (should be reasonable)\n    const stats = fs.statSync(binaryPath);\n    this.results[platform].size = stats.size;\n    if (stats.size < 10 * 1024 * 1024) { // Less than 10MB is suspicious\n      console.warn(`⚠️  ${platform} binary seems too small: ${stats.size} bytes`);\n    }\n    if (stats.size > 200 * 1024 * 1024) { // More than 200MB is too big\n      console.warn(`⚠️  ${platform} binary is very large: ${stats.size} bytes`);\n    }\n    \n    // Check executable permissions (Unix)\n    if (platform !== 'windows') {\n      try {\n        fs.accessSync(binaryPath, fs.constants.X_OK);\n        this.results[platform].executable = true;\n      } catch (err) {\n        console.warn(`⚠️  ${platform} binary is not executable`);\n      }\n    } else {\n      this.results[platform].executable = true;\n    }\n    \n    console.log(`✅ ${platform} binary validated successfully`);\n  }\n\n  validateAll() {\n    const binaries = {\n      linux: 'dist/jora-linux',\n      windows: 'dist/jora-win.exe', \n      macos: 'dist/jora-mac'\n    };\n    \n    for (const [platform, path] of Object.entries(binaries)) {\n      this.validateBinary(platform, path);\n    }\n    \n    this.generateReport();\n  }\n\n  generateReport() {\n    console.log('\\n📊 Build Validation Report:');\n    console.log('================================');\n    \n    for (const [platform, result] of Object.entries(this.results)) {\n      const sizeInMB = (result.size / 1024 / 1024).toFixed(2);\n      console.log(`${platform.toUpperCase()}:`);\n      console.log(`  ✓ Exists: ${result.exists}`);\n      console.log(`  ✓ Executable: ${result.executable}`);\n      console.log(`  📏 Size: ${sizeInMB} MB`);\n      console.log('');\n    }\n  }\n}\n\nif (require.main === module) {\n  const validator = new BuildValidator();\n  validator.validateAll();\n}\n\nmodule.exports = BuildValidator;\n```\n\n### **4. Checksum Generation**\n```javascript\n// scripts/generate-checksums.js\nconst crypto = require('crypto');\nconst fs = require('fs');\nconst path = require('path');\n\nfunction generateChecksum(filePath) {\n  const fileBuffer = fs.readFileSync(filePath);\n  const hashSum = crypto.createHash('sha256');\n  hashSum.update(fileBuffer);\n  return hashSum.digest('hex');\n}\n\nfunction generateAllChecksums() {\n  const binaries = [\n    'dist/jora-linux',\n    'dist/jora-win.exe',\n    'dist/jora-mac'\n  ];\n  \n  const checksums = {};\n  \n  for (const binary of binaries) {\n    if (fs.existsSync(binary)) {\n      const checksum = generateChecksum(binary);\n      const filename = path.basename(binary);\n      checksums[filename] = checksum;\n      console.log(`✅ ${filename}: ${checksum}`);\n    }\n  }\n  \n  // Write checksums file\n  fs.writeFileSync('dist/checksums.json', JSON.stringify(checksums, null, 2));\n  console.log('\\n📝 Checksums written to dist/checksums.json');\n}\n\nif (require.main === module) {\n  generateAllChecksums();\n}\n\nmodule.exports = { generateChecksum, generateAllChecksums };\n```\n\n## 🚀 **Build Process Flow**\n\n### **Production Build:**\n```bash\n# Complete production build\nnpm run build\n\n# What happens:\n# 1. npm run clean          - Clean all output dirs\n# 2. npm run lint           - Code quality check\n# 3. npm run test           - Unit tests pass\n# 4. npm run build:frontend - Vite build optimized\n# 5. npm run build:binaries - PKG build all platforms\n# 6. npm run validate:binaries - Validate all binaries\n# 7. npm run generate:checksums - Generate SHA256 checksums\n```\n\n### **Development Build:**\n```bash\n# Quick development build\nnpm run build:dev\n\n# Only builds current platform for faster iteration\n```\n\n## 📋 **Quality Gates**\n\n### **Pre-build Checks:**\n- ✅ ESLint passes without errors\n- ✅ Unit tests pass\n- ✅ No security vulnerabilities (npm audit)\n\n### **Post-build Validation:**\n- ✅ All 3 binaries generated successfully\n- ✅ Binary sizes within acceptable range (10-200MB)\n- ✅ Executable permissions set correctly\n- ✅ SHA256 checksums generated\n- ✅ Basic startup test passes\n\n## 🔧 **Dependencies to Add:**\n```json\n{\n  \"devDependencies\": {\n    \"rimraf\": \"^5.0.0\",\n    \"cross-env\": \"^7.0.3\"\n  }\n}\n```\n\n## 📊 **Expected Improvements**\n\n### **Build Quality:**\n- ✅ Reproducible builds with checksums\n- ✅ Automated validation prevents broken releases\n- ✅ Clear error messages for build failures\n- ✅ Optimized binary sizes with compression\n\n### **Developer Experience:**\n- ✅ Fast development builds (single platform)\n- ✅ Clear build status and progress\n- ✅ Easy debugging of build issues\n- ✅ Comprehensive build reports\n\n### **Production Readiness:**\n- ✅ Multi-platform builds in single command\n- ✅ Automated quality gates\n- ✅ Security and integrity verification\n- ✅ Professional build artifacts\n\n---\n\n**NOTA:** Esta tarea complementa task-035 (PKG resolution) asegurando que una vez resueltos los problemas técnicos, tengamos un build process production-ready para v0.2.0.",
+  "state": "todo",
+  "type": "feature", 
+  "priority": "high",
+  "epic": "distribution-automation",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": [
+    "build-process",
+    "optimization",
+    "production",
+    "v0.2.0",
+    "quality-gates",
+    "automation"
+  ],
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Optimizar package.json build scripts",
+      "completed": false
+    },
+    {
+      "id": "subtask-2", 
+      "text": "Crear BuildValidator class y validation scripts",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Implementar checksum generation automático",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Configurar quality gates (lint, test, audit)",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Optimizar PKG configuration para production",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Crear development build process rápido",
+      "completed": false
+    },
+    {
+      "id": "subtask-7",
+      "text": "Implementar build reporting y metrics",
+      "completed": false
+    },
+    {
+      "id": "subtask-8",
+      "text": "Documentar build process completo",
+      "completed": false
+    }
+  ],
+  "estimatedPoints": 8,
+  "estimatedDate": "2025-07-25",
+  "images": [],
+  "createdAt": "2025-07-18T21:20:00Z",
+  "updatedAt": "2025-07-18T21:20:00Z"
+}

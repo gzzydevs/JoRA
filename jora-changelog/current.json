@@ -27,7 +27,10 @@
     "task-019-task-card-state-management",
     "task-018-release-system-epic-handling",
     "task-029-auto-branch-switch-for-save",
-    "task-030-optimize-drag-drop-unchanged-detection"
+    "task-030-optimize-drag-drop-unchanged-detection",
+    "task-035-resolve-pkg-vite-compatibility",
+    "task-037-binary-testing-suite",
+    "task-038-build-process-enhancement"
   ],
-  "lastUpdated": "2025-07-18T21:05:00.000Z"
+  "lastUpdated": "2025-07-18T21:20:00.000Z"
 }
