@@ -609,7 +609,7 @@ Cuando completes una subtarea, actualiza el JSON:
 
 #### 1. **Task-035: Resolver PKG + Vite Compatibility** 
 - **Prioridad:** CRITICAL | **Epic:** distribution-automation
-- **Descripción:** Finalizar investigación Task-022 y implementar solución definitiva para generar binarios funcionales. Evaluar alternativas (nexe, ncc, electron-builder)
+- **Descripción:** Finalizar investigación Task-022 y implementar solución definitiva para generar binarios funcionales. Mantener PKG como solución principal tras confirmar que funciona correctamente.
 - **Estimación:** 13 puntos | **Tipo:** investigation + implementation
 
 #### 2. **Task-036: Automated GitHub Actions Release**
