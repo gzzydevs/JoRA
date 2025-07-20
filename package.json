@@ -17,8 +17,18 @@
     "build:linux": "pkg . --targets node18-linux-x64 --output dist/jora-linux",
     "build:win": "pkg . --targets node18-win-x64 --output dist/jora-win.exe",
     "build:mac": "pkg . --targets node18-macos-x64 --output dist/jora-mac",
-    "test:binaries": "node scripts/test-binaries.js",
-    "test": "echo \"No tests yet\" && exit 0"
+    "test:binaries": "node scripts/testing/test-binaries.js",
+    "test:binaries:quick": "node scripts/testing/test-binaries.js --quick",
+    "test:binaries:verbose": "node scripts/testing/test-binaries.js --verbose",
+    "test:linux": "bash scripts/platform/test-linux.sh",
+    "test:macos": "bash scripts/platform/test-macos.sh", 
+    "test:windows": "powershell -ExecutionPolicy Bypass -File scripts/platform/test-windows.ps1",
+    "validate:distribution": "node scripts/testing/validate-distribution.js",
+    "validate:distribution:verbose": "node scripts/testing/validate-distribution.js --verbose",
+    "report:generate": "node scripts/testing/generate-test-report.js",
+    "report:clean": "node scripts/testing/clean-test-results.js",
+    "test:full": "npm run test:binaries && npm run validate:distribution && npm run report:generate",
+    "test": "npm run test:binaries"
   },
   "pkg": {
     "assets": [
