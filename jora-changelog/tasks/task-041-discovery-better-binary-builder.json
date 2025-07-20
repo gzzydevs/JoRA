@@ -1,0 +1,53 @@
+{
+  "id": "task-041-discovery-better-binary-builder",
+  "title": "Discovery: Research Better Cross-Platform Binary Builder",
+  "description": "Research and evaluate alternatives to PKG for creating standalone cross-platform binaries. The current evaluation showed that @vercel/ncc doesn't meet our requirements as it only creates Node.js scripts rather than true standalone executables.\n\n**Background:**\n- PKG works well but is deprecated and has limitations\n- @vercel/ncc was tested but only creates bundled Node.js scripts (not standalone)\n- Need a modern, actively maintained solution for true standalone binaries\n\n**Research Areas:**\n1. **Modern Binary Builders:**\n   - Bun compile (new, promising)\n   - Deno compile (established, TypeScript native)\n   - Node.js SEA (Single Executable Applications - experimental)\n   - nexe (alternative to PKG)\n   - pkg alternatives\n\n2. **Evaluation Criteria:**\n   - Creates true standalone executables (no Node.js dependency)\n   - Cross-platform support (Linux, Windows, macOS)\n   - Active maintenance and community\n   - Bundle size efficiency\n   - Build speed\n   - React/Vite compatibility\n   - Asset bundling capabilities\n\n3. **Technical Requirements:**\n   - Must handle Express server + React frontend\n   - Asset extraction and serving\n   - JSON file system database compatibility\n   - Binary portability (run from any directory)\n\n**Deliverables:**\n- Comparative analysis document\n- POC implementations of top 2-3 candidates\n- Performance benchmarks\n- Migration effort estimation\n- Recommendation with pros/cons\n\n**Decision Context:**\n- PKG remains the primary build system until better alternative found\n- NCC experiment showed it's not suitable for our use case\n- Priority: Find actively maintained, future-proof solution",
+  "type": "discovery",
+  "priority": "low",
+  "assignee": "gzzy",
+  "state": "todo",
+  "tags": ["research", "build-system", "cross-platform", "binary", "tooling"],
+  "epic": "distribution-automation",
+  "estimatedHours": 16,
+  "createdAt": "2025-07-19T18:50:00.000Z",
+  "updatedAt": "2025-07-19T18:50:00.000Z",
+  "dependencies": [],
+  "parentTask": null,
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "title": "Research Bun compile capabilities and limitations",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "title": "Research Deno compile for Node.js projects",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "title": "Investigate Node.js SEA (Single Executable Applications)",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "title": "Evaluate nexe as PKG alternative",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "title": "Create POC builds with top candidates",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "title": "Performance and size benchmarks",
+      "completed": false
+    },
+    {
+      "id": "subtask-7",
+      "title": "Write comparative analysis and recommendation",
+      "completed": false
+    }
+  ]
+}

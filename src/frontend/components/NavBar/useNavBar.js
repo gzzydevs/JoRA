@@ -54,33 +54,38 @@ export const useNavBar = () => {
   };
 
   const handleSaveChanges = async () => {
-    if (!canSaveChanges) {
-      if (hasInvalidFiles) {
-        showError('Cannot save: You can only commit jora-changelog/*.json files');
-        return;
-      }
-      if (needsUpdate) {
-        showError('Cannot save: Please sync with remote first');
-        return;
-      }
-      return;
-    }
-    
     try {
       const result = await saveChanges();
       
       if (result.success) {
         if (result.action === 'no_changes') {
-          showSuccess('No changes to save');
-        } else {
-          showSuccess('Changes saved to jora-backlog branch successfully!');
+          showSuccess('No changes to save - everything is up to date');
+        } else if (result.action === 'success') {
+          showSuccess(`Changes saved and pushed successfully to '${result.currentBranch}' branch!`);
+        } else if (result.action === 'commit_success_push_failed') {
+          showError(`Changes committed locally but push failed. Check your internet connection.`);
         }
+      } else if (result.warning && result.action === 'wrong_branch_no_commit') {
+        // Special case: not on jora branch - changes executed but not committed
+        showError(`⚠️ ${result.message}\n\nCurrent branch: ${result.currentBranch}\nRequired for auto-commit: ${result.requiredBranch}`);
       } else {
-        showError(result.message || 'Failed to save changes');
+        showError(result.message || result.error || 'Failed to save changes');
       }
     } catch (error) {
       console.error('Error in handleSaveChanges:', error);
-      showError('Failed to save changes: ' + error.message);
+      
+      // Handle HTTP error responses
+      if (error.response && error.response.data) {
+        const errorData = error.response.data;
+        
+        if (errorData.warning && errorData.action === 'wrong_branch_no_commit') {
+          showError(`⚠️ ${errorData.message}\n\nHint: ${errorData.hint || 'Switch to jora branch for auto-commits'}`);
+        } else {
+          showError(errorData.message || errorData.error || 'Failed to save changes');
+        }
+      } else {
+        showError('Failed to save changes: ' + error.message);
+      }
     }
   };
 

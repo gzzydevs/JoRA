@@ -1,0 +1,57 @@
+{
+  "id": "task-039-add-discovery-task-type",
+  "title": "Agregar tipo 'discovery' para tareas de investigación técnica",
+  "description": "Implementar un nuevo tipo de tarea 'discovery' con ícono 🔍 para categorizar mejor las tareas de investigación técnica y research.\n\n## 🎯 **Objetivo**\nTener un tipo específico para tareas de investigación que se diferencie claramente de features, bugs, etc.\n\n## ✅ **Implementación Realizada**\n\n### **Frontend Changes:**\n\n#### **1. ReleasePage useReleasePage.js**\n```javascript\n// Added to taskTypeIcons mapping\ndiscovery: '🔍'  // New discovery type for investigation tasks\n```\n\n#### **2. TaskModal Component**\n```jsx\n// Added to select options\n<option value=\"discovery\">🔍 Discovery</option>\n\n// Updated display array\n['✨', '🔥', '📚', '🧪', '⚡', '🐛', '♻️', '✅', '🔧', '🔍']\n['feature', 'hotfix', 'documentation', 'poc', 'improvement', 'bug', 'refactor', 'test', 'chore', 'discovery']\n```\n\n### **Task Updates:**\n- ✅ **task-022:** Updated from `feature` → `discovery`\n- ✅ **task-035:** Updated from `feature` → `discovery`\n\n## 🔧 **Archivos Modificados**\n\n1. `/src/frontend/pages/ReleasePage/useReleasePage.js`\n   - Agregado `discovery: '🔍'` al mapping de taskTypeIcons\n\n2. `/src/frontend/components/modals/TaskModal/index.jsx`\n   - Agregado option `<option value=\"discovery\">🔍 Discovery</option>`\n   - Actualizado array de íconos para incluir '🔍'\n   - Actualizado array de tipos para incluir 'discovery'\n\n3. `/jora-changelog/tasks/task-022-pkg-vite-investigation.json`\n   - Cambiado `\"type\": \"feature\"` → `\"type\": \"discovery\"`\n\n4. `/jora-changelog/tasks/task-035-resolve-pkg-vite-compatibility.json`\n   - Cambiado `\"type\": \"feature\"` → `\"type\": \"discovery\"`\n\n## 🎯 **Beneficios**\n\n### **Mejor Categorización:**\n- ✅ Tareas de investigación claramente identificadas con 🔍\n- ✅ Separación entre research y development work\n- ✅ Mejor tracking de esfuerzo de discovery vs implementation\n\n### **UX Mejorada:**\n- ✅ Ícono visual distintivo para tareas de investigación\n- ✅ Filtrado específico en releases por tipo discovery\n- ✅ Identificación rápida de tareas de research\n\n### **Casos de Uso:**\n- 🔍 Investigaciones técnicas (PKG/nexe, Vite compatibility)\n- 🔍 Proof of concepts que requieren research\n- 🔍 Análisis de performance y debugging\n- 🔍 Technology evaluation y comparisons\n\n## ✅ **Testing Realizado**\n\n### **Frontend:**\n- ✅ TaskModal muestra nueva opción \"🔍 Discovery\"\n- ✅ Tasks con tipo discovery muestran ícono correcto\n- ✅ ReleasePage filtra y agrupa discovery tasks correctamente\n- ✅ task-022 y task-035 ahora muestran ícono 🔍\n\n### **Data Integrity:**\n- ✅ JSON files actualizados correctamente\n- ✅ No breaking changes en existing functionality\n- ✅ Backward compatibility mantenida\n\n---\n\n**NOTA:** Esta implementación mejora significativamente la categorización de tareas, especialmente útil para el roadmap hacia v0.2.0 donde tenemos varias tareas de investigación técnica críticas.",
+  "state": "done",
+  "type": "feature",
+  "priority": "medium",
+  "epic": "core-ui",
+  "author": "gzzy",
+  "assignee": "gzzy",
+  "tags": [
+    "task-types",
+    "ui-improvement",
+    "categorization",
+    "discovery",
+    "frontend",
+    "completed"
+  ],
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Agregar tipo 'discovery' a taskTypeIcons en ReleasePage",
+      "completed": true
+    },
+    {
+      "id": "subtask-2",
+      "text": "Agregar option 'discovery' al TaskModal select",
+      "completed": true
+    },
+    {
+      "id": "subtask-3",
+      "text": "Actualizar arrays de íconos y tipos en TaskModal display",
+      "completed": true
+    },
+    {
+      "id": "subtask-4",
+      "text": "Actualizar task-022 para usar tipo 'discovery'",
+      "completed": true
+    },
+    {
+      "id": "subtask-5",
+      "text": "Actualizar task-035 para usar tipo 'discovery'",
+      "completed": true
+    },
+    {
+      "id": "subtask-6",
+      "text": "Validar que no hay breaking changes en UI",
+      "completed": true
+    }
+  ],
+  "estimatedPoints": 3,
+  "estimatedDate": "2025-07-18",
+  "images": [],
+  "createdAt": "2025-07-18T21:30:00Z",
+  "updatedAt": "2025-07-18T21:30:00Z",
+  "completedAt": "2025-07-18T21:30:00Z"
+}

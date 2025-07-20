@@ -1,6 +1,6 @@
 {
   "name": "jora",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "JoRA - A simple, offline task management tool (no Jira needed)",
   "main": "src/cli.js",
   "bin": {
@@ -12,16 +12,42 @@
     "dev:frontend": "vite",
     "build:frontend": "vite build",
     "preview:frontend": "vite preview",
-    "build": "npm run build:frontend && npm run build:linux && npm run build:win && npm run build:mac",
+    "build": "npm run build:frontend && npm run build:binaries",
+    "build:binaries": "npm run build:linux && npm run build:win && npm run build:mac",
     "build:linux": "pkg . --targets node18-linux-x64 --output dist/jora-linux",
     "build:win": "pkg . --targets node18-win-x64 --output dist/jora-win.exe",
     "build:mac": "pkg . --targets node18-macos-x64 --output dist/jora-mac",
-    "test": "echo \"No tests yet\" && exit 0"
+    "test:binaries": "node scripts/testing/test-binaries.js",
+    "test:binaries:quick": "node scripts/testing/test-binaries.js --quick",
+    "test:binaries:verbose": "node scripts/testing/test-binaries.js --verbose",
+    "test:linux": "bash scripts/platform/test-linux.sh",
+    "test:macos": "bash scripts/platform/test-macos.sh", 
+    "test:windows": "powershell -ExecutionPolicy Bypass -File scripts/platform/test-windows.ps1",
+    "validate:distribution": "node scripts/testing/validate-distribution.js",
+    "validate:distribution:verbose": "node scripts/testing/validate-distribution.js --verbose",
+    "report:generate": "node scripts/testing/generate-test-report.js",
+    "report:clean": "node scripts/testing/clean-test-results.js",
+    "test:full": "npm run test:binaries && npm run validate:distribution && npm run report:generate",
+    "test": "npm run test:binaries"
   },
   "pkg": {
     "assets": [
-      "src/web/**/*",
-      "dist/frontend/**/*"
+      "dist/frontend/**/*",
+      "jora-changelog/**/*",
+      "node_modules/express/**/*",
+      "node_modules/react/**/*",
+      "node_modules/react-dom/**/*",
+      "node_modules/react-router-dom/**/*"
+    ],
+    "scripts": [
+      "src/cli.js",
+      "src/core/**/*.js",
+      "src/server/**/*.js"
+    ],
+    "targets": [
+      "node18-linux-x64",
+      "node18-win-x64", 
+      "node18-macos-x64"
     ],
     "outputPath": "dist"
   },
@@ -32,7 +58,7 @@
     "project-management",
     "tickets"
   ],
-  "author": "Your Name",
+  "author": "gzzy <barbycus@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",

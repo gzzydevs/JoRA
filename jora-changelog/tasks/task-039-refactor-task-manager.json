@@ -1,0 +1,50 @@
+{
+  "id": "task-039-refactor-task-manager",
+  "title": "Refactor TaskManager - Split into smaller modules",
+  "description": "The task-manager.js file has grown too large (670+ lines) and is becoming difficult to work with, especially for AI agents. Need to split it into smaller, focused modules:\n\n1. **TaskManager** (main class) - coordination and public API\n2. **FileManager** - file I/O operations (load/save tasks, epics, etc.)\n3. **ValidationManager** - data validation and schema checking\n4. **ReleaseManager** - release generation and management\n5. **MigrationManager** - data migration and backwards compatibility\n\nBenefits:\n- Easier to understand and maintain\n- Better separation of concerns\n- More testable code\n- Easier for AI agents to work with smaller files\n- Reduced cognitive load when making changes",
+  "state": "in_backlog",
+  "type": "refactor",
+  "priority": "high",
+  "epic": null,
+  "author": "default",
+  "assignee": null,
+  "tags": ["architecture", "refactoring", "maintainability"],
+  "subtasks": [
+    {
+      "id": "1",
+      "title": "Create FileManager module for all file operations",
+      "completed": false
+    },
+    {
+      "id": "2", 
+      "title": "Create ValidationManager for data validation",
+      "completed": false
+    },
+    {
+      "id": "3",
+      "title": "Create ReleaseManager for release operations", 
+      "completed": false
+    },
+    {
+      "id": "4",
+      "title": "Create MigrationManager for data migrations",
+      "completed": false
+    },
+    {
+      "id": "5",
+      "title": "Refactor main TaskManager to use new modules",
+      "completed": false
+    },
+    {
+      "id": "6",
+      "title": "Update tests and ensure backwards compatibility",
+      "completed": false
+    }
+  ],
+  "estimatedPoints": 13,
+  "estimatedDate": null,
+  "images": [],
+  "dependencies": [],
+  "createdAt": "2025-07-19T22:30:00.000Z",
+  "updatedAt": "2025-07-19T22:30:00.000Z"
+}

@@ -1,0 +1,54 @@
+{
+  "id": "task-040-ticket-comments-feature",
+  "title": "Add Comments Feature to Tasks/Tickets",
+  "description": "Implement a commenting system for tasks/tickets that allows users to add notes, observations, and updates throughout the task lifecycle.\n\n**Requirements:**\n- Add comments field to task JSON structure\n- Store comment text, author reference, and timestamp\n- UI component to display existing comments\n- UI form to add new comments\n- Comments should be stored in the same task JSON file\n- Consider adding future 'Convert to Issue' button (disabled for now)\n\n**Technical Implementation:**\n- Extend task schema with 'comments' array\n- Each comment: { id, text, author, timestamp, type: 'comment' }\n- Backend API endpoints for CRUD operations on comments\n- Frontend components: CommentsList, CommentForm\n- Integration with existing TaskModal and TaskDetailPage\n\n**Future Considerations:**\n- 'Convert to Issue' functionality (button should be added but disabled)\n- Comment threading/replies\n- Comment editing/deletion\n- Notification system for comment updates",
+  "type": "feature",
+  "priority": "medium",
+  "assignee": "gzzy",
+  "state": "todo",
+  "tags": [
+    "ui",
+    "backend",
+    "api",
+    "comments",
+    "task-management"
+  ],
+  "epic": "core-functionality",
+  "estimatedHours": 8,
+  "createdAt": "2025-07-19T18:50:00.000Z",
+  "updatedAt": "2025-07-19T22:36:46.169Z",
+  "dependencies": [],
+  "parentTask": null,
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "title": "Extend task JSON schema with comments field",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "title": "Create backend API endpoints for comments CRUD",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "title": "Design and implement CommentsList component",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "title": "Design and implement CommentForm component",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "title": "Integrate comments in TaskModal and TaskDetailPage",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "title": "Add 'Convert to Issue' button (disabled)",
+      "completed": false
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "task-042-refactor-server",
+  "title": "Refactor server.js - Split into smaller modules",
+  "description": "El archivo server.js está demasiado grande y difícil de mantener. Es necesario dividirlo en módulos más pequeños y enfocados:\n\n1. **app.js** - configuración y arranque del servidor\n2. **routes/** - rutas separadas por entidad (tasks, epics, authors, releases, etc.)\n3. **middleware/** - middlewares reutilizables (auth, logging, error handling)\n4. **controllers/** - lógica de negocio para cada entidad\n5. **utils/** - utilidades generales\n\nBeneficios:\n- Mejor mantenibilidad\n- Más fácil de testear\n- Menos errores por cambios accidentales\n- Más fácil para agentes AI y humanos\n- Mejor organización y escalabilidad",
+  "state": "in_backlog",
+  "type": "refactor",
+  "priority": "high",
+  "epic": null,
+  "author": "default",
+  "assignee": null,
+  "tags": ["architecture", "refactoring", "maintainability"],
+  "subtasks": [
+    {
+      "id": "1",
+      "title": "Crear carpeta routes y mover rutas por entidad",
+      "completed": false
+    },
+    {
+      "id": "2",
+      "title": "Crear carpeta controllers y separar lógica de negocio",
+      "completed": false
+    },
+    {
+      "id": "3",
+      "title": "Crear carpeta middleware y mover middlewares reutilizables",
+      "completed": false
+    },
+    {
+      "id": "4",
+      "title": "Crear archivo app.js para configuración y arranque",
+      "completed": false
+    },
+    {
+      "id": "5",
+      "title": "Crear carpeta utils para utilidades generales",
+      "completed": false
+    },
+    {
+      "id": "6",
+      "title": "Actualizar tests y documentación",
+      "completed": false
+    }
+  ],
+  "estimatedPoints": 13,
+  "estimatedDate": null,
+  "images": [],
+  "dependencies": [],
+  "createdAt": "2025-07-19T22:40:00.000Z",
+  "updatedAt": "2025-07-19T22:40:00.000Z"
+}

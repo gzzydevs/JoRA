@@ -1,0 +1,77 @@
+{
+  "id": "task-036-automated-github-actions-release",
+  "title": "Automated GitHub Actions Release Integration",
+  "description": "Implementar sistema completo de automatización entre releases de JoRA y GitHub, incluyendo PRs automáticos, tags, y GitHub Releases sincronizados.\n\n## 🎯 **Objetivo Principal**\nConectar el sistema interno de releases de JoRA con GitHub para automatizar el workflow de deployment y distribución.\n\n## 🔄 **Workflow Ideal Propuesto**\n\n### **Fase 1: GitHub Actions Básico**\n```yaml\n# .github/workflows/release.yml\nname: JoRA Release Automation\non:\n  push:\n    tags: ['v*']\n\njobs:\n  release:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Create GitHub Release from JoRA data\n      - name: Upload binaries (cuando PKG esté resuelto)\n      - name: Sync release notes from jora-changelog/releases/\n```\n\n### **Fase 2: PR Automation**\n```javascript\n// 1. Developer creates release in JoRA UI\nconst release = await createJoRARelease(\"0.1.2\", \"Bug fixes\");\n\n// 2. JoRA auto-creates PR with release content\nawait createGitHubPR({\n  from: \"feature/current-work\",\n  to: \"develop\", \n  title: `Release v${release.version}`,\n  body: generateReleaseNotes(release)\n});\n\n// 3. On merge to master → GitHub Actions\n// 4. Auto-tag + GitHub Release + Binaries\n```\n\n### **Fase 3: Full Integration**\n- **JoRA releases** para tracking interno y funcionalidad\n- **GitHub releases** para distribución pública y binarios\n- **Sincronización bidireccional** JoRA ↔ GitHub\n\n## 📋 **Workflow Manual Actual (Referencia)**\n\n### **Para Release v0.1.1 (Ejemplo completo):**\n```bash\n# 1. Crear release en JoRA UI ✅ DONE\n# 2. Commit con mensaje estructurado ✅ DONE\ngit commit -m \"feat: release v0.1.1 with bug fixes and improvements\n\n🚀 Release Features:\n- ✅ Save & Commit button with branch-aware logic (task-028)\n- ✅ Smart timestamp updates - only when actual changes occur (task-034)\n- ✅ Release system fully functional with undo capability\n\n🐛 Bug Fixes:\n- Fixed releases array initialization bug in TaskManager.loadProjectData()\n- Fixed missing 'bugfix' type in ReleasePage taskTypeIcons mapping\n- Fixed unnecessary updatedAt updates in backend and frontend\"\n\n# 3. Push branch ✅ DONE\ngit push origin feature/a-batch-of-tickets\n\n# 4. Crear PR manual:\n# feature/a-batch-of-tickets → develop → master\n\n# 5. Tag cuando llegue a master:\ngit tag v0.1.1\ngit push origin v0.1.1\n```\n\n## 🔧 **Implementación Requerida**\n\n### **Backend Changes:**\n```javascript\n// src/server/server.js - Nuevos endpoints\napp.post('/api/github/create-pr', async (req, res) => {\n  // Crear PR automático usando GitHub API\n});\n\napp.post('/api/github/sync-release', async (req, res) => {\n  // Sincronizar release de JoRA con GitHub Release\n});\n```\n\n### **Frontend Changes:**\n```jsx\n// ReleaseModal.jsx - Nuevas opciones\n<div className=\"github-integration\">\n  <label>\n    <input type=\"checkbox\" checked={autoCreatePR} />\n    Create GitHub PR automatically\n  </label>\n  <label>\n    <input type=\"checkbox\" checked={autoTag} />\n    Auto-tag on merge to master\n  </label>\n</div>\n```\n\n### **GitHub Actions File:**\n```yaml\n# .github/workflows/release.yml\nname: JoRA Release Process\n\non:\n  push:\n    tags: ['v*']\n  pull_request:\n    types: [closed]\n    branches: [master]\n\njobs:\n  sync-release:\n    if: github.event.pull_request.merged == true\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v3\n      \n      - name: Extract release data\n        run: |\n          VERSION=$(echo ${{ github.ref }} | sed 's/refs\\/tags\\/v//')\n          if [ -f \"jora-changelog/releases/v${VERSION}.json\" ]; then\n            echo \"Release data found for v${VERSION}\"\n          fi\n      \n      - name: Create GitHub Release\n        uses: actions/create-release@v1\n        env:\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n        with:\n          tag_name: v${{ env.VERSION }}\n          release_name: Release v${{ env.VERSION }}\n          body_path: release-notes.md\n          draft: false\n          prerelease: false\n      \n      - name: Upload binaries\n        # Cuando task-022 (PKG) esté resuelto\n        run: echo \"Upload binaries here\"\n```\n\n## 🎯 **Beneficios del Sistema**\n\n### **Para Developers:**\n- **Single source of truth**: JoRA como centro de control\n- **Automatización completa**: Menos pasos manuales\n- **Consistencia**: Release notes siempre sincronizados\n- **Trazabilidad**: Link directo entre tareas y GitHub releases\n\n### **Para Distribution:**\n- **GitHub Releases automáticos** con binarios\n- **Release notes estructurados** desde JoRA data\n- **Tags automáticos** en branches correctas\n- **CI/CD integration** ready\n\n### **Para Project Management:**\n- **Self-tracking**: JoRA gestiona su propio release cycle\n- **Metrics tracking**: Velocidad, completion rates\n- **Epic completion** tracking a través de releases\n\n## 🚧 **Dependencias**\n\n### **Bloqueantes:**\n- ✅ Release system funcional (COMPLETED)\n- 🔄 **task-022**: PKG + Vite resolution (para binarios)\n- 📋 **task-037**: Fix saveConfig API error\n\n### **Nice to Have:**\n- **task-042**: Testing suite para validar automation\n- **task-043**: API documentation para GitHub integration\n- **task-040**: Enhanced error handling para fallos de API\n\n## 📊 **Métricas de Éxito**\n\n### **Fase 1:**\n- ✅ GitHub Actions ejecuta correctamente en tags\n- ✅ Release notes se generan desde JoRA data\n- ✅ Binarios se suben automáticamente\n\n### **Fase 2:**\n- ✅ PRs se crean automáticamente desde JoRA releases\n- ✅ Merge a master triggea GitHub Release\n- ✅ Zero manual steps para releases\n\n### **Fase 3:**\n- ✅ Sincronización bidireccional JoRA ↔ GitHub\n- ✅ Metrics dashboard en JoRA\n- ✅ Full automation end-to-end\n\n## 🔮 **Roadmap de Implementación**\n\n### **Sprint 1 (Post v0.1.0):**\n- Crear GitHub Actions básico\n- Endpoint para sync con GitHub API\n- Testing en repo de desarrollo\n\n### **Sprint 2:**\n- PR automation desde JoRA UI\n- Release notes generation\n- Error handling y rollback\n\n### **Sprint 3:**\n- Full bidirectional sync\n- Metrics y analytics\n- Documentation completa\n\n## 💭 **Consideraciones Técnicas**\n\n### **Security:**\n- GitHub API tokens management\n- Rate limiting handling\n- Permission levels para automation\n\n### **Error Handling:**\n- Fallback a proceso manual\n- Rollback de releases fallidas\n- Notification system para errores\n\n### **Performance:**\n- Async processing para GitHub API calls\n- Queue system para múltiples releases\n- Caching de GitHub data\n\n---\n\n**Nota:** Esta implementación permitirá que JoRA sea el primer task manager que se trackea completamente a sí mismo Y se distribuye automáticamente via GitHub, estableciendo un nuevo estándar en self-managed development tools.",
+  "state": "in_backlog",
+  "type": "feature",
+  "priority": "high",
+  "epic": "distribution-automation",
+  "author": "gzzy",
+  "assignee": null,
+  "tags": [
+    "github-actions",
+    "automation",
+    "ci-cd",
+    "release-management",
+    "api-integration",
+    "distribution",
+    "workflow"
+  ],
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Diseñar GitHub Actions workflow para tags y releases",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Implementar endpoint /api/github/create-pr en backend",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Implementar endpoint /api/github/sync-release en backend",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Agregar opciones de GitHub integration en ReleaseModal",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Crear sistema de generación de release notes desde JoRA data",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Implementar GitHub API client con authentication",
+      "completed": false
+    },
+    {
+      "id": "subtask-7",
+      "text": "Testing completo en repo de desarrollo",
+      "completed": false
+    },
+    {
+      "id": "subtask-8",
+      "text": "Documentación de setup y configuración",
+      "completed": false
+    },
+    {
+      "id": "subtask-9",
+      "text": "Error handling y fallback a proceso manual",
+      "completed": false
+    },
+    {
+      "id": "subtask-10",
+      "text": "Integration testing con workflow real end-to-end",
+      "completed": false
+    }
+  ],
+  "estimatedPoints": 21,
+  "estimatedDate": "2025-08-15",
+  "images": [],
+  "createdAt": "2025-07-18T21:00:00Z",
+  "updatedAt": "2025-07-18T21:00:00Z"
+}

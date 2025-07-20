@@ -1,0 +1,24 @@
+{
+  "name": "JoRA Test Project",
+  "currentVersion": "0.2.0-test",
+  "description": "Test configuration for binary testing suite",
+  "author": "Binary Test Suite",
+  "createdAt": "2025-01-01T00:00:00.000Z",
+  "settings": {
+    "defaultState": "todo",
+    "allowedStates": ["todo", "in_progress", "in_review", "done", "blocked"],
+    "allowedTypes": ["task", "feature", "bug", "epic"],
+    "allowedPriorities": ["low", "medium", "high", "critical"],
+    "autoSave": true,
+    "darkMode": false,
+    "notifications": true
+  },
+  "testMode": true,
+  "testData": {
+    "created": "2025-01-01T00:00:00.000Z",
+    "purpose": "Binary testing validation",
+    "expectedTasks": 3,
+    "expectedEpics": 1,
+    "expectedReleases": 1
+  }
+}

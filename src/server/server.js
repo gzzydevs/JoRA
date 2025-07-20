@@ -23,21 +23,55 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   // Root route 
   app.get('/', (req, res) => {
     try {
-      // Try to serve the React build first, fallback to old web
-      const reactIndexPath = path.join(__dirname, '../../dist/frontend/index.html');
-      const webIndexPath = path.join(__dirname, '../web/index.html');
+      // Fix static file serving in bundled mode
+      let frontendPath, indexPath;
       
-      let indexPath;
-      if (fs.existsSync(reactIndexPath)) {
-        console.log('📦 Serving React frontend');
-        indexPath = reactIndexPath;
+      if (process.pkg) {
+        // In packaged mode, files are in the snapshot filesystem
+        frontendPath = '/snapshot/JoRA/dist/frontend';
+        indexPath = path.join(frontendPath, 'index.html');
       } else {
-        console.log('⚠️  React build not found, serving legacy frontend');
-        indexPath = webIndexPath;
+        // In development mode
+        frontendPath = path.join(__dirname, '../../dist/frontend');
+        indexPath = path.join(frontendPath, 'index.html');
       }
       
-      const indexContent = fs.readFileSync(indexPath, 'utf8');
-      res.send(indexContent);
+      if (fs.existsSync(indexPath)) {
+        console.log('📦 Serving React frontend from:', frontendPath);
+        const indexContent = fs.readFileSync(indexPath, 'utf8');
+        res.send(indexContent);
+      } else {
+        console.log('⚠️  React build not found, creating basic interface');
+        res.send(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>JoRA - Task Management</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 40px; }
+              .warning { background: #fff3cd; border: 1px solid #ffeaa7; padding: 20px; border-radius: 5px; }
+              .api-link { background: #d1ecf1; border: 1px solid #bee5eb; padding: 15px; margin: 20px 0; border-radius: 5px; }
+            </style>
+          </head>
+          <body>
+            <h1>🎯 JoRA - Task Management</h1>
+            <div class="warning">
+              <h3>⚠️ Frontend not available</h3>
+              <p>The React frontend was not found. JoRA is running in API-only mode.</p>
+            </div>
+            <div class="api-link">
+              <h3>📡 API Access</h3>
+              <p>You can still access the API directly:</p>
+              <ul>
+                <li><a href="/api/tasks">/api/tasks</a> - View all tasks</li>
+                <li><a href="/api/epics">/api/epics</a> - View all epics</li>
+                <li><a href="/api/git/status">/api/git/status</a> - Git status</li>
+              </ul>
+            </div>
+          </body>
+          </html>
+        `);
+      }
     } catch (error) {
       res.status(500).send(`
         <h1>JoRA Error</h1>
@@ -48,16 +82,22 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   });
   
   // Serve static files AFTER the root route
-  const reactBuildPath = path.join(__dirname, '../../dist/frontend');
-  const webPath = path.join(__dirname, '../web');
+  // Fix static file serving in bundled mode
+  let staticPath;
   
-  // Try React build first, fallback to legacy web
-  if (fs.existsSync(reactBuildPath)) {
-    console.log('📦 Serving React static files from:', reactBuildPath);
-    app.use(express.static(reactBuildPath));
+  if (process.pkg) {
+    // In packaged mode, files are in the snapshot filesystem
+    staticPath = '/snapshot/JoRA/dist/frontend';
   } else {
-    console.log('⚠️  React build not found, serving legacy static files from:', webPath);
-    app.use(express.static(webPath));
+    // In development mode
+    staticPath = path.join(__dirname, '../../dist/frontend');
+  }
+  
+  if (fs.existsSync(staticPath)) {
+    console.log('📦 Serving React static files from:', staticPath);
+    app.use(express.static(staticPath));
+  } else {
+    console.log('⚠️  React build not found, no static files served');
   }
   
   // API Routes
@@ -108,6 +148,7 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       const task = await taskManager.updateTask(req.params.id, req.body);
       res.json(task);
     } catch (error) {
+      console.error(`Error updating task ${req.params.id}:`, error.message);
       res.status(400).json({ error: error.message });
     }
   });
@@ -314,6 +355,31 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       
       const projectRoot = taskManager.projectPath || process.cwd();
       
+      // Check if we're in a git repository first
+      try {
+        execSync('git rev-parse --git-dir', { cwd: projectRoot, encoding: 'utf8' });
+      } catch (gitError) {
+        console.log('⚠️ No git repository detected in project directory');
+        return res.json({
+          error: 'No git repository found',
+          isGitRepository: false,
+          currentBranch: null,
+          joraBacklogExists: false,
+          originJoraBacklogExists: false,
+          commitsBehind: 0,
+          commitsAhead: 0,
+          isUpToDate: true,
+          canSave: false,
+          hasStagedChanges: false,
+          stagedFiles: [],
+          invalidFiles: [],
+          needsSync: false,
+          hasLocalChanges: false,
+          onCorrectBranch: false,
+          requiredBranch: 'jora-backlog',
+          message: 'JoRA works best when run from within a git repository. Consider initializing git in your project directory.'
+        });
+      }
       // Get current branch
       const currentBranch = execSync('git branch --show-current', { 
         cwd: projectRoot, 
@@ -414,6 +480,13 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       
       const projectRoot = taskManager.projectPath || process.cwd();
       
+      // Check if we're in a git repository first
+      try {
+        execSync('git rev-parse --git-dir', { cwd: projectRoot, encoding: 'utf8' });
+      } catch (gitError) {
+        console.log('⚠️ No git repository detected in project directory');
+        return res.status(500).json({ error: 'Git repository not found' });
+      }
       // Get current branch
       const currentBranch = execSync('git branch --show-current', { 
         cwd: projectRoot, 
@@ -493,7 +566,7 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
     }
   });
 
-  // Save changes (Commit & Push) - SIMPLIFIED: Only works in jora-backlog branch
+  // Save changes (Commit & Push) - NEW LOGIC: Only auto-commit if on 'jora' branch
   app.post('/api/git/save-changes', async (req, res) => {
     const { execSync } = require('child_process');
     
@@ -502,40 +575,88 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       
       const projectRoot = taskManager.projectPath || process.cwd();
       
-      // 1. Get current branch and enforce jora-backlog requirement
+      // Check if we're in a git repository first
+      try {
+        execSync('git rev-parse --git-dir', { cwd: projectRoot, encoding: 'utf8' });
+      } catch (gitError) {
+        console.log('⚠️ No git repository detected in project directory');
+        return res.status(500).json({ error: 'Git repository not found' });
+      }
+      // 1. Get current branch
       const currentBranch = execSync('git branch --show-current', { 
         cwd: projectRoot, 
         encoding: 'utf8' 
       }).trim();
       console.log('📍 Current branch:', currentBranch);
       
-      if (currentBranch !== 'jora-backlog') {
-        return res.status(400).json({
+      // 2. Check if we're on the 'jora' branch
+      const isOnJoraBranch = currentBranch === 'jora';
+      
+      if (!isOnJoraBranch) {
+        // Not on jora branch - show warning but allow execution
+        console.log('⚠️ Not on jora branch - changes will be executed but NOT committed automatically');
+        
+        // Still execute changes (this applies any pending data updates)
+        // The task manager updates are already done by the time this endpoint is called
+        
+        return res.status(200).json({
           success: false,
-          error: 'You must be on the jora-backlog branch to save changes. Please switch to jora-backlog branch first.',
-          action: 'wrong_branch',
+          warning: true,
+          message: `You are on branch '${currentBranch}'. Changes have been applied but NOT committed automatically. Please commit manually if you want to save them.`,
+          action: 'wrong_branch_no_commit',
           currentBranch,
-          requiredBranch: 'jora-backlog'
+          requiredBranch: 'jora',
+          hint: 'Switch to "jora" branch for automatic commits, or commit manually'
         });
       }
       
-      // 2. Add ALL jora-changelog files that have changes
-      console.log('📝 Adding all jora-changelog changes...');
+      // 3. We're on jora branch - proceed with automatic commit
+      console.log('✅ On jora branch - proceeding with automatic commit...');
+      
+      // 4. Create jora branch if it doesn't exist
       try {
-        execSync('git add jora-changelog/*.json', { cwd: projectRoot });
-        execSync('git add jora-changelog/tasks/*.json', { cwd: projectRoot });
-        execSync('git add jora-changelog/epics/*.json', { cwd: projectRoot });
-        execSync('git add jora-changelog/releases/*.json', { cwd: projectRoot });
+        execSync('git show-ref --verify --quiet refs/heads/jora', { cwd: projectRoot });
+        console.log('� jora branch exists');
+      } catch (branchNotFound) {
+        console.log('🌿 Creating jora branch...');
+        try {
+          execSync('git checkout -b jora', { cwd: projectRoot });
+        } catch (createError) {
+          throw new Error('Failed to create jora branch: ' + createError.message);
+        }
+      }
+      
+      // 5. Add jora-changelog files
+      console.log('📝 Adding jora-changelog changes...');
+      try {
+        // Add specific jora-changelog files that may have changes
+        const addCommands = [
+          'git add jora-changelog/*.json',
+          'git add jora-changelog/tasks/*.json', 
+          'git add jora-changelog/epics/*.json',
+          'git add jora-changelog/releases/*.json'
+        ];
+        
+        for (const cmd of addCommands) {
+          try {
+            execSync(cmd, { cwd: projectRoot });
+          } catch (addError) {
+            // Ignore errors for files that don't exist
+            console.log(`ℹ️ ${cmd} - some files not found (normal)`);
+          }
+        }
       } catch (addError) {
         console.log('ℹ️ Some jora-changelog files not found (normal)');
       }
       
-      // 3. Check if we have anything to commit
+      // 6. Check if we have anything to commit
       let hasChangesToCommit = false;
+      let stagedFiles = '';
       try {
         const statusOutput = execSync('git diff --cached --name-status', { cwd: projectRoot, encoding: 'utf8' });
         hasChangesToCommit = statusOutput.trim().length > 0;
-        console.log('📊 Staged changes:', statusOutput.trim() || 'none');
+        stagedFiles = statusOutput.trim();
+        console.log('📊 Staged changes:', stagedFiles || 'none');
       } catch (statusError) {
         console.log('⚠️ Could not check staged changes:', statusError.message);
       }
@@ -543,63 +664,58 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       if (!hasChangesToCommit) {
         return res.json({
           success: true,
-          message: 'No changes to commit',
-          action: 'no_changes'
+          message: 'No changes to commit - all up to date',
+          action: 'no_changes',
+          currentBranch
         });
       }
       
-      // 5. Commit changes
+      // 7. Commit changes
       try {
-        console.log('� Committing changes...');
+        console.log('💾 Committing changes...');
         const commitMessage = `jora auto update - ${new Date().toISOString()}`;
         execSync(`git commit -m "${commitMessage}"`, { cwd: projectRoot });
+        console.log('✅ Changes committed successfully');
       } catch (commitError) {
-        // Switch back if needed
-        if (needToSwitchBack) {
-          try {
-            execSync(`git checkout ${currentBranch}`, { cwd: projectRoot });
-          } catch (checkoutError) {
-            console.error('⚠️ Could not switch back to original branch');
-          }
-        }
-        
         const errorMessage = commitError.message || commitError.toString();
         if (errorMessage.includes('nothing to commit') || errorMessage.includes('no changes added')) {
           return res.json({
             success: true,
-            message: 'No changes to commit',
-            action: 'no_changes'
+            message: 'No changes to commit - all up to date',
+            action: 'no_changes',
+            currentBranch
           });
         }
         
         throw new Error('Failed to commit: ' + commitError.message);
       }
       
-      // 6. Push to remote
+      // 8. Push to remote
       try {
         console.log('🚀 Pushing to remote...');
-        execSync(`git push origin ${joraBacklogBranch}`, { cwd: projectRoot });
+        execSync('git push origin jora', { cwd: projectRoot });
+        console.log('✅ Changes pushed successfully');
       } catch (pushError) {
         console.error('⚠️ Push failed:', pushError.message);
-        // Don't fail completely if push fails
-      }
-      
-      // 7. Switch back to original branch
-      if (needToSwitchBack) {
-        try {
-          console.log(`🔄 Switching back to ${currentBranch}...`);
-          execSync(`git checkout ${currentBranch}`, { cwd: projectRoot });
-        } catch (checkoutError) {
-          console.error('⚠️ Could not switch back to original branch:', checkoutError.message);
-        }
+        // Don't fail completely if push fails - commit was successful
+        return res.json({
+          success: true,
+          warning: true,
+          message: 'Changes committed locally but push failed. Check your internet connection.',
+          action: 'commit_success_push_failed',
+          currentBranch,
+          stagedFiles: stagedFiles.split('\n').filter(line => line.trim()),
+          error: pushError.message
+        });
       }
       
       console.log('✅ Git save operation completed successfully');
       res.json({
         success: true,
-        message: 'Changes saved successfully to jora-backlog branch!',
+        message: 'Changes saved and pushed successfully to jora branch!',
         action: 'success',
-        originalBranch: currentBranch
+        currentBranch,
+        stagedFiles: stagedFiles.split('\n').filter(line => line.trim())
       });
       
     } catch (error) {
@@ -607,7 +723,8 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       res.status(500).json({
         success: false,
         error: error.message,
-        action: 'failed'
+        action: 'failed',
+        currentBranch: currentBranch || 'unknown'
       });
     }
   });
@@ -621,6 +738,13 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       
       const projectRoot = taskManager.projectPath || process.cwd();
       
+      // Check if we're in a git repository first
+      try {
+        execSync('git rev-parse --git-dir', { cwd: projectRoot, encoding: 'utf8' });
+      } catch (gitError) {
+        console.log('⚠️ No git repository detected in project directory');
+        return res.status(500).json({ error: 'Git repository not found' });
+      }
       // 1. Get current branch
       const currentBranch = execSync('git branch --show-current', { 
         cwd: projectRoot, 
