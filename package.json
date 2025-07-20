@@ -1,6 +1,6 @@
 {
   "name": "jora",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "description": "JoRA - A simple, offline task management tool (no Jira needed)",
   "main": "src/cli.js",
   "bin": {
@@ -11,6 +11,7 @@
     "dev": "node src/cli.js",
     "dev:frontend": "vite",
     "build:frontend": "vite build",
+    "build:frontend:compress": "cd dist && 7z a vite-build.7z frontend/ && zip -r vite-build.zip frontend/",
     "preview:frontend": "vite preview",
     "build": "npm run build:frontend && npm run build:binaries",
     "build:binaries": "npm run build:linux && npm run build:win && npm run build:mac",
