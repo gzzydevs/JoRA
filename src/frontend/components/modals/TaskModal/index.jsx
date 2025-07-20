@@ -249,11 +249,12 @@ const TaskModal = ({
                     <option value="refactor">♻️ Refactor</option>
                     <option value="test">✅ Test</option>
                     <option value="chore">🔧 Chore</option>
+                    <option value="discovery">🔍 Discovery</option>
                   </select>
                 ) : (
                   <div className="task-display-type">
-                    {['✨', '🔥', '📚', '🧪', '⚡', '🐛', '♻️', '✅', '🔧'][
-                      ['feature', 'hotfix', 'documentation', 'poc', 'improvement', 'bug', 'refactor', 'test', 'chore'].indexOf(task?.type)
+                    {['✨', '🔥', '📚', '🧪', '⚡', '🐛', '♻️', '✅', '🔧', '🔍'][
+                      ['feature', 'hotfix', 'documentation', 'poc', 'improvement', 'bug', 'refactor', 'test', 'chore', 'discovery'].indexOf(task?.type)
                     ] || '📝'} {task?.type}
                   </div>
                 )}

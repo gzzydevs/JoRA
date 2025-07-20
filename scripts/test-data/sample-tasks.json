@@ -1,0 +1,58 @@
+[
+  {
+    "id": "test-task-001",
+    "title": "Binary Testing Task 1",
+    "description": "This is a test task created for binary testing validation",
+    "state": "todo",
+    "type": "task",
+    "priority": "medium",
+    "author": "test-suite",
+    "assignee": null,
+    "tags": ["testing", "automation"],
+    "subtasks": [],
+    "estimatedPoints": 2,
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "test-task-002", 
+    "title": "Binary Testing Task 2",
+    "description": "Another test task for API validation",
+    "state": "in_progress",
+    "type": "feature",
+    "priority": "high",
+    "author": "test-suite",
+    "assignee": "tester",
+    "tags": ["testing", "api"],
+    "subtasks": [
+      {
+        "id": "subtask-1",
+        "text": "Validate API response",
+        "completed": true
+      },
+      {
+        "id": "subtask-2", 
+        "text": "Check data persistence",
+        "completed": false
+      }
+    ],
+    "estimatedPoints": 5,
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "test-task-003",
+    "title": "Binary Testing Task 3",
+    "description": "Test task for done state validation",
+    "state": "done",
+    "type": "bug",
+    "priority": "low",
+    "author": "test-suite",
+    "assignee": "tester",
+    "tags": ["testing", "validation", "completed"],
+    "subtasks": [],
+    "estimatedPoints": 1,
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  }
+]

@@ -1,9 +1,10 @@
 {
   "tasks": [
-    "task-028-boton-de-save-changes-commit-p",
-    "task-031-fix-saveconfig-error-api",
-    "task-032-ready-release-column-redesign",
+    "task-043-documentation-organization",
+    "task-036-automated-github-actions-release",
     "task-033-static-site-generator-readonly",
+    "task-032-ready-release-column-redesign",
+    "task-031-fix-saveconfig-error-api",
     "task-022-pkg-vite-investigation",
     "task-017-react-router-bug-fix",
     "task-026-fix-hot-reloading-dev-experience",
@@ -27,7 +28,11 @@
     "task-019-task-card-state-management",
     "task-018-release-system-epic-handling",
     "task-029-auto-branch-switch-for-save",
-    "task-030-optimize-drag-drop-unchanged-detection"
+    "task-030-optimize-drag-drop-unchanged-detection",
+    "task-035-resolve-pkg-vite-compatibility",
+    "task-037-binary-testing-suite",
+    "task-038-build-process-enhancement",
+    "task-039-add-discovery-task-type"
   ],
-  "lastUpdated": "2025-07-14T16:05:00.000Z"
+  "lastUpdated": "2025-07-19T16:30:00.000Z"
 }

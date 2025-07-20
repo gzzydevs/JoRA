@@ -160,18 +160,49 @@ class TaskManager {
     return task;
   }
   
+  // Helper function to check if there are actual changes
+  hasChanges(original, updates) {
+    for (const [key, value] of Object.entries(updates)) {
+      if (key === 'updatedAt') continue; // Skip updatedAt field
+      
+      // Deep comparison for arrays and objects
+      if (Array.isArray(value) && Array.isArray(original[key])) {
+        if (JSON.stringify(value) !== JSON.stringify(original[key])) {
+          return true;
+        }
+      } else if (typeof value === 'object' && value !== null && typeof original[key] === 'object' && original[key] !== null) {
+        if (JSON.stringify(value) !== JSON.stringify(original[key])) {
+          return true;
+        }
+      } else if (original[key] !== value) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   // Update existing task
   async updateTask(taskId, updates) {
-    const task = await this.loadTask(taskId);
-    
-    // Update fields
-    Object.assign(task, updates, {
-      updatedAt: new Date().toISOString()
-    });
-    
-    await this.saveTask(task);
-    
-    return task;
+    try {
+      const task = await this.loadTask(taskId);
+      
+      // Check if there are actual changes
+      if (!this.hasChanges(task, updates)) {
+        // No changes detected, return task without updating updatedAt
+        return task;
+      }
+      
+      // Update fields only if there are actual changes
+      Object.assign(task, updates, {
+        updatedAt: new Date().toISOString()
+      });
+      
+      await this.saveTask(task);
+      
+      return task;
+    } catch (error) {
+      throw new Error(`Failed to update task ${taskId}: ${error.message}`);
+    }
   }
   
   // Delete task
@@ -187,8 +218,25 @@ class TaskManager {
   
   // Save task to file
   async saveTask(task) {
-    const taskPath = path.join(this.tasksPath, `${task.id}.json`);
-    await fs.writeFile(taskPath, JSON.stringify(task, null, 2));
+    try {
+      // Ensure tasks directory exists
+      await this.ensureDirectoryExists(this.tasksPath);
+      
+      const taskPath = path.join(this.tasksPath, `${task.id}.json`);
+      await fs.writeFile(taskPath, JSON.stringify(task, null, 2));
+    } catch (error) {
+      throw new Error(`Failed to save task ${task.id}: ${error.message}`);
+    }
+  }
+
+  // Ensure directory exists
+  async ensureDirectoryExists(dirPath) {
+    try {
+      await fs.access(dirPath);
+    } catch (error) {
+      console.log(`Creating directory: ${dirPath}`);
+      await fs.mkdir(dirPath, { recursive: true });
+    }
   }
   
   // Update current.json index
@@ -258,7 +306,13 @@ class TaskManager {
       const epicContent = await fs.readFile(epicPath, 'utf8');
       const epic = JSON.parse(epicContent);
       
-      // Update fields
+      // Check if there are actual changes
+      if (!this.hasChanges(epic, updates)) {
+        // No changes detected, return epic without updating updatedAt
+        return epic;
+      }
+      
+      // Update fields only if there are actual changes
       Object.assign(epic, updates, {
         updatedAt: new Date().toISOString()
       });
@@ -328,6 +382,14 @@ class TaskManager {
       }
 
       const oldAuthor = { ...this.projectData.authors[authorIndex] };
+      
+      // Check if there are actual changes
+      if (!this.hasChanges(oldAuthor, updates)) {
+        // No changes detected, return author without updating updatedAt
+        console.log('No changes detected for author:', authorId);
+        return oldAuthor;
+      }
+      
       this.projectData.authors[authorIndex] = {
         ...this.projectData.authors[authorIndex],
         ...updates,
@@ -507,6 +569,7 @@ class TaskManager {
       const config = await this.loadConfig();
       const authors = await this.loadAuthors();
       const tags = await this.loadTags();
+      const releases = await this.loadAllReleases();
       
       // Assign to instance variable for use in other methods
       this.projectData = {
@@ -514,6 +577,9 @@ class TaskManager {
         authors,
         tags
       };
+      
+      // Initialize releases array
+      this.releases = releases || [];
       
       return this.projectData;
     } catch (error) {
@@ -523,6 +589,7 @@ class TaskManager {
         authors: [],
         tags: []
       };
+      this.releases = [];
       return this.projectData;
     }
   }

@@ -7,7 +7,9 @@ const fs = require('fs');
 const { initializeProject } = require('./core/project-manager');
 const { startServer } = require('./server/server');
 
-const CLI_VERSION = '1.0.0';
+// Read version from package.json
+const packageJson = require('../package.json');
+const CLI_VERSION = packageJson.version;
 
 // Main CLI handler
 const cli = yargs(hideBin(process.argv))

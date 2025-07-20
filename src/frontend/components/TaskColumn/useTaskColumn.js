@@ -24,8 +24,15 @@ export const useTaskColumn = (state) => {
     const taskId = e.dataTransfer.getData('text/plain');
     
     if (taskId && state) {
-      // Use optimized updateTaskState (no full reload)
-      await updateTaskState(taskId, state);
+      try {
+        // Use optimized updateTaskState (no full reload)
+        await updateTaskState(taskId, state);
+      } catch (error) {
+        // The error is already handled in TaskContext
+        console.error(`Failed to update task ${taskId} to state ${state}:`, error);
+      }
+    } else {
+      console.warn('Drop failed: missing taskId or state', { taskId, state });
     }
   };
 
