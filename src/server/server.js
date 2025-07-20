@@ -27,8 +27,8 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
       let frontendPath, indexPath;
       
       if (process.pkg) {
-        // In packaged mode, files are in the snapshot filesystem
-        frontendPath = '/snapshot/JoRA/dist/frontend';
+        // In packaged mode, files should be relative to the executable
+        frontendPath = path.join(path.dirname(process.execPath), 'frontend');
         indexPath = path.join(frontendPath, 'index.html');
       } else {
         // In development mode
@@ -86,8 +86,8 @@ async function startServer(port = 3333, openBrowser = true, projectPath) {
   let staticPath;
   
   if (process.pkg) {
-    // In packaged mode, files are in the snapshot filesystem
-    staticPath = '/snapshot/JoRA/dist/frontend';
+    // In packaged mode, files should be relative to the executable
+    staticPath = path.join(path.dirname(process.execPath), 'frontend');
   } else {
     // In development mode
     staticPath = path.join(__dirname, '../../dist/frontend');
