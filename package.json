@@ -1,6 +1,6 @@
 {
   "name": "@ressjs/jora",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "JoRA - A simple, offline task management tool",
   "author": "gzzy <barbycus@gmail.com>",
   "main": "src/cli.js",
