@@ -174,15 +174,17 @@ async function initializeProject(projectPath) {
   );
   
   console.log('✅ JSON structure created successfully');
-  console.log('🔨 Setting up frontend (this may take a moment)...');
+  console.log('� Checking frontend availability...');
   
   try {
     // Determine JoRA installation path
     let joraPath;
+    let isFromSource = false;
     
     // Check if we're running from source (development)
     if (__dirname.includes('src/core')) {
       joraPath = path.dirname(path.dirname(__dirname)); // Development: go to JoRA root
+      isFromSource = true;
     } else {
       // We're in node_modules, find the JoRA package root
       const nodeModulesMatch = __dirname.match(/(.+\/node_modules\/@ressjs\/jora)/);
@@ -211,43 +213,64 @@ async function initializeProject(projectPath) {
       throw new Error('Could not determine JoRA installation path');
     }
     
-    console.log(`🏗️  Running build in: ${joraPath}`);
+    console.log(`🔍 Checking JoRA installation: ${joraPath}`);
     
-    // First install dependencies
-    console.log('📦 Installing dependencies...');
-    await executeCommand('npm', ['install'], { 
-      cwd: joraPath
-    });
-    
-    // Then build the frontend
-    console.log('🔨 Building frontend...');
-    await executeCommand('npm', ['run', 'build:frontend'], { 
-      cwd: joraPath
-    });
-    
-    // Verify that the build was successful
+    // Check if frontend already exists (npm package should include it)
     const frontendBuildPath = path.join(joraPath, 'dist', 'frontend');
+    
     try {
       await fs.access(frontendBuildPath);
       const buildFiles = await fs.readdir(frontendBuildPath);
-      if (buildFiles.length === 0) {
-        throw new Error('Frontend build directory is empty');
+      if (buildFiles.length > 0) {
+        console.log('✅ Frontend already available - no build needed!');
+        console.log(`📁 Using existing build: ${frontendBuildPath}`);
+        return; // Frontend already exists, no need to build
       }
-      console.log('✅ Frontend build completed successfully!');
-      console.log(`📁 Build files created in: ${frontendBuildPath}`);
-    } catch (buildError) {
-      throw new Error(`Frontend build verification failed: ${buildError.message}`);
+    } catch (e) {
+      // Frontend doesn't exist, need to build
+    }
+    
+    // Only build if running from source (development) or frontend missing
+    if (isFromSource) {
+      console.log('🔨 Development mode - building frontend...');
+      
+      // First install dependencies
+      console.log('📦 Installing dependencies...');
+      await executeCommand('npm', ['install'], { 
+        cwd: joraPath
+      });
+      
+      // Then build the frontend
+      console.log('🔨 Building frontend...');
+      await executeCommand('npm', ['run', 'build:frontend'], { 
+        cwd: joraPath
+      });
+      
+      // Verify that the build was successful
+      try {
+        await fs.access(frontendBuildPath);
+        const buildFiles = await fs.readdir(frontendBuildPath);
+        if (buildFiles.length === 0) {
+          throw new Error('Frontend build directory is empty');
+        }
+        console.log('✅ Frontend build completed successfully!');
+        console.log(`📁 Build files created in: ${frontendBuildPath}`);
+      } catch (buildError) {
+        throw new Error(`Frontend build verification failed: ${buildError.message}`);
+      }
+    } else {
+      // NPM package should include frontend, but it's missing
+      throw new Error('Frontend not found in package. Please reinstall JoRA or contact support.');
     }
     
   } catch (buildError) {
-    console.error('❌ Frontend build failed:', buildError.message);
+    console.error('❌ Frontend setup failed:', buildError.message);
     console.log('');
     console.log('🔧 Manual fix required:');
-    console.log('   1. Go to JoRA installation directory');
-    console.log('   2. Run: npm install');
-    console.log('   3. Run: npm run build:frontend');
-    console.log('   4. Then you can use: jora start');
-    throw new Error('Frontend build failed - see above for manual fix instructions');
+    console.log('   1. Try reinstalling: npm uninstall -g @ressjs/jora && npm install -g @ressjs/jora');
+    console.log('   2. Or use binaries from GitHub releases');
+    console.log('   3. Report issue at: https://github.com/gzzydevs/JoRA/issues');
+    throw new Error('Frontend setup failed - see above for manual fix instructions');
   }
 }
 
