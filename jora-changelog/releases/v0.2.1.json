@@ -1,0 +1,227 @@
+{
+  "version": "0.2.1",
+  "description": "Primer release con build binarios!\n\nSiempre me parecio genial la idea de poder instalar jora en cualquier lado sin necesidad de usar node!\nYa de por si se podia utilizar con:\nnpx @ressjs/jora init\nnpx @ressjs/jora start\n\nPero a partir de ahora podrias descargarlo, ponerlo en un path como variable de entorno y utilizarlo en todos tus proyectos.\nJora me he resultado game changer para mis proyectos personales, cada vez que se me ocurre algo para mejorar, le pido a mi agente de copilot que me genere un ticket de jora explicandole el problema. Luego en otro chat a veces le adjunto el ticket, que ya esta creado en el repo con la explicacion y le pido a otro agente que lo resuelva, es super efectivo, este mismo repositorio se esta desarrollando solo, no diria que es vibe coding al 100% porque tengo que prestar atencion a lo que hace el agente, pero casi.\n\nYo generalmente suelo hacer esto:\n1. Creo un nuevo proyecto X, sea lo que sea\n2. Creo un archivo llamado EXPLAIN_FOR_AGENTS.md en el que explico los aspectos fundamentales del repo, las reglas que quiero que siga y como se deberia comportar\n3. Le adjunto una tarea de Jora y pongo a trabajar al agente hasta que lo resuelve como yo necesito.\n\nAumenta mucho la velocidad de las tareas, lo recomiendo.\n\n\nPara una proxima version intentare agregar un comando de actualización de la dependencia, por ahora deberán hacerlo a mano.\n\nSaludos!",
+  "tasks": [
+    {
+      "id": "task-023-multiplatform-build-system",
+      "title": "Implementar build system multiplataforma",
+      "description": "Configurar sistema de build que genere binarios funcionales para Windows, macOS y Linux. Basado en la investigación de la task-022, implementar la solución definitiva.\n\n**Plataformas objetivo:**\n- **Windows**: x64 (.exe)\n- **macOS**: x64 y arm64 (Apple Silicon)\n- **Linux**: x64 (AppImage o binario)\n\n**Requerimientos técnicos:**\n- Binarios standalone sin dependencias externas\n- Assets de frontend incluidos correctamente\n- Base de datos JSON embebida\n- Tamaño optimizado (< 100MB por binario)\n\n**Scripts a crear:**\n- `npm run build:win` - Build para Windows\n- `npm run build:mac` - Build para macOS\n- `npm run build:linux` - Build para Linux\n- `npm run build:all` - Build para todas las plataformas\n\n**Testing:**\n- Probar cada binario en su plataforma objetivo\n- Verificar funcionalidad completa offline\n- Validar performance y tamaño",
+      "state": "ready_to_release",
+      "type": "feature",
+      "priority": "high",
+      "epic": "distribution-automation",
+      "author": "gzzy",
+      "assignee": "gzzy",
+      "tags": [
+        "build",
+        "multiplatform",
+        "binary",
+        "windows",
+        "macos",
+        "linux",
+        "v0.1.0"
+      ],
+      "subtasks": [
+        {
+          "id": "subtask-1",
+          "text": "Configurar build para Windows x64",
+          "completed": true
+        },
+        {
+          "id": "subtask-2",
+          "text": "Configurar build para macOS (x64 + arm64)",
+          "completed": true
+        },
+        {
+          "id": "subtask-3",
+          "text": "Configurar build para Linux x64",
+          "completed": true
+        },
+        {
+          "id": "subtask-4",
+          "text": "Crear scripts npm para cada plataforma",
+          "completed": true
+        },
+        {
+          "id": "subtask-5",
+          "text": "Optimizar tamaño y performance de binarios",
+          "completed": true
+        },
+        {
+          "id": "subtask-6",
+          "text": "Testing completo en cada plataforma",
+          "completed": true
+        }
+      ],
+      "estimatedPoints": 8,
+      "estimatedDate": "2025-07-17",
+      "images": [],
+      "createdAt": "2025-07-13T21:40:00Z",
+      "updatedAt": "2025-08-02T22:03:56.264Z"
+    },
+    {
+      "id": "task-022-pkg-vite-investigation",
+      "title": "Investigar y resolver problemas PKG + Vite",
+      "description": "Investigar problemas actuales con PKG para generar binarios que funcionen correctamente con la arquitectura de Vite + React. Resolver incompatibilidades y encontrar la configuración correcta.\n\n**Problemas conocidos:**\n- PKG no puede empaquetar assets de Vite correctamente\n- Paths relativos no funcionan en binarios\n- Dynamic imports pueden fallar\n- Node modules no se incluyen correctamente\n\n**Investigación requerida:**\n- Alternativas a PKG (nexe, pkg-fetch, ncc)\n- Configuración específica para Vite\n- Workarounds para assets estáticos\n- Pruebas con diferentes versiones de Node.js\n\n**Entregables:**\n- Análisis de problemas actuales\n- Recomendación de solución\n- Configuración funcional de build\n- Primer binario funcional de prueba\n\nEDIT:\nSe resuelve seguir con nexec y se crean muchas tareas mas",
+      "state": "ready_to_release",
+      "type": "discovery",
+      "priority": "critical",
+      "epic": "distribution-automation",
+      "author": "gzzy",
+      "assignee": "gzzy",
+      "tags": [
+        "pkg",
+        "vite",
+        "binary",
+        "investigation",
+        "v0.1.0"
+      ],
+      "subtasks": [
+        {
+          "id": "subtask-1",
+          "text": "Analizar errores actuales de PKG con la build de Vite",
+          "completed": true
+        },
+        {
+          "id": "subtask-2",
+          "text": "Investigar alternativas a PKG (nexe, ncc, etc.)",
+          "completed": true
+        },
+        {
+          "id": "subtask-3",
+          "text": "Probar configuraciones de PKG específicas para Vite",
+          "completed": true
+        },
+        {
+          "id": "subtask-4",
+          "text": "Resolver problemas de paths y assets estáticos",
+          "completed": true
+        },
+        {
+          "id": "subtask-5",
+          "text": "Generar primer binario funcional de prueba",
+          "completed": true
+        }
+      ],
+      "estimatedPoints": 5,
+      "estimatedDate": "2025-07-15",
+      "images": [],
+      "createdAt": "2025-07-13T21:35:00Z",
+      "updatedAt": "2025-08-02T21:41:57.057Z"
+    },
+    {
+      "id": "task-043-documentation-organization",
+      "title": "Reorganize project documentation structure",
+      "description": "Reorganizar toda la documentación del proyecto en una estructura coherente de carpetas para mejorar la navegabilidad y mantenibilidad. Consolidar archivos dispersos y actualizar referencias.\n\n**Problema Actual:**\n- Archivos de documentación esparcidos en el root del proyecto\n- Diferentes tipos de documentación mezclados\n- Dificulta encontrar información específica\n- No hay una estructura clara para contribuir nueva documentación\n\n**Nueva Estructura Propuesta:**\n```\ndocs/\n├── user-guide/           # Documentación para usuarios finales\n│   ├── README.md         # Movido desde root\n│   ├── INSTALL.md        # Guía de instalación\n│   ├── EXAMPLES.md       # Movido desde root\n│   └── FAQ.md            # Preguntas frecuentes\n├── development/          # Documentación para desarrolladores\n│   ├── BUILD.md          # Movido desde root\n│   ├── BUILD_PROCESS.md  # Movido desde root\n│   ├── DEVELOPMENT_STATUS.md  # Movido desde root\n│   ├── REACT_MIGRATION.md     # Movido desde root\n│   └── SCRIPTS_ORGANIZATION.md # Movido desde root\n├── testing/              # Documentación de testing\n│   ├── BINARY_TESTING.md # Movido desde root\n│   └── TESTING_GUIDE.md  # Guía general de testing\n├── architecture/         # Documentación técnica\n│   ├── EXPLAIN_FOR_AGENTS.md  # Movido desde root\n│   └── API_REFERENCE.md       # Futura documentación de API\n└── releases/            # Documentación de releases\n    ├── CHANGELOG.md     # Movido desde root\n    └── RELEASE_PROCESS.md # Proceso de releases\n```\n\n**Acciones Requeridas:**\n1. Crear estructura de carpetas `docs/`\n2. Mover archivos existentes a ubicaciones apropiadas\n3. Actualizar referencias internas entre documentos\n4. Crear archivo `docs/README.md` como índice principal\n5. Actualizar `.gitignore` si es necesario\n6. Verificar que no se rompan enlaces en GitHub/frontend\n\n**Tickets Relacionados que se Cierran:**\n- **task-004**: Create User Documentation (parcialmente)\n- **task-025**: Distribution Documentation (se organiza mejor)\n\n**Beneficios:**\n- Navegación más intuitiva\n- Separación clara por audiencia (users vs developers)\n- Estructura escalable para futuras contribuciones\n- Mejor experiencia para nuevos contributors\n- Facilita encontrar documentación específica",
+      "state": "ready_to_release",
+      "type": "documentation",
+      "priority": "medium",
+      "epic": "getting-started",
+      "author": "default",
+      "assignee": "default",
+      "tags": [
+        "documentation",
+        "organization",
+        "structure",
+        "maintainability"
+      ],
+      "subtasks": [
+        {
+          "id": "1",
+          "text": "Crear estructura de carpetas docs/ con subcarpetas",
+          "completed": true
+        },
+        {
+          "id": "2",
+          "text": "Mover archivos de documentación a ubicaciones apropiadas",
+          "completed": true
+        },
+        {
+          "id": "3",
+          "text": "Crear docs/README.md como índice principal de documentación",
+          "completed": true
+        },
+        {
+          "id": "4",
+          "text": "Actualizar referencias internas entre documentos",
+          "completed": true
+        },
+        {
+          "id": "5",
+          "text": "Verificar que enlaces externos no se rompan",
+          "completed": true
+        },
+        {
+          "id": "6",
+          "text": "Actualizar task-004 y task-025 como completadas/cerradas",
+          "completed": true
+        }
+      ],
+      "estimatedPoints": 3,
+      "estimatedDate": "2025-07-19",
+      "images": [],
+      "createdAt": "2025-07-19T16:30:00Z",
+      "updatedAt": "2025-07-19T21:30:00Z"
+    }
+  ],
+  "convertedToEpics": [
+    {
+      "id": "task-006-pkg-distribution",
+      "title": "PKG Distribution + GitHub Actions Release",
+      "description": "Resolver problemas con PKG para generar binarios distribuibles que funcionen correctamente. Crear GitHub Actions que automáticamente generen y publiquen binarios cuando se cree un release oficial en GitHub.",
+      "state": "converted_to_epic",
+      "priority": "critical",
+      "type": "feature",
+      "epic": "api",
+      "author": "gzzy",
+      "assignee": null,
+      "tags": [
+        "pkg",
+        "binary",
+        "distribution",
+        "deployment",
+        "github-actions",
+        "automation"
+      ],
+      "estimatedPoints": 13,
+      "estimatedDate": "2025-07-20",
+      "subtasks": [
+        {
+          "id": "subtask-1",
+          "text": "Investigar problemas actuales con PKG + Vite",
+          "completed": false
+        },
+        {
+          "id": "subtask-2",
+          "text": "Configurar build process para binarios multiplataforma",
+          "completed": false
+        },
+        {
+          "id": "subtask-3",
+          "text": "Testear binarios en diferentes OS (Windows, macOS, Linux)",
+          "completed": false
+        },
+        {
+          "id": "subtask-4",
+          "text": "Crear GitHub Action para build automático en releases",
+          "completed": false
+        },
+        {
+          "id": "subtask-5",
+          "text": "Configurar publicación automática de binarios en GitHub Releases",
+          "completed": false
+        },
+        {
+          "id": "subtask-6",
+          "text": "Crear documentación de distribución y deployment",
+          "completed": false
+        }
+      ],
+      "createdAt": "2025-07-13T15:15:00Z",
+      "updatedAt": "2025-07-13T21:30:00Z"
+    }
+  ],
+  "generatedAt": "2025-08-02T22:05:02.399Z",
+  "taskCount": 3,
+  "convertedCount": 1
+}

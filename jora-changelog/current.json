@@ -1,15 +1,19 @@
 {
   "tasks": [
-    "task-044-jora-init-frontend-build-missing",
-    "task-043-documentation-organization",
+    "task-035-resolve-pkg-vite-compatibility",
+    "task-037-binary-testing-suite",
+    "task-042-refactor-server",
+    "task-040-ticket-comments-feature",
+    "task-039-refactor-task-manager",
+    "task-038-build-process-enhancement",
+    "task-041-discovery-better-binary-builder",
+    "task-039-add-discovery-task-type",
     "task-036-automated-github-actions-release",
     "task-033-static-site-generator-readonly",
     "task-032-ready-release-column-redesign",
     "task-031-fix-saveconfig-error-api",
-    "task-022-pkg-vite-investigation",
     "task-017-react-router-bug-fix",
     "task-026-fix-hot-reloading-dev-experience",
-    "task-023-multiplatform-build-system",
     "task-024-github-actions-cicd",
     "task-025-distribution-documentation",
     "task-006-pkg-distribution",
@@ -29,11 +33,7 @@
     "task-019-task-card-state-management",
     "task-018-release-system-epic-handling",
     "task-029-auto-branch-switch-for-save",
-    "task-030-optimize-drag-drop-unchanged-detection",
-    "task-035-resolve-pkg-vite-compatibility",
-    "task-037-binary-testing-suite",
-    "task-038-build-process-enhancement",
-    "task-039-add-discovery-task-type"
+    "task-030-optimize-drag-drop-unchanged-detection"
   ],
-  "lastUpdated": "2025-07-19T16:30:00.000Z"
+  "lastUpdated": "2025-08-02T22:06:11.896Z"
 }
