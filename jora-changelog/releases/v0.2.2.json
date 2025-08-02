@@ -1,0 +1,120 @@
+{
+  "version": "0.2.2",
+  "description": "# 🔧 JoRA v0.2.2 - Hotfix: Auto-build on Init\n\n## 🐛 **Bug Fix**\n\n### **jora init Frontend Build**\n- ✅ **Fixed:** `jora init` now automatically builds frontend with Vite\n- ✅ **Fixed:** No more \"Frontend build not found\" errors after init\n- ✅ **Improved:** Better user feedback during initialization process\n\n## 🚀 **What's New**\n\n### **Seamless Setup Experience**\n```bash\n# Now this just works! \nnpx jora init    # Creates structure + builds frontend automatically\nnpx jora start   # Ready to go immediately",
+  "tasks": [
+    {
+      "id": "task-044-jora-init-frontend-build-missing",
+      "title": "Fix jora init: Agregar build del frontend automático",
+      "description": "El comando `jora init` está creando correctamente la estructura básica de archivos JSON (current.json, config.json, authors.json, etc.) pero NO está generando el build del frontend con Vite.\n\n## 🐛 **Problema Actual**\n\n1. Usuario ejecuta `jora init` en un nuevo repositorio\n2. Se crean los archivos JSON básicos ✅\n3. Usuario ejecuta `jora start` \n4. El servidor se levanta pero al ir al browser muestra error **\"Frontend build not found\"** ❌\n5. Usuario tiene que ejecutar manualmente `npm run build:frontend` antes de `jora start`\n\n## 🎯 **Solución Requerida**\n\nEl comando `jora init` debe:\n\n1. **Crear estructura JSON** (ya funciona) ✅\n2. **Ejecutar automáticamente** `npm run build:frontend` ⭐ **NUEVO**\n3. **Verificar que el build se completó** correctamente\n4. **Mostrar mensaje de éxito** confirmando que todo está listo\n5. **Instruir al usuario** que ya puede ejecutar `jora start`\n\n## ✅ **IMPLEMENTACIÓN COMPLETADA**\n\n### **Archivos modificados:**\n\n1. **`src/core/project-manager.js`**\n   - ✅ Agregada función `executeCommand()` para ejecutar npm commands\n   - ✅ Modificada `initializeProject()` para incluir build del frontend\n   - ✅ Agregado manejo robusto de errores del build\n   - ✅ Verificación de integridad del build (dist/frontend/ existe)\n   - ✅ Mensajes informativos durante el proceso\n\n2. **`src/cli.js`**\n   - ✅ Actualizado mensaje final para reflejar que build está completo\n   - ✅ Mejorado comando de ayuda\n\n### **Flujo implementado:**\n```bash\n$ jora init\n🎯 Initializing JoRA...\n📁 Creating basic JSON structure...\n✅ JSON structure created successfully\n🔨 Building frontend with Vite...\n🏗️  Running build in: /path/to/jora\n[output del build de Vite]\n✅ Frontend build completed successfully!\n� Build files created in: /path/to/dist/frontend\n✅ JoRA initialized successfully!\n📁 Created: jora-changelog/ directory with initial structure\n🎯 Frontend build completed - ready to run!\n🚀 Run: jora start\n```\n\n### **Manejo de errores:**\n- ✅ Si falla el build, se muestran instrucciones manuales\n- ✅ Verificación de que dist/frontend/ existe y contiene archivos\n- ✅ Output completo del build visible al usuario\n- ✅ Exit codes apropiados\n\n## 🧪 **Testing Manual**\n\n```bash\n# Test case: Repositorio completamente nuevo\nmkdir test-jora-init\ncd test-jora-init\ngit init\nnpm init -y\nnpm install @ressjs/jora\npnpx jora init  # Debe crear JSONs + build frontend\npnpx jora start # Debe funcionar sin errores\n```\n\n## 🎯 **Criterios de Aceptación**\n\n- ✅ `jora init` crea estructura JSON\n- ✅ `jora init` ejecuta build del frontend automáticamente\n- ✅ Después de `jora init`, `jora start` funciona sin errores\n- ✅ Se muestran mensajes informativos durante el proceso\n- ✅ Manejo robusto de errores si falla el build\n- ✅ Testing manual exitoso con `npm run build:frontend`",
+      "state": "ready_to_release",
+      "priority": "critical",
+      "type": "bug",
+      "epic": "critical-fixes",
+      "author": "gzzy",
+      "assignee": "gzzy",
+      "estimatedPoints": 5,
+      "estimatedDate": "2025-08-03",
+      "tags": [
+        "cli",
+        "build",
+        "initialization",
+        "vite"
+      ],
+      "subtasks": [
+        {
+          "id": "subtask-1",
+          "text": "Analizar código actual de jora init en src/cli.js",
+          "completed": true
+        },
+        {
+          "id": "subtask-2",
+          "text": "Implementar llamada a npm run build:frontend después de crear JSONs",
+          "completed": true
+        },
+        {
+          "id": "subtask-3",
+          "text": "Agregar manejo de errores robusto para el proceso de build",
+          "completed": true
+        },
+        {
+          "id": "subtask-4",
+          "text": "Verificar integridad del build generado (dist/frontend/ existe)",
+          "completed": true
+        },
+        {
+          "id": "subtask-5",
+          "text": "Actualizar mensajes de output para informar progreso al usuario",
+          "completed": true
+        },
+        {
+          "id": "subtask-6",
+          "text": "Testing manual en repositorio limpio",
+          "completed": true
+        }
+      ],
+      "images": [],
+      "createdAt": "2025-08-02T15:00:00Z",
+      "updatedAt": "2025-08-02T22:05:36.398Z"
+    }
+  ],
+  "convertedToEpics": [
+    {
+      "id": "task-006-pkg-distribution",
+      "title": "PKG Distribution + GitHub Actions Release",
+      "description": "Resolver problemas con PKG para generar binarios distribuibles que funcionen correctamente. Crear GitHub Actions que automáticamente generen y publiquen binarios cuando se cree un release oficial en GitHub.",
+      "state": "converted_to_epic",
+      "priority": "critical",
+      "type": "feature",
+      "epic": "api",
+      "author": "gzzy",
+      "assignee": null,
+      "tags": [
+        "pkg",
+        "binary",
+        "distribution",
+        "deployment",
+        "github-actions",
+        "automation"
+      ],
+      "estimatedPoints": 13,
+      "estimatedDate": "2025-07-20",
+      "subtasks": [
+        {
+          "id": "subtask-1",
+          "text": "Investigar problemas actuales con PKG + Vite",
+          "completed": false
+        },
+        {
+          "id": "subtask-2",
+          "text": "Configurar build process para binarios multiplataforma",
+          "completed": false
+        },
+        {
+          "id": "subtask-3",
+          "text": "Testear binarios en diferentes OS (Windows, macOS, Linux)",
+          "completed": false
+        },
+        {
+          "id": "subtask-4",
+          "text": "Crear GitHub Action para build automático en releases",
+          "completed": false
+        },
+        {
+          "id": "subtask-5",
+          "text": "Configurar publicación automática de binarios en GitHub Releases",
+          "completed": false
+        },
+        {
+          "id": "subtask-6",
+          "text": "Crear documentación de distribución y deployment",
+          "completed": false
+        }
+      ],
+      "createdAt": "2025-07-13T15:15:00Z",
+      "updatedAt": "2025-07-13T21:30:00Z"
+    }
+  ],
+  "generatedAt": "2025-08-02T22:06:11.891Z",
+  "taskCount": 1,
+  "convertedCount": 1
+}

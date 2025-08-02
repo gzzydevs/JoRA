@@ -64,7 +64,8 @@ const cli = yargs(hideBin(process.argv))
         await initializeProject(projectPath);
         console.log('✅ JoRA initialized successfully!');
         console.log('📁 Created: jora-changelog/ directory with initial structure');
-        console.log('🚀 Run: jora');
+        console.log('🎯 Frontend build completed - ready to run!');
+        console.log('🚀 Run: jora start');
       } catch (error) {
         console.error('❌ Error initializing JoRA:', error.message);
         process.exit(1);

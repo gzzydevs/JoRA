@@ -1,5 +1,46 @@
 const fs = require('fs').promises;
 const path = require('path');
+const { spawn } = require('child_process');
+
+/**
+ * Execute a command and return a promise
+ */
+function executeCommand(command, args, options = {}) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args, {
+      stdio: ['inherit', 'pipe', 'pipe'],
+      shell: true,
+      ...options
+    });
+    
+    let stdout = '';
+    let stderr = '';
+    
+    child.stdout.on('data', (data) => {
+      stdout += data.toString();
+      // Show progress to user
+      process.stdout.write(data);
+    });
+    
+    child.stderr.on('data', (data) => {
+      stderr += data.toString();
+      // Show errors to user
+      process.stderr.write(data);
+    });
+    
+    child.on('close', (code) => {
+      if (code === 0) {
+        resolve({ stdout, stderr, code });
+      } else {
+        reject(new Error(`Command failed with exit code ${code}: ${stderr}`));
+      }
+    });
+    
+    child.on('error', (error) => {
+      reject(error);
+    });
+  });
+}
 
 /**
  * Initialize a JoRA project in the given directory
@@ -16,6 +57,8 @@ async function initializeProject(projectPath) {
       throw error;
     }
   }
+  
+  console.log('📁 Creating basic JSON structure...');
   
   // Create directory structure
   await fs.mkdir(todoPath, { recursive: true });
@@ -129,6 +172,42 @@ async function initializeProject(projectPath) {
     path.join(todoPath, 'current.json'),
     JSON.stringify(current, null, 2)
   );
+  
+  console.log('✅ JSON structure created successfully');
+  console.log('🔨 Building frontend with Vite...');
+  
+  try {
+    // Build the frontend
+    const joraPath = path.dirname(path.dirname(__dirname)); // Go up to JoRA root
+    console.log(`🏗️  Running build in: ${joraPath}`);
+    
+    await executeCommand('npm', ['run', 'build:frontend'], { 
+      cwd: joraPath
+    });
+    
+    // Verify that the build was successful
+    const frontendBuildPath = path.join(joraPath, 'dist', 'frontend');
+    try {
+      await fs.access(frontendBuildPath);
+      const buildFiles = await fs.readdir(frontendBuildPath);
+      if (buildFiles.length === 0) {
+        throw new Error('Frontend build directory is empty');
+      }
+      console.log('✅ Frontend build completed successfully!');
+      console.log(`📁 Build files created in: ${frontendBuildPath}`);
+    } catch (buildError) {
+      throw new Error(`Frontend build verification failed: ${buildError.message}`);
+    }
+    
+  } catch (buildError) {
+    console.error('❌ Frontend build failed:', buildError.message);
+    console.log('');
+    console.log('🔧 Manual fix required:');
+    console.log('   1. Make sure dependencies are installed: npm install');
+    console.log('   2. Run the build manually: npm run build:frontend');
+    console.log('   3. Then you can use: jora start');
+    throw new Error('Frontend build failed - see above for manual fix instructions');
+  }
 }
 
 module.exports = {
