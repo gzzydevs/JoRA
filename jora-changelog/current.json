@@ -1,5 +1,6 @@
 {
   "tasks": [
+    "task-044-jora-init-frontend-build-missing",
     "task-043-documentation-organization",
     "task-036-automated-github-actions-release",
     "task-033-static-site-generator-readonly",
