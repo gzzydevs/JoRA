@@ -1,9 +1,17 @@
 {
   "name": "@ressjs/jora",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "JoRA - A simple, offline task management tool",
   "author": "gzzy <barbycus@gmail.com>",
   "main": "src/cli.js",
+  "files": [
+    "src/cli.js",
+    "src/server/",
+    "src/core/",
+    "dist/frontend/",
+    "jora-changelog/",
+    "vite.config.js"
+  ],
   "bin": {
     "jora": "src/cli.js"
   },
@@ -12,9 +20,11 @@
     "dev": "node src/cli.js",
     "dev:frontend": "vite",
     "build:frontend": "vite build",
+    "build:frontend-zip": "npm run build:frontend && zip -r dist/jora-frontend.zip dist/frontend/",
     "preview:frontend": "vite preview",
-    "build": "npm run build:frontend && npm run build:binaries",
+    "build": "npm run build:frontend && npm run build:binaries && npm run zip:frontend",
     "build:binaries": "npm run build:linux && npm run build:win && npm run build:mac",
+    "zip:frontend": "zip -r dist/jora-frontend.zip dist/frontend/",
     "build:linux": "pkg . --targets node18-linux-x64 --output dist/jora-linux",
     "build:win": "pkg . --targets node18-win-x64 --output dist/jora-win.exe",
     "build:mac": "pkg . --targets node18-macos-x64 --output dist/jora-mac",
@@ -73,5 +83,8 @@
     "@vitejs/plugin-react": "^4.6.0",
     "pkg": "^5.8.1",
     "vite": "^7.0.4"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -174,13 +174,53 @@ async function initializeProject(projectPath) {
   );
   
   console.log('✅ JSON structure created successfully');
-  console.log('🔨 Building frontend with Vite...');
+  console.log('🔨 Setting up frontend (this may take a moment)...');
   
   try {
-    // Build the frontend
-    const joraPath = path.dirname(path.dirname(__dirname)); // Go up to JoRA root
+    // Determine JoRA installation path
+    let joraPath;
+    
+    // Check if we're running from source (development)
+    if (__dirname.includes('src/core')) {
+      joraPath = path.dirname(path.dirname(__dirname)); // Development: go to JoRA root
+    } else {
+      // We're in node_modules, find the JoRA package root
+      const nodeModulesMatch = __dirname.match(/(.+\/node_modules\/@ressjs\/jora)/);
+      if (nodeModulesMatch) {
+        joraPath = nodeModulesMatch[1];
+      } else {
+        // Fallback: try to find package.json going up the directory tree
+        let currentDir = __dirname;
+        while (currentDir !== path.dirname(currentDir)) {
+          const packagePath = path.join(currentDir, 'package.json');
+          try {
+            const pkg = JSON.parse(await fs.readFile(packagePath, 'utf8'));
+            if (pkg.name === '@ressjs/jora') {
+              joraPath = currentDir;
+              break;
+            }
+          } catch (e) {
+            // Continue searching
+          }
+          currentDir = path.dirname(currentDir);
+        }
+      }
+    }
+    
+    if (!joraPath) {
+      throw new Error('Could not determine JoRA installation path');
+    }
+    
     console.log(`🏗️  Running build in: ${joraPath}`);
     
+    // First install dependencies
+    console.log('📦 Installing dependencies...');
+    await executeCommand('npm', ['install'], { 
+      cwd: joraPath
+    });
+    
+    // Then build the frontend
+    console.log('🔨 Building frontend...');
     await executeCommand('npm', ['run', 'build:frontend'], { 
       cwd: joraPath
     });
@@ -203,9 +243,10 @@ async function initializeProject(projectPath) {
     console.error('❌ Frontend build failed:', buildError.message);
     console.log('');
     console.log('🔧 Manual fix required:');
-    console.log('   1. Make sure dependencies are installed: npm install');
-    console.log('   2. Run the build manually: npm run build:frontend');
-    console.log('   3. Then you can use: jora start');
+    console.log('   1. Go to JoRA installation directory');
+    console.log('   2. Run: npm install');
+    console.log('   3. Run: npm run build:frontend');
+    console.log('   4. Then you can use: jora start');
     throw new Error('Frontend build failed - see above for manual fix instructions');
   }
 }
