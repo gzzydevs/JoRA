@@ -1,5 +1,6 @@
 {
   "tasks": [
+    "task-045-fix-binary-shutdown-signal-handling",
     "task-035-resolve-pkg-vite-compatibility",
     "task-037-binary-testing-suite",
     "task-042-refactor-server",
@@ -35,5 +36,5 @@
     "task-029-auto-branch-switch-for-save",
     "task-030-optimize-drag-drop-unchanged-detection"
   ],
-  "lastUpdated": "2025-08-02T22:06:11.896Z"
+  "lastUpdated": "2025-08-03T10:30:00Z"
 }

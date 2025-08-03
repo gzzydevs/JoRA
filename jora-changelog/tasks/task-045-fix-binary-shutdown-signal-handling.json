@@ -1,0 +1,49 @@
+{
+  "id": "task-045-fix-binary-shutdown-signal-handling",
+  "title": "Fix binary shutdown signal handling (Ctrl+C/Cmd+C)",
+  "description": "## 🐛 **Problema**\n\nLas versiones compiladas de JoRA (binarios PKG) no responden correctamente a señales de interrupción (SIGINT) cuando se presiona **Ctrl+C** o **Cmd+C** en la terminal.\n\n### **Comportamiento actual:**\n- Al presionar Ctrl+C/Cmd+C aparece el mensaje \"Shutting down JoRA...\"\n- El proceso **NO se termina** y queda colgado\n- Es necesario usar `kill -9` o cerrar la terminal para terminar el proceso\n- Esto solo ocurre en **binarios compilados**, no en modo desarrollo (`npm start`)\n\n### **Comportamiento esperado:**\n- Al presionar Ctrl+C/Cmd+C el proceso debe terminar correctamente\n- Debe ejecutar cleanup si es necesario (cerrar servidor, limpiar recursos)\n- Debe salir con código 0 o 130 (SIGINT)\n\n## 🔍 **Análisis Técnico**\n\n### **Posibles causas:**\n1. **Signal handling en PKG**: PKG puede no manejar señales correctamente\n2. **Event loop blocking**: Algo mantiene el event loop activo\n3. **Server shutdown**: Express server no se cierra correctamente\n4. **Process.exit() missing**: Falta llamada explícita a process.exit()\n\n### **Archivos involucrados:**\n- `src/cli.js` - Entry point principal\n- `src/server/server.js` - Express server setup\n- `src/core/project-manager.js` - Process lifecycle\n\n## 📋 **Plan de Implementación**\n\n### **Fase 1: Investigación**\n- [ ] Reproducir bug en los 3 binarios (Linux/macOS/Windows)\n- [ ] Revisar logs de PKG durante shutdown\n- [ ] Comparar comportamiento desarrollo vs binario\n- [ ] Investigar PKG signal handling limitations\n\n### **Fase 2: Signal Handling**\n- [ ] Implementar handlers para SIGINT y SIGTERM\n- [ ] Asegurar que Express server se cierra correctamente\n- [ ] Agregar cleanup de recursos activos\n- [ ] Forzar process.exit() si es necesario\n\n### **Fase 3: Testing**\n- [ ] Testear en desarrollo (debe seguir funcionando)\n- [ ] Testear en todos los binarios\n- [ ] Validar que no hay memory leaks\n- [ ] Documentar workarounds si los hay\n\n## 🛠️ **Implementación Propuesta**\n\n### **En `src/cli.js`:**\n```javascript\n// Signal handling para binarios PKG\nfunction setupSignalHandlers() {\n  const gracefulShutdown = (signal) => {\n    console.log(`\\n🛑 Received ${signal}. Shutting down JoRA...`);\n    \n    // Cerrar servidor Express\n    if (global.joraServer) {\n      global.joraServer.close(() => {\n        console.log('✅ Server closed successfully');\n        process.exit(0);\n      });\n      \n      // Timeout para forzar salida\n      setTimeout(() => {\n        console.log('⚠️ Force closing JoRA...');\n        process.exit(1);\n      }, 5000);\n    } else {\n      process.exit(0);\n    }\n  };\n  \n  process.on('SIGINT', () => gracefulShutdown('SIGINT'));\n  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));\n  \n  // PKG specific handling\n  if (process.pkg) {\n    console.log('🔧 PKG binary detected - enhanced signal handling enabled');\n  }\n}\n```\n\n### **En `src/server/server.js`:**\n```javascript\n// Guardar referencia del servidor para shutdown\nconst server = app.listen(port, () => {\n  console.log(`✅ JoRA server running at http://localhost:${port}`);\n});\n\n// Hacer servidor accesible globalmente para cleanup\nglobal.joraServer = server;\n```\n\n## 🧪 **Testing Plan**\n\n### **Manual Testing:**\n```bash\n# Test en desarrollo\nnpm start\n# Ctrl+C -> debe cerrar inmediatamente\n\n# Test binarios\n./dist/jora-linux\n# Ctrl+C -> debe cerrar correctamente\n\n./dist/jora-mac  \n# Cmd+C -> debe cerrar correctamente\n\n./dist/jora-win.exe\n# Ctrl+C -> debe cerrar correctamente\n```\n\n### **Automated Testing:**\n- Integrar en `scripts/testing/test-binaries.js`\n- Test de startup/shutdown cycles\n- Validación de exit codes\n\n## 🚨 **Criterios de Aceptación**\n\n### **✅ Must Have:**\n- [ ] Ctrl+C/Cmd+C termina proceso en ≤ 2 segundos\n- [ ] No quedan procesos zombie\n- [ ] Funciona en los 3 binarios (Linux/macOS/Windows)\n- [ ] Modo desarrollo sigue funcionando igual\n\n### **🎯 Nice to Have:**\n- [ ] Mensaje de shutdown elegante\n- [ ] Cleanup de archivos temporales\n- [ ] Exit codes apropiados (0 para normal, 130 para SIGINT)\n\n## 🔗 **Referencias**\n\n- [PKG Signal Handling Issues](https://github.com/vercel/pkg/issues)\n- [Node.js Process Events](https://nodejs.org/api/process.html#signal-events)\n- [Express Server Shutdown](https://expressjs.com/en/advanced/healthcheck-graceful-shutdown.html)",
+  "state": "in_progress",
+  "priority": "high",
+  "type": "bug",
+  "epic": "critical-fixes",
+  "author": "gzzy",
+  "assignee": "gzzy",
+  "estimatedPoints": 8,
+  "estimatedDate": "2025-08-06",
+  "tags": ["binaries", "pkg", "signal-handling", "critical", "shutdown"],
+  "subtasks": [
+    {
+      "id": "subtask-1",
+      "text": "Reproducir bug en los 3 binarios (Linux/macOS/Windows)",
+      "completed": false
+    },
+    {
+      "id": "subtask-2",
+      "text": "Investigar PKG signal handling limitations y workarounds",
+      "completed": false
+    },
+    {
+      "id": "subtask-3",
+      "text": "Implementar signal handlers (SIGINT/SIGTERM) en cli.js",
+      "completed": false
+    },
+    {
+      "id": "subtask-4",
+      "text": "Asegurar que Express server se cierra correctamente",
+      "completed": false
+    },
+    {
+      "id": "subtask-5",
+      "text": "Agregar timeout de emergencia para forzar exit",
+      "completed": false
+    },
+    {
+      "id": "subtask-6",
+      "text": "Testear fix en todos los binarios y modo desarrollo",
+      "completed": false
+    }
+  ],
+  "images": [],
+  "createdAt": "2025-08-03T10:30:00Z",
+  "updatedAt": "2025-08-03T10:30:00Z"
+}
